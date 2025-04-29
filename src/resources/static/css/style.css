@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
+.jersey-10-regular {
+  font-family: "Jersey 10", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Jersey 10', sans-serif;
+  font-weight: 400;
+  background: linear-gradient(135deg, #8F33A5, #1E1E1E);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: #ffffff;
+  position: relative; 
+  letter-spacing: 2px;
+}
+
+.cabecalho {
+  text-align: center;
+  margin-bottom: 40px; 
+}
+
+.titulo {
+  font-size: 90px;
+  font-weight: bold;
+  color: #FFFF00; 
+  position: relative;
+  text-shadow:
+    2px 0 #5e2ca5,
+    4px 0 #230049;
+}
+
+#home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+#botoes-login {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.botao-login {
+  width: 300px; 
+  height: 350px; 
+  background-color: #CFAFFF;
+  border-radius: 62px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s;
+}
+
+.botao-login img {
+  width: 100px; 
+  height: 100px;
+  margin-bottom: 20px; 
+}
+
+.subtitulo {
+  font-size: 60px;
+}
+
+#cadastro {
+  background-color: #4e008f;
+  color: white;
+  font-size: 30px;
+  padding: 15px 30px;
+  border: 2px solid white;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  position: absolute; 
+  bottom: 40px; 
+  right: 40px; 
+  font-family: 'Jersey 10';
+  letter-spacing: 1px;
+}
+
+#cadastro:hover {
+  transform: scale(1.05);
+}
+
+
+@media screen and (max-width: 1024px) {
+  .titulo {
+    font-size: 70px;
+  }
+  
+  .botao-login {
+    width: 250px;
+    height: 300px;
+  }
+  
+  .subtitulo {
+    font-size: 50px;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .titulo {
+    font-size: 60px;
+    margin-top: 40px;
+  }
+  
+  #botoes-login {
+    gap: 20px;
+  }
+  
+  .botao-login {
+    width: 200px;
+    height: 250px;
+  }
+  
+  .subtitulo {
+    font-size: 40px;
+  }
+  
+  #cadastro {
+    font-size: 24px;
+    padding: 12px 24px;
+  }
+}
+
+/* Layout para mobile */
+@media screen and (max-width: 600px) {
+  .cabecalho {
+    margin-bottom: 20px;
+    margin-top: 60px;
+  }
+  
+  .titulo {
+    font-size: 40px;
+  }
+  
+  #botoes-login {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    width: 90%;
+    max-width: 300px;
+  }
+  
+  .botao-login {
+    width: 100%;
+    height: 180px;
+    border-radius: 40px;
+  }
+  
+  .botao-login img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+  }
+  
+  .subtitulo {
+    font-size: 30px;
+    margin-top: 5px;
+  }
+  
+  #cadastro {
+    font-size: 20px;
+    padding: 10px 20px;
+    position: relative;
+    margin-top: 30px;
+    bottom: auto;
+    right: auto;
+  }
+}
+
+/* Layout para telas muito pequenas */
+@media screen and (max-width: 400px) {
+  .titulo {
+    font-size: 36px;
+  }
+  
+  .botao-login {
+    height: 150px;
+  }
+  
+  .botao-login img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .subtitulo {
+    font-size: 24px;
+  }
+}
