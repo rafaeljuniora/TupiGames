@@ -1,32 +1,25 @@
-package br.com.TupiGames.domain;
+package br.com.TupiGames.dto;
 
-import jakarta.persistence.*;
+import br.com.TupiGames.domain.Aluno;
+import br.com.TupiGames.domain.Escola;
+import br.com.TupiGames.domain.Professor;
+import br.com.TupiGames.domain.Turma;
 
 import java.util.List;
 
-@Entity
-public class Escola {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class EscolaDTO {
     private String nomeEscola;
     private String email;
     private String senha;
 
-    @OneToMany
     private List<Turma> turmas;
-    @OneToMany
     private List<Professor> professores;
-    @OneToMany
     private List<Aluno> alunos;
 
-    public Escola(String nomeEscola, String email, String senha) {
+    public EscolaDTO(String nomeEscola, String email, String senha) {
         this.nomeEscola = nomeEscola;
         this.email = email;
         this.senha = senha;
-    }
-
-    public Escola() {
     }
 
     public String getNomeEscola() {
@@ -37,6 +30,14 @@ public class Escola {
         this.nomeEscola = nomeEscola;
     }
 
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -45,11 +46,10 @@ public class Escola {
         this.email = email;
     }
 
-    public String getSenha() {
-        return senha;
+    public Escola toEscola() {
+        return new Escola(this.nomeEscola, this.email, this.senha);
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public EscolaDTO() {
     }
 }
