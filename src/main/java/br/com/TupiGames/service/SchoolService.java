@@ -15,6 +15,7 @@ public class SchoolService {
     }
 
     public Escola getSchoolByEmail(String email) {
-        return schoolRepository.findByEmail(email).orElse(null);
+        return schoolRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Escola não encontrada"));
     }
 }

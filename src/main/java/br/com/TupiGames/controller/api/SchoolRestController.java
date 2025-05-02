@@ -21,13 +21,21 @@ public class SchoolRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<Escola> loginSchool(@RequestParam String email,
-                                              @RequestParam String senha) {
-        Escola escola = schoolService.getSchoolByEmail(email);
-        if(escola != null && escola.getSenha().equals(senha)) {
-            return ResponseEntity.ok(escola);
+    @PostMapping("/login")
+    public ResponseEntity<?> login(
+            @RequestParam String email,
+            @RequestParam String senha) {
+
+        try {
+            Escola escola = schoolService.getSchoolByEmail(email);
+
+            if (escola != null && escola.getSenha().equals(senha)) {
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
