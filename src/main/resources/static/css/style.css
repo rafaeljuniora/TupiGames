@@ -50,8 +50,10 @@ body {
 }
 
 .botao-login {
-  width: 300px; 
-  height: 350px; 
+  all: unset;
+  cursor: pointer;
+  width: 300px;
+  height: 350px;
   background-color: #CFAFFF;
   border-radius: 62px;
   display: flex;
@@ -60,6 +62,11 @@ body {
   justify-content: center;
   transition: transform 0.3s;
 }
+
+.botao-login:hover {
+  transform: scale(1.05);
+}
+
 
 .botao-login img {
   width: 100px; 
@@ -199,3 +206,5 @@ body {
     font-size: 24px;
   }
 }
+
+
