@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm:watch-css\" \"npm:start-browsersync\"",
+    "watch-css": "tailwindcss -i ./src/main/resources/static/css/styles.css -o ./src/main/resources/static/css/output.css --watch",
+    "start-browsersync": "browser-sync start --proxy \"localhost:8080\" --files \"src/main/resources/templates/**/*.html,src/main/resources/static/css/**/*.css\" --no-ui --no-notify"
   },
   "keywords": [],
   "author": "",
@@ -12,8 +15,10 @@
   "description": "",
   "devDependencies": {
     "autoprefixer": "^10.4.21",
+    "browser-sync": "^3.0.4",
+    "concurrently": "^9.1.2",
     "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.2"
+    "tailwindcss": "^4.1.5"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.2",
