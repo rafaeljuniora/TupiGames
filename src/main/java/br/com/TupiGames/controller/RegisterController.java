@@ -24,6 +24,6 @@ public class RegisterController {
     public String completeRegister(@ModelAttribute("escola") EscolaDTO escolaDTO) {
         Escola escola = escolaDTO.toEscola();
         schoolService.registerSchool(escola);
-        return "redirect:/HomePages/SchoolHomePages";
+        return "redirect:/HomePages/SchoolHome";
     }
 }

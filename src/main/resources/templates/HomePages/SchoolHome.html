@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - Escola</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
+    <style th:replace="~{components/SchoolHeader :: sidebar-style}"></style>
+    <link href="/css/output.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script
+      th:replace="~{components/TeacherHeaderDark :: sidebar-script}"
+    ></script>
+  </head>
+  <body class="bg-[#F5E5C7]">
+    <header
+      th:replace="~{components/SchoolHeader :: header('inicio')}"
+    ></header>
+    <aside th:replace="~{components/SchoolHeader :: sidebar('inicio')}"></aside>
+
+    <main class="container mx-auto px-4 py-6 pt-[10vw]">
+      <h2 class="text-6xl jersey-10 text-center mb-8">Nome da Escola</h2>
+      <div class="flex flex-col items-center gap-4 mb-12">
+        <a
+          href="#"
+          th:href="@{/atividades/nova}"
+          class="bg-[#FFE889] rounded-full px-8 py-3 text-2xl jersey-10 w-64 text-center"
+          >Criar nova atividade</a
+        >
+        <a
+          href="#"
+          th:href="@{/usuarios}"
+          class="bg-[#FFE889] rounded-full px-8 py-3 text-2xl jersey-10 w-64 text-center"
+          >Gerenciar Usuários</a
+        >
+      </div>
+      <div class="mb-12">
+        <h3 class="text-4xl jersey-10 text-center mb-6">
+          Visualização de Turmas
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div
+            th:each="turma : ${turmas}"
+            class="bg-[#7C4A24] rounded-lg p-4 text-[#66AD70]"
+          >
+            <div class="flex justify-between items-center mb-2">
+              <h4 class="text-xl jersey-10" th:text="${turma.nome}">
+                Nome Turma
+              </h4>
+              <a
+                href="#"
+                th:href="@{/turmas/{id}(id=${turma.id})}"
+                class="bg-[#66AD70] rounded-full w-8 h-8 flex items-center justify-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  class="w-5 h-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </a>
+            </div>
+            <p
+              class="text-lg jersey-10"
+              th:text="|Qnt de Alunos: ${turma.quantidadeAlunos}/30|"
+            >
+              Qnt de Alunos: X/30
+            </p>
+            <div class="mt-2">
+              <p
+                class="text-lg jersey-10"
+                th:each="professor : ${turma.professores}"
+                th:text="${professor.nome}"
+              >
+                Nome Professores
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-4xl jersey-10 text-center mb-6">Atividades Globais</h3>
+
+        <div class="bg-white rounded-lg p-4">
+          <div class="grid grid-cols-5 gap-4">
+            <a
+              href="#"
+              th:each="atividade : ${atividades}"
+              th:href="@{/atividades/{id}(id=${atividade.id})}"
+              class="bg-[#FFD735] rounded-3xl w-full aspect-square flex items-center justify-center"
+            >
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
