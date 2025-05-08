@@ -13,4 +13,10 @@ public class SchoolController {
         return "HomePages/SchoolHome";
     }
 
+
+    @GetMapping("/management")
+    public String managementSchool(){
+        return "ManagementPages/SchoolManagement";
+    }
+
 }
