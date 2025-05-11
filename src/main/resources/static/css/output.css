@@ -736,6 +736,9 @@
   .fill-\[\#475467\] {
     fill: #475467;
   }
+  .p-1 {
+    padding: calc(var(--spacing) * 1);
+  }
   .p-2 {
     padding: calc(var(--spacing) * 2);
   }
