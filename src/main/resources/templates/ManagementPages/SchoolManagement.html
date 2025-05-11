@@ -15,7 +15,10 @@
       th:replace="~{components/TeacherHeaderDark :: sidebar-script}"
     ></script>
     <style
-      th:replace="~{components/modal/CreateStudentModal :: modal-style}"
+      th:replace="~{components/modal/CreateStudentModal :: student-modal-style}"
+    ></style>
+    <style
+      th:replace="~{components/modal/CreateTeacherModal :: teacher-modal-style}"
     ></style>
     <style>
       .card-container {
@@ -28,7 +31,7 @@
 
       .card-gestao {
         background-color: #ffe889;
-        border-radius: 1.5rem;  
+        border-radius: 1.5rem;
         padding: 2rem;
         display: flex;
         flex-direction: column;
@@ -247,7 +250,7 @@
         <div class="flex justify-end mb-6 mt-12">
           <button
             class="bg-[#FFD735] text-black px-6 py-3 rounded-[15px] flex items-center jersey-10 text-2xl hover:bg-[#FFE889] transition-colors"
-            onclick="document.getElementById('addModal').classList.remove('hidden')"
+            onclick="document.getElementById('studentModal').classList.remove('student-hidden')"
           >
             <span>Adicionar</span>
           </button>
@@ -357,6 +360,7 @@
         <div class="flex justify-end mb-6 mt-12">
           <button
             class="bg-[#FFD735] text-black px-6 py-3 rounded-[15px] flex items-center jersey-10 text-2xl hover:bg-[#FFE889] transition-colors"
+            onclick="document.getElementById('teacherModal').classList.remove('teacher-hidden')"
           >
             <span>Adicionar</span>
           </button>
@@ -523,9 +527,19 @@
         </div>
       </div>
     </main>
-    <div th:replace="~{components/modal/CreateStudentModal :: add-modal}"></div>
+
+    <div
+      th:replace="~{components/modal/CreateStudentModal :: student-modal}"
+    ></div>
     <script
-      th:replace="~{components/modal/CreateStudentModal :: modal-script}"
+      th:replace="~{components/modal/CreateStudentModal :: student-modal-script}"
+    ></script>
+
+    <div
+      th:replace="~{components/modal/CreateTeacherModal :: teacher-modal}"
+    ></div>
+    <script
+      th:replace="~{components/modal/CreateTeacherModal :: teacher-modal-script}"
     ></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
