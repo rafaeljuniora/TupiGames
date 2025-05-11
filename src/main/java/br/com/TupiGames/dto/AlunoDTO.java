@@ -1,25 +1,20 @@
-package br.com.TupiGames.domain;
+package br.com.TupiGames.dto;
 
-import jakarta.persistence.*;
+import br.com.TupiGames.domain.Aluno;
+import br.com.TupiGames.domain.Escola;
 
-@Entity
-public class Aluno {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
-    private Long id;
-
+public class AlunoDTO {
     private String primeiroNome;
     private String sobreNome;
     private String senha;
 
-    public Aluno() {
-    }
-
-    public Aluno(String primeiroNome, String sobreNome, String senha) {
+    public AlunoDTO(String primeiroNome, String sobreNome, String senha) {
         this.primeiroNome = primeiroNome;
         this.sobreNome = sobreNome;
         this.senha = senha;
+    }
+
+    public AlunoDTO() {
     }
 
     public String getPrimeiroNome() {
@@ -42,11 +37,11 @@ public class Aluno {
         return senha;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public Aluno toAluno() {
+        return new Aluno(this.primeiroNome, this.sobreNome, this.senha);
     }
 }

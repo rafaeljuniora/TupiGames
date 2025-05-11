@@ -39,11 +39,15 @@
         </div>
 
         <div>
-          <form class="space-y-4">
+          <form class="space-y-4"
+          th:action="@{/register/aluno/save}"
+          th:object="${aluno}"
+          method="post">
             <div>
               <input
                 type="text"
                 placeholder="Nome"
+                th:field="*{primeiroNome}"
                 class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
               />
             </div>
@@ -52,6 +56,7 @@
               <input
                 type="text"
                 placeholder="Sobrenome"
+                th:field="*{sobreNome}"
                 class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
               />
             </div>
@@ -60,10 +65,11 @@
               <input
                 type="text"
                 placeholder="Data de Nascimento (Senha)"
+                th:field="*{senha}"
                 class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
               />
             </div>
-
+            <input type="hidden" id="escolaEmail" name="escolaEmail">
             <div class="flex justify-center mt-6">
               <button
                 type="submit"
@@ -81,6 +87,12 @@
       document.addEventListener("DOMContentLoaded", function () {
         const studentModal = document.getElementById("studentModal");
         const studentCloseBtn = document.getElementById("studentCloseModalBtn");
+
+        const usuarioSalvo = sessionStorage.getItem('usuario');
+        if (usuarioSalvo) {
+            const usuario = JSON.parse(usuarioSalvo);
+            document.getElementById('escolaEmail').value = usuario.email;
+        }
 
         if (studentModal && studentCloseBtn) {
           studentCloseBtn.addEventListener("click", function () {

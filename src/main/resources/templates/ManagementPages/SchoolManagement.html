@@ -639,6 +639,17 @@
         cardTurmas.addEventListener("click", () =>
           animateCardSelection(cardTurmas)
         );
+        const usuarioSalvo = sessionStorage.getItem('usuario');
+    
+    if (usuarioSalvo) {
+        const usuario = JSON.parse(usuarioSalvo);
+        console.log('Usuário logado:', usuario.email);
+        
+        document.getElementById('user-email').textContent = usuario.email;
+        
+    } else {
+        window.location.href = '/';
+    }
       });
     </script>
   </body>

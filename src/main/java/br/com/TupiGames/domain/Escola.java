@@ -2,6 +2,7 @@ package br.com.TupiGames.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,11 +14,16 @@ public class Escola {
     private String email;
     private String senha;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Turma> turmas;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Professor> professores;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(
+            name = "escola_alunos",
+            joinColumns = @JoinColumn(name = "escola_id"),
+            inverseJoinColumns = @JoinColumn(name = "aluno_id")
+    )
     private List<Aluno> alunos;
 
     public Escola(String nomeEscola, String email, String senha) {
@@ -47,6 +53,13 @@ public class Escola {
 
     public String getSenha() {
         return senha;
+    }
+
+    public void addAluno(Aluno aluno) {
+        if (alunos == null) {
+            alunos = new ArrayList<>();
+        }
+        alunos.add(aluno);
     }
 
     public void setSenha(String senha) {
