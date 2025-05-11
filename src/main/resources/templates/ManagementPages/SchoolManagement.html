@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - Escola</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
+    <style th:replace="~{components/SchoolHeader :: sidebar-style}"></style>
+    <link href="/css/output.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script
+      th:replace="~{components/TeacherHeaderDark :: sidebar-script}"
+    ></script>
+    <style>
+      .card-gestao {
+        transition: transform 0.3s ease;
+        width: 100%;
+      }
+
+      .card-gestao:hover {
+        transform: scale(1.05);
+      }
+
+      .cards-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+    </style>
+  </head>
+  <body class="bg-[#F5E5C7]">
+    <header
+      th:replace="~{components/SchoolHeader :: header('inicio')}"
+    ></header>
+    <aside th:replace="~{components/SchoolHeader :: sidebar('inicio')}"></aside>
+    <main class="container mx-auto px-4 py-6">
+      <h1
+        class="text-6xl bg-gradient-to-r from-[#C26A45] to-[#A0522D] pt-[14vh] jersey-10 text-transparent bg-clip-text text-center w-max m-auto"
+      >
+        Gerenciamento
+      </h1>
+      <div class="cards-container">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+          <a
+            href="#"
+            th:href="@{/gerenciamento/alunos}"
+            class="card-gestao bg-[#FFE889] rounded-3xl p-8 flex flex-col justify-center items-center"
+          >
+            <div class="mb-8">
+              <img src="/img/aluno-icon.png" />
+            </div>
+            <h3 class="text-5xl jersey-10 text-center">Aluno</h3>
+          </a>
+
+          <a
+            href="#"
+            th:href="@{/gerenciamento/professores}"
+            class="card-gestao bg-[#FFE889] rounded-3xl p-8 flex flex-col justify-center items-center"
+          >
+            <div class="mb-8">
+              <img src="/img/professor-icon.png" />
+            </div>
+            <h3 class="text-5xl jersey-10 text-center">Professor</h3>
+          </a>
+
+          <a
+            href="#"
+            th:href="@{/gerenciamento/turmas}"
+            class="card-gestao bg-[#FFE889] rounded-3xl p-8 flex flex-col justify-center items-center"
+          >
+            <div class="mb-8">
+              <img src="/img/escola-icon.png" />
+            </div>
+            <h3 class="text-5xl jersey-10 text-center">Turma</h3>
+          </a>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
