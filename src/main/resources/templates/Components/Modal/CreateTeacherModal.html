@@ -39,11 +39,15 @@
         </div>
 
         <div>
-          <form class="space-y-4">
+          <form class="space-y-4"
+          th:action="@{/register/professor/save}"
+          th:object="${professor}"
+          method="post">
             <div>
               <input
                 type="text"
                 placeholder="Nome"
+                th:field="*{primeiroNome}"
                 class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
               />
             </div>
@@ -52,6 +56,7 @@
               <input
                 type="text"
                 placeholder="Sobrenome"
+                th:field="*{sobreNome}"
                 class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
               />
             </div>
@@ -60,6 +65,7 @@
               <input
                 type="text"
                 placeholder="Data de Nascimento"
+                th:field="*{dataNascimento}"
                 class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
               />
             </div>
@@ -68,6 +74,7 @@
               <input
                 type="text"
                 placeholder="Email Institucional"
+                th:field="*{email}"
                 class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
               />
             </div>
@@ -76,9 +83,12 @@
               <input
                 type="password"
                 placeholder="Senha"
+                th:field="*{senha}"
                 class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
               />
             </div>
+
+            <input type="hidden" id="escolaEmail" name="escolaEmail">
 
             <div class="flex justify-center mt-6">
               <button
@@ -97,6 +107,12 @@
       document.addEventListener("DOMContentLoaded", function () {
         const teacherModal = document.getElementById("teacherModal");
         const teacherCloseBtn = document.getElementById("teacherCloseModalBtn");
+
+        const usuarioSalvo = sessionStorage.getItem('usuario');
+        if (usuarioSalvo) {
+            const usuario = JSON.parse(usuarioSalvo);
+            document.getElementById('escolaEmail').value = usuario.email;
+        }
 
         if (teacherModal && teacherCloseBtn) {
           teacherCloseBtn.addEventListener("click", function () {

@@ -1,14 +1,9 @@
-package br.com.TupiGames.domain;
+package br.com.TupiGames.dto;
 
-import jakarta.persistence.*;
+import br.com.TupiGames.domain.Escola;
+import br.com.TupiGames.domain.Professor;
 
-@Entity
-public class Professor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
-    private Long id;
-
+public class ProfessorDTO {
     private String primeiroNome;
     private String sobreNome;
     // Todo - Modificar para DATE ou Epoch
@@ -16,7 +11,7 @@ public class Professor {
     private String email;
     private String senha;
 
-    public Professor(String primeiroNome, String sobreNome, String dataNascimento, String email, String senha) {
+    public ProfessorDTO(String primeiroNome, String sobreNome, String dataNascimento, String email, String senha) {
         this.primeiroNome = primeiroNome;
         this.sobreNome = sobreNome;
         this.dataNascimento = dataNascimento;
@@ -24,7 +19,7 @@ public class Professor {
         this.senha = senha;
     }
 
-    public Professor() {
+    public ProfessorDTO() {
     }
 
     public String getPrimeiroNome() {
@@ -67,7 +62,7 @@ public class Professor {
         this.senha = senha;
     }
 
-    public Long getId() {
-        return id;
+    public Professor toProfessor() {
+        return new Professor(this.primeiroNome, this.sobreNome, this.dataNascimento, this.email, this.senha);
     }
 }
