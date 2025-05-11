@@ -2,10 +2,8 @@ const plugin = require("tailwindcss/plugin");
 const colors = require("tailwindcss/colors");
 
 module.exports = {
-  content: [
-    "./public/**/*.html",
-    "./src/**/*.js",
-    "./src/**/*.html",
+ content: [
+    "./src/main/resources/templates/**/*.html"
   ],
   theme: {
     colors: {
@@ -107,7 +105,17 @@ module.exports = {
       screens: {
         'small': '320px',
         'medium': '1450px'
-      }
+      },
+      rotate: {
+        '45': '45deg',
+        '-45': '-45deg',
+      },
+      translate: {
+        '2.5': '0.625rem',
+        '-2.5': '-0.625rem',
+        },
+      fontFamily: {
+              'jersey': ['"Jersey 10"', 'sans-serif'],
     },
   },
   variants: [

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro de Escola</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
+    <link href="/css/output.css" rel="stylesheet" />
+    <link href="/css/login.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body
+    class="min-h-screen flex items-center justify-center bg-[url('/images/back_emy.png')] bg-[#342238] bg-cover"
+  >
+    <div class="absolute top-16 left-4">
+      <a
+        href="#"
+        th:href="@{/}"
+        class="px-12 py-4 bg-[#4E185C] hover:bg-[#2d1b31] rounded-full text-white jersey-10-regular text-3xl"
+        >Voltar</a
+      >
+    </div>
+    <div class="flex flex-col">
+      <h1
+        class="bg-gradient-to-r from-[#CFAFFF] to-[#6C0CFF] text-transparent bg-clip-text text-8xl text-center mb-20 jersey-10-regular"
+      >
+        Cadastro de Escola
+      </h1>
+      <div
+        class="bg-[#CFAFFF] rounded-[62px] px-10 py-12 w-96 md:w-[500px] flex flex-col items-center m-auto"
+      >
+        <form
+          class="w-full flex flex-col h-full"
+          th:action="@{/register/escola/save}"
+          th:object="${escola}"
+          method="post"
+        >
+          <div class="flex flex-col gap-5 mb-16">
+            <div>
+              <input
+                type="text"
+                th:field="*{nomeEscola}"
+                placeholder="Nome da Escola"
+                class="w-full px-4 py-3 rounded-full focus:outline-none bg-white border-2 border-[#C7C3C3]"
+              />
+            </div>
+            <div>
+              <input
+                type="email"
+                th:field="*{email}"
+                placeholder="Email da Escola"
+                class="w-full px-4 py-3 rounded-full focus:outline-none bg-white border-2 border-[#C7C3C3]"
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                th:field="*{senha}"
+                placeholder="Senha"
+                class="w-full px-4 py-3 rounded-full focus:outline-none bg-white border-2 border-[#C7C3C3]"
+              />
+            </div>
+          </div>
+          <div class="mt-auto flex justify-center">
+            <button
+              type="submit"
+              class="px-12 py-3 bg-[#432671] hover:bg-purple-800 text-white font-medium rounded-full transition-colors jersey-10-regular text-3xl border-white border-2"
+            >
+              Cadastrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
