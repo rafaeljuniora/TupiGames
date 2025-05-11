@@ -15,10 +15,16 @@ public class LoginController {
         return "LoginPages/SchoolLogin";
     }
 
+    @GetMapping("/aluno")
+    public String loginStudent(){
+        return "LoginPages/StudentLogin";
+    }
+
     @PostMapping("/escola/auth")
     public String handleLogin(@RequestParam String email,
                               @RequestParam String senha,
                               Model model) {
         return "redirect:/home";
     }
+
 }
