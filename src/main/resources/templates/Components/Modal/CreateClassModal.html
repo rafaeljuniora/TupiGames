@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <style th:fragment="class-modal-style">
+      .class-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .class-hidden {
+        display: none;
+      }
+
+      .class-modal-content {
+        max-height: 80vh;
+        overflow-y: auto;
+        background-color: #f1f1f1;
+        width: 90%;
+        max-width: 28rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .class-dropdown {
+        border: 1px solid #e5e7eb;
+        border-radius: 45px;
+        background-color: white;
+        margin-bottom: 1rem;
+        overflow: hidden;
+      }
+
+      .class-dropdown-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        cursor: pointer;
+      }
+
+      .class-dropdown-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        padding: 0 1rem;
+      }
+
+      .class-dropdown-open .class-dropdown-content {
+        max-height: 300px;
+        overflow-y: auto;
+        padding-bottom: 1rem;
+        transition: max-height 0.5s ease-in;
+      }
+
+      .class-dropdown-arrow {
+        transition: transform 0.3s ease;
+      }
+
+      .class-dropdown-open .class-dropdown-arrow {
+        transform: rotate(180deg);
+      }
+
+      .class-list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f3f4f6;
+      }
+
+      .class-add-btn {
+        color: #10b981;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .class-remove-btn {
+        color: #ef4444;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .class-selected {
+        background-color: #eff6ff;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      th:fragment="class-modal"
+      id="classModal"
+      class="class-modal-overlay class-hidden"
+    >
+      <div class="class-modal-content rounded-b-[45px] rounded-tl-[45px]">
+        <div class="flex justify-end">
+          <button
+            class="text-3xl font-bold p-2 cursor-pointer"
+            id="classCloseModalBtn"
+          >
+            &times;
+          </button>
+        </div>
+
+        <form class="space-y-4">
+          <div>
+            <input
+              type="text"
+              placeholder="Turma"
+              class="w-full p-4 bg-white rounded-full border border-gray-200 focus:outline-none"
+              required
+            />
+          </div>
+
+          <div>
+            <select
+              class="w-full p-4 bg-white rounded-full border border-gray-200 focus:outline-none appearance-none"
+              required
+            >
+              <option value="" disabled selected>Selecione o período</option>
+              <option value="MANHA">Manhã</option>
+              <option value="TARDE">Tarde</option>
+              <option value="NOITE">Noite</option>
+            </select>
+          </div>
+
+          <div>
+            <input
+              type="number"
+              placeholder="Quantidade de Alunos"
+              class="w-full p-4 bg-white rounded-full border border-gray-200 focus:outline-none"
+              required
+            />
+          </div>
+
+          <div class="class-dropdown">
+            <div
+              class="class-dropdown-toggle"
+              id="classProfessorDropdownToggle"
+            >
+              <span class="text-gray-400">Professores Responsáveis</span>
+              <svg
+                class="w-6 h-6 class-dropdown-arrow"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </div>
+            <div class="class-dropdown-content">
+              <div class="class-list-item">
+                <span class="p-1">Professor X</span>
+                <button type="button" class="class-add-btn">+</button>
+              </div>
+              <div class="class-list-item">
+                <span class="p-1">Professor X</span>
+                <button type="button" class="class-add-btn">+</button>
+              </div>
+              <div class="class-list-item class-selected">
+                <span class="p-1">Professor X</span>
+                <button type="button" class="class-remove-btn">−</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="class-dropdown">
+            <div class="class-dropdown-toggle" id="classAlunoDropdownToggle">
+              <span class="text-gray-400">Alunos Registrados</span>
+              <svg
+                class="w-6 h-6 class-dropdown-arrow"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </div>
+            <div class="class-dropdown-content">
+              <div class="class-list-item">
+                <span class="p-1">Aluno Y</span>
+                <button type="button" class="class-add-btn">+</button>
+              </div>
+              <div class="class-list-item class-selected">
+                <span class="p-1">Aluno Y</span>
+                <button type="button" class="class-remove-btn">−</button>
+              </div>
+              <div class="class-list-item">
+                <span class="p-1">Aluno Y</span>
+                <button type="button" class="class-add-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-center mt-6">
+            <button
+              type="submit"
+              class="bg-[#FFE889] text-black font-medium px-10 py-3 rounded-full hover:bg-yellow-300"
+            >
+              Adicionar Turma
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script th:fragment="class-modal-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const classModal = document.getElementById("classModal");
+        const classCloseBtn = document.getElementById("classCloseModalBtn");
+        const professorToggle = document.getElementById(
+          "classProfessorDropdownToggle"
+        );
+        const alunoToggle = document.getElementById("classAlunoDropdownToggle");
+
+        if (classCloseBtn) {
+          classCloseBtn.addEventListener("click", () =>
+            classModal.classList.add("class-hidden")
+          );
+          classModal.addEventListener("click", (e) => {
+            if (e.target === classModal)
+              classModal.classList.add("class-hidden");
+          });
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") classModal.classList.add("class-hidden");
+          });
+        }
+
+        function setupDropdown(toggleId) {
+          const toggle = document.getElementById(toggleId);
+          if (toggle) {
+            toggle.addEventListener("click", function () {
+              const dropdown = this.closest(".class-dropdown");
+              dropdown.classList.toggle("class-dropdown-open");
+            });
+          }
+        }
+
+        setupDropdown("classProfessorDropdownToggle");
+        setupDropdown("classAlunoDropdownToggle");
+
+        function toggleButtonState(button) {
+          const isAdd = button.classList.contains("class-add-btn");
+
+          if (isAdd) {
+            button.textContent = "−";
+            button.classList.remove("class-add-btn");
+            button.classList.add("class-remove-btn");
+            button.closest(".class-list-item").classList.add("class-selected");
+          } else {
+            button.textContent = "+";
+            button.classList.remove("class-remove-btn");
+            button.classList.add("class-add-btn");
+            button
+              .closest(".class-list-item")
+              .classList.remove("class-selected");
+          }
+        }
+
+        document
+          .querySelectorAll(".class-dropdown-content")
+          .forEach((dropdown) => {
+            dropdown.addEventListener("click", function (e) {
+              if (
+                e.target.classList.contains("class-add-btn") ||
+                e.target.classList.contains("class-remove-btn")
+              ) {
+                e.preventDefault();
+                toggleButtonState(e.target);
+              }
+            });
+          });
+      });
+    </script>
+  </body>
+</html>
