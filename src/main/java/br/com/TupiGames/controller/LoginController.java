@@ -20,6 +20,11 @@ public class LoginController {
         return "LoginPages/StudentLogin";
     }
 
+    @GetMapping("/professor")
+    public String loginTeacher(){
+        return "LoginPages/TeacherLogin";
+    }
+
     @PostMapping("/escola/auth")
     public String handleLogin(@RequestParam String email,
                               @RequestParam String senha,
