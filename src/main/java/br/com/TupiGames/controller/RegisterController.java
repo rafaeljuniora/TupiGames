@@ -39,7 +39,7 @@ public class RegisterController {
     public String completeRegister(@ModelAttribute("escola") EscolaDTO escolaDTO) {
         Escola escola = escolaDTO.toEscola();
         schoolService.registerSchool(escola);
-        return "redirect:/index";
+        return "redirect:/";
     }
 
     @PostMapping("/aluno/save")

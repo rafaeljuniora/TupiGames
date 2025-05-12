@@ -163,6 +163,7 @@
           </svg>
         </div>
         <span
+          id="escolaEmailDisplay"
           class="ml-4 text-xl text-white"
           th:text="${nomeEscola ?: 'Nome da Escola'}"
           >Nome da Escola</span
@@ -176,7 +177,7 @@
           >
             <a
               href="#"
-              th:href="@{/inicio}"
+              th:href="@{/escola/home}"
               class="block text-white text-lg hover:text-[#9f3fce] transition-colors font-semibold"
               >Inicio</a
             >
@@ -186,7 +187,7 @@
           >
             <a
               href="#"
-              th:href="@{/gerenciamento}"
+              th:href="@{/escola/management}"
               class="block text-white text-lg hover:text-[#9f3fce] transition-colors font-semibold"
               >Gerenciamento</a
             >
@@ -217,7 +218,7 @@
       <div class="absolute bottom-8 px-6 w-full">
         <a
           href="#"
-          th:href="@{/logout}"
+          th:href="@{/}"
           class="flex items-center justify-center rounded-[20px] text-[#ff4f4f] hover:text-white transition-colors hover:bg-[#ff4f4f] p-2"
         >
           <svg
@@ -246,6 +247,20 @@
         sidebar.classList.toggle("translate-x-0");
         sidebar.classList.toggle("-translate-x-full");
       }
+      document.addEventListener('DOMContentLoaded', function() {
+      const usuarioSalvo = sessionStorage.getItem('usuario');
+      if (usuarioSalvo) {
+        try {
+          const usuario = JSON.parse(usuarioSalvo);
+          const emailDisplay = document.getElementById('escolaEmailDisplay');
+          if (emailDisplay && usuario.email) {
+            emailDisplay.textContent = usuario.email;
+          }
+        } catch (e) {
+          console.error('Erro ao analisar dados do usuário:', e);
+        }
+      }
+    });
     </script>
   </body>
 </html>
