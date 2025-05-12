@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <style th:fragment="student-modal-style">
-      .student-modal-overlay {
+    <style th:fragment="teacher-modal-style">
+      .teacher-modal-overlay {
         position: fixed;
         top: 0;
         left: 0;
@@ -15,16 +15,16 @@
         z-index: 1000;
       }
 
-      .student-hidden {
+      .teacher-hidden {
         display: none;
       }
     </style>
   </head>
   <body>
     <div
-      th:fragment="student-modal"
-      id="studentModal"
-      class="student-modal-overlay student-hidden"
+      th:fragment="teacher-modal"
+      id="teacherModal"
+      class="teacher-modal-overlay teacher-hidden"
     >
       <div
         class="bg-[#F1F1F1] rounded-b-[45px] rounded-tl-[45px] w-11/12 max-w-md p-6 shadow-lg"
@@ -32,7 +32,7 @@
         <div class="flex justify-end items-center mb-6">
           <button
             class="text-2xl font-bold p-2 cursor-pointer"
-            id="studentCloseModalBtn"
+            id="teacherCloseModalBtn"
           >
             &times;
           </button>
@@ -59,7 +59,23 @@
             <div>
               <input
                 type="text"
-                placeholder="Data de Nascimento (Senha)"
+                placeholder="Data de Nascimento"
+                class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
+              />
+            </div>
+
+            <div>
+              <input
+                type="text"
+                placeholder="Email Institucional"
+                class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
+              />
+            </div>
+
+            <div>
+              <input
+                type="password"
+                placeholder="Senha"
                 class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
               />
             </div>
@@ -77,28 +93,28 @@
       </div>
     </div>
 
-    <script th:fragment="student-modal-script">
+    <script th:fragment="teacher-modal-script">
       document.addEventListener("DOMContentLoaded", function () {
-        const studentModal = document.getElementById("studentModal");
-        const studentCloseBtn = document.getElementById("studentCloseModalBtn");
+        const teacherModal = document.getElementById("teacherModal");
+        const teacherCloseBtn = document.getElementById("teacherCloseModalBtn");
 
-        if (studentModal && studentCloseBtn) {
-          studentCloseBtn.addEventListener("click", function () {
-            studentModal.classList.add("student-hidden");
+        if (teacherModal && teacherCloseBtn) {
+          teacherCloseBtn.addEventListener("click", function () {
+            teacherModal.classList.add("teacher-hidden");
           });
 
-          studentModal.addEventListener("click", function (e) {
-            if (e.target === studentModal) {
-              studentModal.classList.add("student-hidden");
+          teacherModal.addEventListener("click", function (e) {
+            if (e.target === teacherModal) {
+              teacherModal.classList.add("teacher-hidden");
             }
           });
 
           document.addEventListener("keydown", function (e) {
             if (
               e.key === "Escape" &&
-              !studentModal.classList.contains("student-hidden")
+              !teacherModal.classList.contains("teacher-hidden")
             ) {
-              studentModal.classList.add("student-hidden");
+              teacherModal.classList.add("teacher-hidden");
             }
           });
         }
