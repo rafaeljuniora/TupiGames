@@ -14,6 +14,10 @@ public class LoginController {
     public String loginSchool(){
         return "LoginPages/SchoolLogin";
     }
+    @GetMapping("/teste")
+    public String loginSchoola(){
+        return "ConfigurationPages/StudentConfiguration";
+    }
 
     @PostMapping("/escola/auth")
     public String handleLogin(@RequestParam String email,
