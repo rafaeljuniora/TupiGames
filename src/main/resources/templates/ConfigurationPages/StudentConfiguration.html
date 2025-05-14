@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style th:replace="~{components/StudentHeader :: sidebar-style}"></style>
+    <script th:replace="~{components/StudentHeader :: sidebar-script}"></script>
     <style>
         .jersey-10 {
           font-family: "Jersey 10", sans-serif;
@@ -75,7 +76,6 @@
     </style>
 </head>
 <body class="bg-[#F5E5C7]">
-<!-- Header e Sidebar via fragmentos Thymeleaf -->
 <header th:replace="~{components/StudentHeader :: header('inicio')}"></header>
 <aside th:replace="~{components/StudentHeader :: sidebar('inicio')}"></aside>
 
@@ -110,7 +110,7 @@
                             name="senha"
                             th:value="${aluno?.senha}"
                             class="input-field pr-20"
-                            placeholder="********"
+                            placeholder=""
                             required
                     />
                     <div class="password-toggle">
@@ -142,7 +142,7 @@
 </main>
 
 <!-- Script do sidebar via fragmento Thymeleaf -->
-<script th:replace="~{components/StudentHeader :: sidebar-script}"></script>
+
 
 <!-- Script para o toggle de senha -->
 <script>
