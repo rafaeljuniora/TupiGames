@@ -45,12 +45,14 @@ public class RegisterController {
     @PostMapping("/aluno/save")
     public String studentRegister(
             @ModelAttribute("aluno") AlunoDTO alunoDTO,
-            @RequestParam String escolaEmail
+            @RequestParam String modStudEscolaEmail
     ) {
-        if(escolaEmail==null){
+        if(modStudEscolaEmail==null){
             return "redirect:/escola/management";
         }
+        Escola escola = schoolService.getSchoolByEmail(modStudEscolaEmail);
         Aluno aluno = alunoDTO.toAluno();
+        aluno.setEscola(escola);
         studentService.save(aluno);
         return "redirect:/escola/management";
     }
@@ -58,12 +60,14 @@ public class RegisterController {
     @PostMapping("/professor/save")
     public String teacherRegister(
             @ModelAttribute("professor") ProfessorDTO professorDTO,
-            @RequestParam String escolaEmail
+            @RequestParam String modTeacherEscolaEmail
     ) {
-        if(escolaEmail==null){
+        if(modTeacherEscolaEmail==null){
             return "redirect:/escola/management";
         }
+        Escola escola = schoolService.getSchoolByEmail(modTeacherEscolaEmail);
         Professor professor = professorDTO.toProfessor();
+        professor.setEscola(escola);
         teacherService.save(professor);
         return "redirect:/escola/management";
     }

@@ -69,7 +69,7 @@
                 class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
               />
             </div>
-            <input type="hidden" id="escolaEmail" name="escolaEmail">
+            <input type="hidden" id="modStudEscolaEmail" name="modStudEscolaEmail">
             <div class="flex justify-center mt-6">
               <button
                 type="submit"
@@ -91,7 +91,7 @@
         const usuarioSalvo = sessionStorage.getItem('usuario');
         if (usuarioSalvo) {
             const usuario = JSON.parse(usuarioSalvo);
-            document.getElementById('escolaEmail').value = usuario.email;
+            document.getElementById('modStudEscolaEmail').value = usuario.email;
         }
 
         if (studentModal && studentCloseBtn) {

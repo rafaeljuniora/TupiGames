@@ -88,7 +88,7 @@
               />
             </div>
 
-            <input type="hidden" id="escolaEmail" name="escolaEmail">
+            <input type="hidden" id="modTeacherEscolaEmail" name="modTeacherEscolaEmail">
 
             <div class="flex justify-center mt-6">
               <button
@@ -111,7 +111,7 @@
         const usuarioSalvo = sessionStorage.getItem('usuario');
         if (usuarioSalvo) {
             const usuario = JSON.parse(usuarioSalvo);
-            document.getElementById('escolaEmail').value = usuario.email;
+            document.getElementById('modTeacherEscolaEmail').value = usuario.email;
         }
 
         if (teacherModal && teacherCloseBtn) {
