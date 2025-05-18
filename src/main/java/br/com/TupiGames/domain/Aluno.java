@@ -1,52 +1,10 @@
 package br.com.TupiGames.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 @Entity
 public class Aluno {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
-
-    private String primeiroNome;
-    private String sobreNome;
-    private String senha;
-
-    public Aluno() {
-    }
-
-    public Aluno(String primeiroNome, String sobreNome, String senha) {
-        this.primeiroNome = primeiroNome;
-        this.sobreNome = sobreNome;
-        this.senha = senha;
-    }
-
-    public String getPrimeiroNome() {
-        return primeiroNome;
-    }
-
-    public void setPrimeiroNome(String primeiroNome) {
-        this.primeiroNome = primeiroNome;
-    }
-
-    public String getSobreNome() {
-        return sobreNome;
-    }
-
-    public void setSobreNome(String sobreNome) {
-        this.sobreNome = sobreNome;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
 }

@@ -8,18 +8,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/login")
-public class LoginController {
-    @GetMapping("/escola")
-    public String loginSchool(){
-        return "LoginPages/SchoolLogin";
-    }
+@RequestMapping("/configuration")
+public class ConfigurationController {
 
+    @GetMapping("/aluno")
+    public String loginSchoola() {
+        return "ConfigurationPages/StudentConfiguration";
+    }
 
     @PostMapping("/escola/auth")
     public String handleLogin(@RequestParam String email,
                               @RequestParam String senha,
                               Model model) {
+        // deu certo
         return "redirect:/home";
     }
 }
