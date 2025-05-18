@@ -6,6 +6,8 @@ import br.com.TupiGames.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StudentService {
     @Autowired
@@ -19,4 +21,9 @@ public class StudentService {
         return studentRepository.findByPrimeiroNomeAndSobreNome(primeiroNome,sobreNome)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
     }
+
+    public List<Aluno> getAllBySchool(Escola escola){
+        return studentRepository.findAllByescola(escola);
+    }
+
 }
