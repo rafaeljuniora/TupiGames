@@ -10,8 +10,7 @@ public class Aluno {
     @Column(columnDefinition = "serial")
     private Long aluno_id;
 
-    private String primeiroNome;
-    private String sobreNome;
+    private String nomeAluno;
     private String senha;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -21,26 +20,17 @@ public class Aluno {
     public Aluno() {
     }
 
-    public Aluno(String primeiroNome, String sobreNome, String senha) {
-        this.primeiroNome = primeiroNome;
-        this.sobreNome = sobreNome;
+    public Aluno(String nomeAluno, String senha) {
+        this.nomeAluno=nomeAluno;
         this.senha = senha;
     }
 
-    public String getPrimeiroNome() {
-        return primeiroNome;
+    public String getNomeAluno() {
+        return nomeAluno;
     }
 
-    public void setPrimeiroNome(String primeiroNome) {
-        this.primeiroNome = primeiroNome;
-    }
-
-    public String getSobreNome() {
-        return sobreNome;
-    }
-
-    public void setSobreNome(String sobreNome) {
-        this.sobreNome = sobreNome;
+    public void setNomeAluno(String nomeAluno) {
+        this.nomeAluno = nomeAluno;
     }
 
     public String getSenha() {

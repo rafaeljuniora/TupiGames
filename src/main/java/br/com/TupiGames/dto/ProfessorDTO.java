@@ -4,16 +4,14 @@ import br.com.TupiGames.domain.Escola;
 import br.com.TupiGames.domain.Professor;
 
 public class ProfessorDTO {
-    private String primeiroNome;
-    private String sobreNome;
+    private String nomeProfessor;
     // Todo - Modificar para DATE ou Epoch
     private String dataNascimento;
     private String email;
     private String senha;
 
-    public ProfessorDTO(String primeiroNome, String sobreNome, String dataNascimento, String email, String senha) {
-        this.primeiroNome = primeiroNome;
-        this.sobreNome = sobreNome;
+    public ProfessorDTO(String nomeProfessor, String dataNascimento, String email, String senha) {
+        this.nomeProfessor = nomeProfessor;
         this.dataNascimento = dataNascimento;
         this.email = email;
         this.senha = senha;
@@ -22,20 +20,12 @@ public class ProfessorDTO {
     public ProfessorDTO() {
     }
 
-    public String getPrimeiroNome() {
-        return primeiroNome;
+    public String getNomeProfessor() {
+        return nomeProfessor;
     }
 
-    public void setPrimeiroNome(String primeiroNome) {
-        this.primeiroNome = primeiroNome;
-    }
-
-    public String getSobreNome() {
-        return sobreNome;
-    }
-
-    public void setSobreNome(String sobreNome) {
-        this.sobreNome = sobreNome;
+    public void setNomeProfessor(String nomeProfessor) {
+        this.nomeProfessor = nomeProfessor;
     }
 
     public String getDataNascimento() {
@@ -63,6 +53,6 @@ public class ProfessorDTO {
     }
 
     public Professor toProfessor() {
-        return new Professor(this.primeiroNome, this.sobreNome, this.dataNascimento, this.email, this.senha);
+        return new Professor(this.nomeProfessor, this.dataNascimento, this.email, this.senha);
     }
 }

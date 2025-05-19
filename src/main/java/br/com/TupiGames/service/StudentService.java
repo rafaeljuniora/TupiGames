@@ -17,8 +17,8 @@ public class StudentService {
         return studentRepository.save(aluno);
     }
 
-    public Aluno getStudentByName(String primeiroNome,String sobreNome) {
-        return studentRepository.findByPrimeiroNomeAndSobreNome(primeiroNome,sobreNome)
+    public Aluno getStudentByName(String nomeAluno) {
+        return studentRepository.findBynomeAluno(nomeAluno)
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
     }
 
