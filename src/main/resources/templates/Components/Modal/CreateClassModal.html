@@ -108,9 +108,15 @@
           </button>
         </div>
 
-        <form class="space-y-4">
+        <form id="classForm" class="space-y-4"
+          th:action="@{/register/turma/save}"
+          th:object="${turma}"
+          method="post"
+        >
           <div>
             <input
+              id="classNameInput"
+              th:field="*{nomeTurma}"
               type="text"
               placeholder="Turma"
               class="w-full p-4 bg-white rounded-full border border-gray-200 focus:outline-none"
@@ -120,6 +126,8 @@
 
           <div>
             <select
+              id="classPeriodSelect"
+              th:field="*{periodo}"
               class="w-full p-4 bg-white rounded-full border border-gray-200 focus:outline-none appearance-none"
               required
             >
@@ -132,6 +140,8 @@
 
           <div>
             <input
+              id="classStudentCount"
+              th:field="*{qntAlunos}"
               type="number"
               placeholder="Quantidade de Alunos"
               class="w-full p-4 bg-white rounded-full border border-gray-200 focus:outline-none"
@@ -159,20 +169,7 @@
                 ></path>
               </svg>
             </div>
-            <div class="class-dropdown-content">
-              <div class="class-list-item">
-                <span class="p-1">Professor X</span>
-                <button type="button" class="class-add-btn">+</button>
-              </div>
-              <div class="class-list-item">
-                <span class="p-1">Professor X</span>
-                <button type="button" class="class-add-btn">+</button>
-              </div>
-              <div class="class-list-item class-selected">
-                <span class="p-1">Professor X</span>
-                <button type="button" class="class-remove-btn">−</button>
-              </div>
-            </div>
+            <div class="class-dropdown-content" id="professoresContainer" th:field="*{alunos}"></div>
           </div>
 
           <div class="class-dropdown">
@@ -192,20 +189,7 @@
                 ></path>
               </svg>
             </div>
-            <div class="class-dropdown-content">
-              <div class="class-list-item">
-                <span class="p-1">Aluno Y</span>
-                <button type="button" class="class-add-btn">+</button>
-              </div>
-              <div class="class-list-item class-selected">
-                <span class="p-1">Aluno Y</span>
-                <button type="button" class="class-remove-btn">−</button>
-              </div>
-              <div class="class-list-item">
-                <span class="p-1">Aluno Y</span>
-                <button type="button" class="class-add-btn">+</button>
-              </div>
-            </div>
+            <div class="class-dropdown-content" id="alunosContainer" th:field="*{professores}"></div>
           </div>
 
           <div class="flex justify-center mt-6">
@@ -224,68 +208,156 @@
       document.addEventListener("DOMContentLoaded", function () {
         const classModal = document.getElementById("classModal");
         const classCloseBtn = document.getElementById("classCloseModalBtn");
-        const professorToggle = document.getElementById(
-          "classProfessorDropdownToggle"
-        );
+        const professorToggle = document.getElementById("classProfessorDropdownToggle");
         const alunoToggle = document.getElementById("classAlunoDropdownToggle");
+        const professoresContainer = document.getElementById("professoresContainer");
+        const alunosContainer = document.getElementById("alunosContainer");
+        const classForm = document.getElementById("classForm");
+
+        setupDropdown("classProfessorDropdownToggle");
+        setupDropdown("classAlunoDropdownToggle");
 
         if (classCloseBtn) {
           classCloseBtn.addEventListener("click", () =>
             classModal.classList.add("class-hidden")
           );
           classModal.addEventListener("click", (e) => {
-            if (e.target === classModal)
-              classModal.classList.add("class-hidden");
+            if (e.target === classModal) classModal.classList.add("class-hidden");
           });
           document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") classModal.classList.add("class-hidden");
           });
         }
 
+        window.openClassModal = function() {
+          classModal.classList.remove("class-hidden");
+          loadProfessores();
+          loadAlunos();
+        };
+
         function setupDropdown(toggleId) {
           const toggle = document.getElementById(toggleId);
           if (toggle) {
-            toggle.addEventListener("click", function () {
+            toggle.addEventListener("click", function(e) {
+              e.stopPropagation();
               const dropdown = this.closest(".class-dropdown");
-              dropdown.classList.toggle("class-dropdown-open");
+              if (dropdown) {
+                dropdown.classList.toggle("class-dropdown-open");
+                
+                document.querySelectorAll(".class-dropdown").forEach((otherDropdown) => {
+                  if (otherDropdown !== dropdown && 
+                      otherDropdown.classList.contains("class-dropdown-open")) {
+                    otherDropdown.classList.remove("class-dropdown-open");
+                  }
+                });
+              }
             });
           }
         }
 
-        setupDropdown("classProfessorDropdownToggle");
-        setupDropdown("classAlunoDropdownToggle");
+        document.addEventListener("click", function(e) {
+          if (!e.target.closest(".class-dropdown")) {
+            document.querySelectorAll(".class-dropdown").forEach((dropdown) => {
+              dropdown.classList.remove("class-dropdown-open");
+            });
+          }
+        });
 
         function toggleButtonState(button) {
           const isAdd = button.classList.contains("class-add-btn");
+          button.textContent = isAdd ? "−" : "+";
+          button.classList.toggle("class-add-btn", !isAdd);
+          button.classList.toggle("class-remove-btn", isAdd);
+          button.closest(".class-list-item").classList.toggle("class-selected", isAdd);
+        }
 
-          if (isAdd) {
-            button.textContent = "−";
-            button.classList.remove("class-add-btn");
-            button.classList.add("class-remove-btn");
-            button.closest(".class-list-item").classList.add("class-selected");
-          } else {
-            button.textContent = "+";
-            button.classList.remove("class-remove-btn");
-            button.classList.add("class-add-btn");
-            button
-              .closest(".class-list-item")
-              .classList.remove("class-selected");
+        professoresContainer.addEventListener("click", function(e) {
+          if (e.target.classList.contains("class-add-btn") || 
+              e.target.classList.contains("class-remove-btn")) {
+            e.preventDefault();
+            toggleButtonState(e.target);
+          }
+        });
+
+        alunosContainer.addEventListener("click", function(e) {
+          if (e.target.classList.contains("class-add-btn") || 
+              e.target.classList.contains("class-remove-btn")) {
+            e.preventDefault();
+            toggleButtonState(e.target);
+          }
+        });
+
+        async function loadProfessores() {
+          try {
+            const usuarioSalvo = sessionStorage.getItem("usuario");
+            if (!usuarioSalvo) {
+              console.error("Usuário não encontrado no sessionStorage");
+              return;
+            }
+
+            const usuario = JSON.parse(usuarioSalvo);
+            const response = await axios.post(
+              "/api/v1/professor/getAllBySchool",
+              usuario.email,
+              { headers: { "Content-Type": "text/plain" } }
+            );
+
+            professoresContainer.innerHTML = "";
+
+            if (response.data?.length > 0) {
+              response.data.forEach((professor) => {
+                const professorItem = document.createElement("div");
+                professorItem.className = "class-list-item";
+                professorItem.innerHTML = `
+                  <span class="p-1">${professor.nomeProfessor}</span>
+                  <button type="button" class="class-add-btn" data-id="${professor.id}">+</button>
+                `;
+                professoresContainer.appendChild(professorItem);
+              });
+            } else {
+              professoresContainer.innerHTML = '<div class="p-2 text-gray-500">Nenhum professor encontrado</div>';
+            }
+          } catch (error) {
+            console.error("Erro ao carregar professores:", error);
+            professoresContainer.innerHTML = '<div class="p-2 text-red-500">Erro ao carregar professores</div>';
           }
         }
 
-        document
-          .querySelectorAll(".class-dropdown-content")
-          .forEach((dropdown) => {
-            dropdown.addEventListener("click", function (e) {
-              if (
-                e.target.classList.contains("class-add-btn") ||
-                e.target.classList.contains("class-remove-btn")
-              ) {
-                e.preventDefault();
-                toggleButtonState(e.target);
-              }
-            });
-          });
+        async function loadAlunos() {
+          try {
+            const usuarioSalvo = sessionStorage.getItem("usuario");
+            if (!usuarioSalvo) {
+              console.error("Usuário não encontrado no sessionStorage");
+              return;
+            }
+
+            const usuario = JSON.parse(usuarioSalvo);
+            const response = await axios.post(
+              "/api/v1/aluno/getAllBySchool",
+              usuario.email,
+              { headers: { "Content-Type": "text/plain" } }
+            );
+
+            alunosContainer.innerHTML = "";
+
+            if (response.data?.length > 0) {
+              response.data.forEach((aluno) => {
+                const alunoItem = document.createElement("div");
+                alunoItem.className = "class-list-item";
+                alunoItem.innerHTML = `
+                  <span class="p-1">${aluno.nomeAluno}</span>
+                  <button type="button" class="class-add-btn" data-id="${aluno.id}">+</button>
+                `;
+                alunosContainer.appendChild(alunoItem);
+              });
+            } else {
+              alunosContainer.innerHTML = '<div class="p-2 text-gray-500">Nenhum aluno encontrado</div>';
+            }
+          } catch (error) {
+            console.error("Erro ao carregar alunos:", error);
+            alunosContainer.innerHTML = '<div class="p-2 text-red-500">Erro ao carregar alunos</div>';
+          }
+        }
       });
     </script>
   </body>

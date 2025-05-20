@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "professor")
 public class Professor {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(columnDefinition = "serial")
     private Long professor_id;
 
@@ -19,6 +19,10 @@ public class Professor {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "escola_id", nullable = false)
     private Escola escola;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "turma_id", nullable = true)
+    private Turma turma;
 
     public Professor(String nomeProfessor, String dataNascimento, String email, String senha) {
         this.nomeProfessor = nomeProfessor;
@@ -72,5 +76,13 @@ public class Professor {
 
     public Long getId() {
         return professor_id;
+    }
+
+    public void setTurma(Turma turma) {
+        this.turma = turma;
+    }
+
+    public Turma getTurma(){
+        return turma;
     }
 }
