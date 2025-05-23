@@ -29,6 +29,7 @@ public class Escola {
     @OneToMany(mappedBy = "escola", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Aluno> alunos = new ArrayList<>();
 
+
     public Escola(String nomeEscola, String email, String senha) {
         this.nomeEscola = nomeEscola;
         this.email = email;
@@ -56,13 +57,6 @@ public class Escola {
 
     public String getSenha() {
         return senha;
-    }
-
-    public void addAluno(Aluno aluno) {
-        if (alunos == null) {
-            alunos = new ArrayList<>();
-        }
-        alunos.add(aluno);
     }
 
     public void setSenha(String senha) {

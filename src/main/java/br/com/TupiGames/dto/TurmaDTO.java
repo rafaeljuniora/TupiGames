@@ -10,8 +10,19 @@ public class TurmaDTO {
     private String nomeTurma;
     private String periodo;
     private Integer qntAlunos;
-    private List<Aluno> alunos;
-    private List<Professor> professores;
+    private List<Long> selectedProfessores;
+    private List<Long> selectedAlunos;
+
+    public TurmaDTO(String nomeTurma, String periodo, Integer qntAlunos, List<Long> selectedProfessores, List<Long> selectedAlunos) {
+        this.nomeTurma = nomeTurma;
+        this.periodo = periodo;
+        this.qntAlunos = qntAlunos;
+        this.selectedProfessores = selectedProfessores;
+        this.selectedAlunos = selectedAlunos;
+    }
+
+    public TurmaDTO() {
+    }
 
     public String getNomeTurma() {
         return nomeTurma;
@@ -39,5 +50,21 @@ public class TurmaDTO {
 
     public Turma toTurma() {
         return new Turma(this.nomeTurma,this.periodo,this.qntAlunos);
+    }
+
+    public List<Long> getSelectedProfessores() {
+        return selectedProfessores;
+    }
+
+    public void setSelectedProfessores(List<Long> selectedProfessores) {
+        this.selectedProfessores = selectedProfessores;
+    }
+
+    public List<Long> getSelectedAlunos() {
+        return selectedAlunos;
+    }
+
+    public void setSelectedAlunos(List<Long> selectedAlunos) {
+        this.selectedAlunos = selectedAlunos;
     }
 }

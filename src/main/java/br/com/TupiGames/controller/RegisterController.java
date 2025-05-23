@@ -8,16 +8,15 @@ import br.com.TupiGames.dto.AlunoDTO;
 import br.com.TupiGames.dto.EscolaDTO;
 import br.com.TupiGames.dto.ProfessorDTO;
 import br.com.TupiGames.dto.TurmaDTO;
+import br.com.TupiGames.service.ClassService;
 import br.com.TupiGames.service.SchoolService;
 import br.com.TupiGames.service.StudentService;
 import br.com.TupiGames.service.TeacherService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/register")
@@ -30,6 +29,9 @@ public class RegisterController {
 
     @Autowired
     TeacherService teacherService;
+
+    @Autowired
+    ClassService classService;
 
     @GetMapping("/escola")
     public String showRegistrationForm(Model model) {
@@ -75,6 +77,7 @@ public class RegisterController {
     }
 
     @PostMapping("/turma/save")
+    @Transactional
     public String classRegister(
             @ModelAttribute("turma") TurmaDTO turmaDTO,
             @RequestParam String modClassEscolaEmail
@@ -84,7 +87,26 @@ public class RegisterController {
         }
         Escola escola = schoolService.getSchoolByEmail(modClassEscolaEmail);
         Turma turma = turmaDTO.toTurma();
+        turma.setEscola(escola);
+        classService.turmaregister(turma);
 
+        if (turmaDTO.getSelectedProfessores() != null) {
+            for (Long professorId : turmaDTO.getSelectedProfessores()) {
+                Professor professor = teacherService.findById(professorId);
+                professor.adicionarTurma(turma);
+                turma.getProfessores().add(professor);
+                teacherService.save(professor);
+            }
+        }
+
+        if (turmaDTO.getSelectedAlunos() != null) {
+            for (Long alunoId : turmaDTO.getSelectedAlunos()) {
+                Aluno aluno = studentService.findById(alunoId);
+                aluno.adicionarTurma(turma);
+                turma.getAlunos().add(aluno);
+                studentService.save(aluno);
+            }
+        }
 
         return "redirect:/escola/management";
     }

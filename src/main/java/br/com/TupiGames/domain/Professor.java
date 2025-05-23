@@ -2,6 +2,11 @@ package br.com.TupiGames.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @Table(name = "professor")
 public class Professor {
@@ -20,9 +25,8 @@ public class Professor {
     @JoinColumn(name = "escola_id", nullable = false)
     private Escola escola;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "turma_id", nullable = true)
-    private Turma turma;
+    @ManyToMany(mappedBy = "professores")
+    private Set<Turma> turmas = new HashSet<>();
 
     public Professor(String nomeProfessor, String dataNascimento, String email, String senha) {
         this.nomeProfessor = nomeProfessor;
@@ -78,11 +82,12 @@ public class Professor {
         return professor_id;
     }
 
-    public void setTurma(Turma turma) {
-        this.turma = turma;
+    public void adicionarTurma(Turma turma) {
+        this.turmas.add(turma);
     }
 
-    public Turma getTurma(){
-        return turma;
+    public void removerTurma(Turma turma) {
+        this.turmas.remove(turma);
     }
+
 }

@@ -26,4 +26,9 @@ public class StudentService {
         return studentRepository.findAllByescola(escola);
     }
 
+    public Aluno findById(Long aluno_id){
+        return studentRepository.findById(aluno_id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+    }
+
 }

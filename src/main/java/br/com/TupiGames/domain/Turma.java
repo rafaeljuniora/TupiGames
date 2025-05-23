@@ -2,8 +2,8 @@ package br.com.TupiGames.domain;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -16,20 +16,33 @@ public class Turma {
     private String periodo;
     private Integer qntAlunos;
 
-    @OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Professor> professores = new ArrayList<>();
-
-    @OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Aluno> alunos = new ArrayList<>();
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "escola_id", nullable = false)
     private Escola escola;
+
+    @ManyToMany
+    @JoinTable(
+            name = "turma_professor",
+            joinColumns = @JoinColumn(name = "turma_id"),
+            inverseJoinColumns = @JoinColumn(name = "professor_id")
+    )
+    private Set<Professor> professores = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "turma_aluno",
+            joinColumns = @JoinColumn(name = "turma_id"),
+            inverseJoinColumns = @JoinColumn(name = "aluno_id")
+    )
+    private Set<Aluno> alunos = new HashSet<>();
 
     public Turma(String nomeTurma, String periodo, Integer qntAlunos) {
         this.nomeTurma = nomeTurma;
         this.periodo = periodo;
         this.qntAlunos = qntAlunos;
+    }
+
+    public Turma() {
     }
 
     public void setEscola(Escola escola) {
@@ -62,5 +75,21 @@ public class Turma {
 
     public void setQntAlunos(Integer qntAlunos) {
         this.qntAlunos = qntAlunos;
+    }
+
+    public Set<Professor> getProfessores() {
+        return professores;
+    }
+
+    public void setProfessores(Set<Professor> professores) {
+        this.professores = professores;
+    }
+
+    public Set<Aluno> getAlunos() {
+        return alunos;
+    }
+
+    public void setAlunos(Set<Aluno> alunos) {
+        this.alunos = alunos;
     }
 }
