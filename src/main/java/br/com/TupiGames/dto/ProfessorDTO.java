@@ -1,6 +1,5 @@
 package br.com.TupiGames.dto;
 
-import br.com.TupiGames.domain.Escola;
 import br.com.TupiGames.domain.Professor;
 
 public class ProfessorDTO {
