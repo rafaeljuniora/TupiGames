@@ -57,6 +57,39 @@
       body {
         background-attachment: fixed;
       }
+
+      .correct-answer-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #9f7aea;
+        border-radius: 4px;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        margin-right: 8px;
+      }
+
+      .correct-answer-checkbox:checked {
+        background-color: #6b46c1;
+        border-color: #6b46c1;
+      }
+
+      .correct-answer-checkbox:checked::after {
+        content: "✓";
+        position: absolute;
+        color: white;
+        font-size: 14px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .option-header {
+        display: flex;
+        align-items: center;
+      }
     </style>
     <style
       th:replace="~{components/TeacherHeaderDark :: sidebar-style}"
@@ -262,7 +295,10 @@
           <div class="grid grid-cols-4 gap-4 mb-6" id="options-grid-${questionCount}">
             <div class="option-card option-card-1 rounded-2xl p-4 relative min-h-48 overflow-hidden">
               <div class="flex justify-between items-start mb-2">
-                <span class="text-white text-sm">Opção 1</span>
+                <div class="option-header">
+                  <input type="checkbox" class="correct-answer-checkbox" name="correct-answer-${questionCount}" onchange="updateCorrectAnswer(this, ${questionCount}, 0)">
+                  <span class="text-white text-sm">Opção 1</span>
+                </div>
                 <div class="flex space-x-2">
                   <select class="option-type-select text-xs bg-white bg-opacity-20 text-white rounded px-2 py-1 focus:outline-none" onchange="updateOptionType(${questionCount}, 0)">
                     <option value="texto" class="text-black">Texto</option>
@@ -290,7 +326,10 @@
             
             <div class="option-card option-card-2 rounded-2xl p-4 relative min-h-48 overflow-hidden">
               <div class="flex justify-between items-start mb-2">
-                <span class="text-white text-sm">Opção 2</span>
+                <div class="option-header">
+                  <input type="checkbox" class="correct-answer-checkbox" name="correct-answer-${questionCount}" onchange="updateCorrectAnswer(this, ${questionCount}, 1)">
+                  <span class="text-white text-sm">Opção 2</span>
+                </div>
                 <div class="flex space-x-2">
                   <select class="option-type-select text-xs bg-white bg-opacity-20 text-white rounded px-2 py-1 focus:outline-none" onchange="updateOptionType(${questionCount}, 1)">
                     <option value="texto" class="text-black">Texto</option>
@@ -325,6 +364,23 @@
         `;
 
         container.appendChild(questionDiv);
+      }
+
+      function updateCorrectAnswer(checkbox, questionId, optionIndex) {
+        if (checkbox.checked) {
+          const questionElement = document.getElementById(
+            `question-${questionId}`
+          );
+          const checkboxes = questionElement.querySelectorAll(
+            `input[name="correct-answer-${questionId}"]`
+          );
+
+          checkboxes.forEach((cb) => {
+            if (cb !== checkbox) {
+              cb.checked = false;
+            }
+          });
+        }
       }
 
       function removeQuestion(questionId) {
@@ -408,9 +464,12 @@
           } rounded-2xl p-4 relative min-h-48 overflow-hidden`;
           newOption.innerHTML = `
             <div class="flex justify-between items-start mb-2">
-              <span class="text-white text-sm">Opção ${
-                currentOptions + 1
-              }</span>
+              <div class="option-header">
+                <input type="checkbox" class="correct-answer-checkbox" name="correct-answer-${questionId}" onchange="updateCorrectAnswer(this, ${questionId}, ${currentOptions})">
+                <span class="text-white text-sm">Opção ${
+                  currentOptions + 1
+                }</span>
+              </div>
               <div class="flex space-x-2">
                 <select class="option-type-select text-xs bg-white bg-opacity-20 text-white rounded px-2 py-1 focus:outline-none" onchange="updateOptionType(${questionId}, ${currentOptions})">
                   <option value="texto" class="text-black">Texto</option>
