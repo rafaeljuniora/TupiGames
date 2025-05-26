@@ -1,7 +1,6 @@
 package br.com.TupiGames.domain;
 
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -13,15 +12,63 @@ public class Atividade {
 
     private String nomeAtividade;
     private Double atividadeCode;
+    private Boolean global;
+
+    @OneToMany(mappedBy = "atividade", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pergunta> perguntas;
+
+    @ManyToMany
+    @JoinTable(
+            name = "atividade_turma",
+            joinColumns = @JoinColumn(name = "atividade_id"),
+            inverseJoinColumns = @JoinColumn(name = "turma_id")
+    )
     private List<Turma> turmas;
 
-    public Atividade() {
-    }
-
-    public Atividade(String nomeAtividade, Double atividadeCode, List<Pergunta> perguntas) {
+    public Atividade(String nomeAtividade, Double atividadeCode, List<Pergunta> perguntas, Boolean global) {
         this.nomeAtividade = nomeAtividade;
         this.atividadeCode = atividadeCode;
         this.perguntas = perguntas;
+        this.global = global;
+    }
+
+    public String getNomeAtividade() {
+        return nomeAtividade;
+    }
+
+    public void setNomeAtividade(String nomeAtividade) {
+        this.nomeAtividade = nomeAtividade;
+    }
+
+    public Double getAtividadeCode() {
+        return atividadeCode;
+    }
+
+    public void setAtividadeCode(Double atividadeCode) {
+        this.atividadeCode = atividadeCode;
+    }
+
+    public Boolean getGlobal() {
+        return global;
+    }
+
+    public void setGlobal(Boolean global) {
+        this.global = global;
+    }
+
+    public List<Pergunta> getPerguntas() {
+        return perguntas;
+    }
+
+    public void setPerguntas(List<Pergunta> perguntas) {
+        this.perguntas = perguntas;
+    }
+
+    public List<Turma> getTurmas() {
+        return turmas;
+    }
+
+    public void setTurmas(List<Turma> turmas) {
+        this.turmas = turmas;
     }
 }

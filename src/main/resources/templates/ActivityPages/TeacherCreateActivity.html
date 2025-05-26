@@ -709,7 +709,115 @@
         }
       }
 
-      document.addEventListener("DOMContentLoaded", function () {});
+      async function carregarTurmas() {
+        try {
+          const usuarioSalvo = sessionStorage.getItem("usuario");
+          if (!usuarioSalvo) {
+            console.error("Usuário não encontrado na sessionStorage");
+            return;
+          }
+
+          const usuario = JSON.parse(usuarioSalvo);
+          const response = await fetch(
+            "/api/v1/professor/getTurmasByProfessor",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: usuario.email,
+            }
+          );
+            
+          if (!response.ok) {
+            throw new Error("Erro ao carregar turmas");
+          }
+
+          const turmas = await response.json();
+          preencherSelectTurmas(turmas);
+          console.log(turmas);
+        } catch (error) {
+          console.error("Erro ao carregar turmas:", error);
+        }
+      }
+
+      function preencherSelectTurmas(turmasDTO) {
+        const select = document.getElementById("turmaSelect");
+        select.innerHTML = '<option value="">Selecione uma Turma</option>';
+
+        turmasDTO.forEach((turma) => {
+          const option = document.createElement("option");
+          option.value = turma.id;
+          option.textContent = turma.nomeTurma;
+          select.appendChild(option);
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        carregarTurmas();
+      });
+
+      document
+        .getElementById("criarBtn")
+        .addEventListener("click", function () {
+          const atividadeDTO = {
+            nomeAtividade: document.getElementById("nomeAtividade").value,
+            global: false,
+            perguntas: [],
+          };
+
+          document
+            .querySelectorAll('[id^="question-"]')
+            .forEach((questionElement) => {
+              const tipo = questionElement.querySelector("select").value;
+              const pergunta = {
+                questionario: {
+                  imagem: tipo === "imagem",
+                  enunciado: tipo === "texto",
+                  imagem_enunciado: tipo === "imagem-texto",
+                  valor: questionElement.querySelector("textarea").value,
+                },
+                alternativas: [],
+              };
+
+              questionElement
+                .querySelectorAll(".option-card")
+                .forEach((optionElement) => {
+                  const alternativa = {
+                    imagem:
+                      optionElement.querySelector(".option-type-select")
+                        .value === "imagem",
+                    enunciado:
+                      optionElement.querySelector(".option-type-select")
+                        .value === "texto",
+                    valor: optionElement.querySelector("textarea")?.value || "",
+                    acerto: optionElement.querySelector(
+                      ".correct-answer-checkbox"
+                    ).checked,
+                  };
+                  pergunta.alternativas.push(alternativa);
+                });
+
+              atividadeDTO.perguntas.push(pergunta);
+            });
+
+          fetch("/api/v1/atividade", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(atividadeDTO),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Success:", data);
+              alert("Atividade criada com sucesso!");
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Erro ao criar atividade");
+            });
+        });
     </script>
   </body>
 </html>

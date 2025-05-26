@@ -20,7 +20,7 @@ public class ActivityRestController {
     @PostMapping("/register")
     public ResponseEntity<Atividade> createActivity(@RequestParam AtividadeDTO atividadeDTO){
         Atividade atividade = atividadeDTO.toAtividade();
-        Atividade atividadeSaved = activityService.atividadeSave(atividade);
+        Atividade atividadeSaved = activityService.salvar(atividade);
         return ResponseEntity.status(HttpStatus.CREATED).body(atividadeSaved);
     }
 }
