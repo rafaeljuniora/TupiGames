@@ -28,6 +28,12 @@
             transition: border-color 0.2s;
         }
 
+        .input-field:disabled {
+            background-color: #F7FAFC;
+            color: #A0AEC0;
+            cursor: not-allowed;
+        }
+
         .input-field:focus {
             outline: none;
             border-color: #FFCD03;
@@ -79,14 +85,14 @@
 <header th:replace="~{components/StudentHeader :: header('inicio')}"></header>
 <aside th:replace="~{components/StudentHeader :: sidebar('inicio')}"></aside>
 
-<!-- Main Content -->
+
 <main class="pt-24 px-6 pb-16 max-w-4xl mx-auto">
     <h2 class="text-4xl text-center jersey-10 bg-gradient-to-r from-[#C26A45] to-[#A0522D] text-transparent bg-clip-text mb-8">
         Configuração do Aluno
     </h2>
 
     <div class="bg-white rounded-[50px] shadow-md p-8">
-        <!-- Adicionado ID ao formulário e removendo action para usar JavaScript -->
+
         <form id="configForm">
             <div class="mb-6">
                 <label for="nome" class="form-label">Nome:</label>
@@ -97,7 +103,8 @@
                         th:value="${aluno?.nome}"
                         class="input-field"
                         placeholder="Digite seu nome completo"
-                        required
+                        readonly
+                        disabled
                 />
             </div>
 
@@ -111,6 +118,8 @@
                             th:value="${aluno?.senha}"
                             class="input-field pr-20"
                             placeholder=""
+                            readonly
+                            disabled
                             required
                     />
                     <div class="password-toggle">
@@ -120,7 +129,7 @@
                                 <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
                             </svg>
                         </button>
-                        <button type="button" class="edit-icon text-gray-500 hover:text-gray-700">
+                        <button type="button" class="edit-icon text-gray-500 hover:text-gray-700" id="editPasswordButton">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                             </svg>
@@ -129,7 +138,6 @@
                 </div>
             </div>
 
-            <!-- Adicionada área para mensagens de erro/sucesso -->
             <div id="statusMessage" class="text-center font-bold mb-4 hidden"></div>
 
             <div class="flex justify-end mt-8">
@@ -141,21 +149,35 @@
     </div>
 </main>
 
-<!-- Script do sidebar via fragmento Thymeleaf -->
 
-
-<!-- Script para o toggle de senha -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const togglePassword = document.getElementById('togglePassword');
         const passwordField = document.getElementById('senha');
+        const editPasswordButton = document.getElementById('editPasswordButton');
+
+        if (editPasswordButton && passwordField) {
+            editPasswordButton.addEventListener('click', function() {
+                if (passwordField.disabled) {
+                    passwordField.disabled = false;
+                    passwordField.readOnly = false;
+                    passwordField.focus();
+                } else {
+                    passwordField.disabled = true;
+                    passwordField.readOnly = true;
+                }
+            });
+        }
 
         if (togglePassword && passwordField) {
             togglePassword.addEventListener('click', function() {
+                if (passwordField.disabled) {
+                    return;
+                }
+
                 const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
                 passwordField.setAttribute('type', type);
 
-                // Change the eye icon
                 if (type === 'text') {
                     this.innerHTML = `
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -174,47 +196,45 @@
             });
         }
 
-        // Adicionado o script para processamento do formulário
         const configForm = document.getElementById('configForm');
         if (configForm) {
             configForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
 
-                const nome = document.getElementById('nome').value;
-                const senha = document.getElementById('senha').value;
+                const passwordField = document.getElementById('senha');
+                if (passwordField.disabled) {
+                    return;
+                }
+
+                const senha = passwordField.value;
                 const statusElement = document.getElementById('statusMessage');
                 const button = document.getElementById('submitButton');
 
-                // Desabilitar o botão e mostrar que está processando
                 button.disabled = true;
                 button.textContent = 'Salvando...';
 
-                // Esconder mensagens anteriores
                 statusElement.classList.add('hidden');
 
                 try {
-                    // Adapte a URL da API conforme necessário para o seu backend
                     const response = await axios.post('/api/v1/aluno/configuracoes', {
-                        nome: nome,
                         senha: senha
                     });
 
-                    // Mostrar mensagem de sucesso
                     statusElement.textContent = 'Configurações salvas com sucesso!';
                     statusElement.classList.remove('hidden');
                     statusElement.classList.add('text-green-600');
                     statusElement.classList.remove('text-red-600');
 
-                    // Restaurar o botão
                     button.disabled = false;
                     button.textContent = 'Salvar Alterações';
+
+                    passwordField.disabled = true;
+                    passwordField.readOnly = true;
 
                 } catch (error) {
-                    // Restaurar o botão
                     button.disabled = false;
                     button.textContent = 'Salvar Alterações';
 
-                    // Mostrar mensagem de erro
                     if (error.response) {
                         statusElement.textContent = error.response.data?.message || 'Erro ao salvar as configurações';
                     } else {

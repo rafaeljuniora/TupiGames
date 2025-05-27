@@ -16,11 +16,9 @@ public class ConfigurationController {
         return "ConfigurationPages/StudentConfiguration";
     }
 
-    @PostMapping("/escola/auth")
-    public String handleLogin(@RequestParam String email,
-                              @RequestParam String senha,
-                              Model model) {
-        // deu certo
-        return "redirect:/home";
+    @GetMapping("/professor")
+    public String loginProfessor() { return "ConfigurationPages/TeacherConfiguration";
     }
+
+
 }
