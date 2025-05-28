@@ -272,7 +272,7 @@
           tag.className =
             "turma-tag rounded-full px-4 py-2 flex items-center space-x-2";
           tag.innerHTML = `
-                <span class="text-white text-sm">${turma.nome}</span>
+                <span id="turmaSelecionada" class="text-white text-sm">${turma.nome}</span>
                 <button type="button" onclick="removeTurma(${index})" class="text-white hover:text-red-300">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
@@ -728,7 +728,7 @@
               body: usuario.email,
             }
           );
-            
+
           if (!response.ok) {
             throw new Error("Erro ao carregar turmas");
           }
@@ -764,18 +764,27 @@
             nomeAtividade: document.getElementById("nomeAtividade").value,
             global: false,
             perguntas: [],
+            nomeTurma: document.getElementById("turmaSelecionada").textContent
           };
-
+          console.log(atividadeDTO.turmasIds)
           document
             .querySelectorAll('[id^="question-"]')
             .forEach((questionElement) => {
-              const tipo = questionElement.querySelector("select").value;
+              const selectElement = questionElement.querySelector("select");
+              if (!selectElement) {
+                console.error("Select não encontrado em:", questionElement.id);
+                return;
+              }
+
+              const tipo = selectElement.value;
+              const textarea = questionElement.querySelector("textarea");
+
               const pergunta = {
                 questionario: {
                   imagem: tipo === "imagem",
                   enunciado: tipo === "texto",
-                  imagem_enunciado: tipo === "imagem-texto",
-                  valor: questionElement.querySelector("textarea").value,
+                  imagemEnunciado: tipo === "imagem-texto",
+                  valor: textarea ? textarea.value : "",
                 },
                 alternativas: [],
               };
@@ -783,17 +792,28 @@
               questionElement
                 .querySelectorAll(".option-card")
                 .forEach((optionElement) => {
+                  const optionSelect = optionElement.querySelector(
+                    ".option-type-select"
+                  );
+                  const optionTextarea =
+                    optionElement.querySelector("textarea");
+                  const checkbox = optionElement.querySelector(
+                    ".correct-answer-checkbox"
+                  );
+
+                  if (!optionSelect || !checkbox) {
+                    console.error(
+                      "Elementos da opção não encontrados em:",
+                      optionElement
+                    );
+                    return;
+                  }
+
                   const alternativa = {
-                    imagem:
-                      optionElement.querySelector(".option-type-select")
-                        .value === "imagem",
-                    enunciado:
-                      optionElement.querySelector(".option-type-select")
-                        .value === "texto",
-                    valor: optionElement.querySelector("textarea")?.value || "",
-                    acerto: optionElement.querySelector(
-                      ".correct-answer-checkbox"
-                    ).checked,
+                    imagem: optionSelect.value === "imagem",
+                    enunciado: optionSelect.value === "texto",
+                    valor: optionTextarea?.value || "",
+                    acerto: checkbox.checked,
                   };
                   pergunta.alternativas.push(alternativa);
                 });
@@ -801,7 +821,7 @@
               atividadeDTO.perguntas.push(pergunta);
             });
 
-          fetch("/api/v1/atividade", {
+          fetch("/api/v1/atividade/save", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

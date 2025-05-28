@@ -11,14 +11,15 @@ public class Questionario {
     private Boolean imagemEnunciado;
     private String valor;
 
-    // Construtores, getters e setters
-
 
     public Questionario(Boolean imagem, Boolean enunciado, Boolean imagemEnunciado, String valor) {
         this.imagem = imagem;
         this.enunciado = enunciado;
         this.imagemEnunciado = imagemEnunciado;
         this.valor = valor;
+    }
+
+    public Questionario() {
     }
 
     public Boolean getImagem() {

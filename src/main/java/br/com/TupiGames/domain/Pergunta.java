@@ -20,8 +20,14 @@ public class Pergunta {
     @JoinColumn(name = "atividade_id")
     private Atividade atividade;
 
-    // Construtores, getters e setters
+    public Pergunta(Questionario questionario, List<Alternativa> alternativas, Atividade atividade) {
+        this.questionario = questionario;
+        this.alternativas = alternativas;
+        this.atividade = atividade;
+    }
 
+    public Pergunta() {
+    }
 
     public Questionario getQuestionario() {
         return questionario;

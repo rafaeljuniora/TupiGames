@@ -1,6 +1,8 @@
 package br.com.TupiGames.domain;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,7 +13,7 @@ public class Atividade {
     private Long atividade_id;
 
     private String nomeAtividade;
-    private Double atividadeCode;
+    private long atividadeCode;
     private Boolean global;
 
     @OneToMany(mappedBy = "atividade", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -23,9 +25,9 @@ public class Atividade {
             joinColumns = @JoinColumn(name = "atividade_id"),
             inverseJoinColumns = @JoinColumn(name = "turma_id")
     )
-    private List<Turma> turmas;
+    private List<Turma> turmas = new ArrayList<>();
 
-    public Atividade(String nomeAtividade, Double atividadeCode, List<Pergunta> perguntas, Boolean global) {
+    public Atividade(String nomeAtividade, Long atividadeCode, List<Pergunta> perguntas, Boolean global) {
         this.nomeAtividade = nomeAtividade;
         this.atividadeCode = atividadeCode;
         this.perguntas = perguntas;
@@ -40,11 +42,11 @@ public class Atividade {
         this.nomeAtividade = nomeAtividade;
     }
 
-    public Double getAtividadeCode() {
+    public Long getAtividadeCode() {
         return atividadeCode;
     }
 
-    public void setAtividadeCode(Double atividadeCode) {
+    public void setAtividadeCode(long atividadeCode) {
         this.atividadeCode = atividadeCode;
     }
 
@@ -70,5 +72,9 @@ public class Atividade {
 
     public void setTurmas(List<Turma> turmas) {
         this.turmas = turmas;
+    }
+
+    public void adicionarTurma(Turma turma) {
+        this.turmas.add(turma);
     }
 }

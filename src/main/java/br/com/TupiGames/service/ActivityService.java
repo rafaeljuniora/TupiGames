@@ -1,23 +1,39 @@
 package br.com.TupiGames.service;
 
+import br.com.TupiGames.domain.Alternativa;
 import br.com.TupiGames.domain.Atividade;
+import br.com.TupiGames.domain.Pergunta;
+import br.com.TupiGames.domain.Turma;
 import br.com.TupiGames.repository.ActvityRepository;
+import br.com.TupiGames.repository.ClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ActivityService {
     @Autowired
     ActvityRepository actvityRepository;
+
+    @Autowired
+    ClassRepository classRepository;
+
+    @Transactional
     public Atividade salvar(Atividade atividade) {
-        // Configurar relações bidirecionais
+        atividade = actvityRepository.save(atividade);
+
         if(atividade.getPerguntas() != null) {
-            atividade.getPerguntas().forEach(pergunta -> {
+            for(Pergunta pergunta : atividade.getPerguntas()) {
                 pergunta.setAtividade(atividade);
+
                 if(pergunta.getAlternativas() != null) {
-                    pergunta.getAlternativas().forEach(alt -> alt.setPergunta(pergunta));
+                    for(Alternativa alternativa : pergunta.getAlternativas()) {
+                        alternativa.setPergunta(pergunta);
+                    }
                 }
-            });
+            }
         }
 
         return actvityRepository.save(atividade);

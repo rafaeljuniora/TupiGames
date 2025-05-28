@@ -26,7 +26,8 @@ public class Alternativa {
         this.pergunta = pergunta;
     }
 
-    // Construtores, getters e setters
+    public Alternativa() {
+    }
 
     public Boolean getImagem() {
         return imagem;
