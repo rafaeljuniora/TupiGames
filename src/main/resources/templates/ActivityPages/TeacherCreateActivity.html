@@ -827,16 +827,7 @@
               "Content-Type": "application/json",
             },
             body: JSON.stringify(atividadeDTO),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log("Success:", data);
-              alert("Atividade criada com sucesso!");
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-              alert("Erro ao criar atividade");
-            });
+          });
         });
     </script>
   </body>
