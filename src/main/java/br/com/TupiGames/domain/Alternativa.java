@@ -11,7 +11,10 @@ public class Alternativa {
 
     private Boolean imagem;
     private Boolean enunciado;
+
+    @Column(columnDefinition = "TEXT")
     private String valor;
+
     private Boolean acerto;
 
     @ManyToOne

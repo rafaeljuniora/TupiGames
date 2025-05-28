@@ -9,6 +9,7 @@
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
       .jersey-10 {
         font-family: "Jersey 10", cursive;
@@ -676,6 +677,8 @@
             img.src = e.target.result;
             preview.classList.remove("hidden");
 
+            input.setAttribute("data-base64", e.target.result);
+
             img.onload = function () {
               const ratio = img.naturalWidth / img.naturalHeight;
               if (ratio > 1) {
@@ -704,6 +707,8 @@
             const img = preview.querySelector("img");
             img.src = e.target.result;
             preview.classList.remove("hidden");
+
+            input.setAttribute("data-base64", e.target.result);
           };
           reader.readAsDataURL(file);
         }
@@ -735,7 +740,6 @@
 
           const turmas = await response.json();
           preencherSelectTurmas(turmas);
-          console.log(turmas);
         } catch (error) {
           console.error("Erro ao carregar turmas:", error);
         }
@@ -764,9 +768,9 @@
             nomeAtividade: document.getElementById("nomeAtividade").value,
             global: false,
             perguntas: [],
-            nomeTurma: document.getElementById("turmaSelecionada").textContent
+            nomeTurma: document.getElementById("turmaSelecionada").textContent,
           };
-          console.log(atividadeDTO.turmasIds)
+
           document
             .querySelectorAll('[id^="question-"]')
             .forEach((questionElement) => {
@@ -778,13 +782,29 @@
 
               const tipo = selectElement.value;
               const textarea = questionElement.querySelector("textarea");
+              const imageInput =
+                questionElement.querySelector(".question-image");
+
+              let valorPergunta = "";
+              if (tipo === "texto") {
+                valorPergunta = textarea ? textarea.value : "";
+              } else if (tipo === "imagem" && imageInput) {
+                valorPergunta = imageInput.getAttribute("data-base64") || "";
+              } else if (tipo === "imagem-texto") {
+                valorPergunta =
+                  (textarea ? textarea.value : "") +
+                  (imageInput
+                    ? "\nIMAGE:" +
+                      (imageInput.getAttribute("data-base64") || "")
+                    : "");
+              }
 
               const pergunta = {
                 questionario: {
                   imagem: tipo === "imagem",
                   enunciado: tipo === "texto",
                   imagemEnunciado: tipo === "imagem-texto",
-                  valor: textarea ? textarea.value : "",
+                  valor: valorPergunta,
                 },
                 alternativas: [],
               };
@@ -800,6 +820,8 @@
                   const checkbox = optionElement.querySelector(
                     ".correct-answer-checkbox"
                   );
+                  const optionImageInput =
+                    optionElement.querySelector(".option-image");
 
                   if (!optionSelect || !checkbox) {
                     console.error(
@@ -809,10 +831,21 @@
                     return;
                   }
 
+                  let valorAlternativa = "";
+                  if (optionSelect.value === "texto") {
+                    valorAlternativa = optionTextarea?.value || "";
+                  } else if (
+                    optionSelect.value === "imagem" &&
+                    optionImageInput
+                  ) {
+                    valorAlternativa =
+                      optionImageInput.getAttribute("data-base64") || "";
+                  }
+
                   const alternativa = {
                     imagem: optionSelect.value === "imagem",
                     enunciado: optionSelect.value === "texto",
-                    valor: optionTextarea?.value || "",
+                    valor: valorAlternativa,
                     acerto: checkbox.checked,
                   };
                   pergunta.alternativas.push(alternativa);
@@ -827,7 +860,32 @@
               "Content-Type": "application/json",
             },
             body: JSON.stringify(atividadeDTO),
-          });
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Erro ao salvar atividade");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              Swal.fire({
+                icon: "success",
+                title: "Atividade criada!",
+                text: "Sua atividade foi salva com sucesso.",
+                confirmButtonColor: "#6b46c1",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+            })
+            .catch((error) => {
+              console.error("Erro:", error);
+              Swal.fire({
+                icon: "error",
+                title: "Erro ao criar atividade",
+                text: "Ocorreu um erro ao tentar salvar a atividade. Tente novamente.",
+                confirmButtonColor: "#6b46c1",
+              });
+            });
         });
     </script>
   </body>

@@ -9,6 +9,8 @@ public class Questionario {
     private Boolean enunciado;
     @Column(name = "imagem_enunciado")
     private Boolean imagemEnunciado;
+
+    @Column(columnDefinition = "TEXT")
     private String valor;
 
 
