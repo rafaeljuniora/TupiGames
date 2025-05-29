@@ -2,6 +2,7 @@ package br.com.TupiGames.controller;
 
 import br.com.TupiGames.dto.AlunoDTO;
 import br.com.TupiGames.dto.ProfessorDTO;
+import br.com.TupiGames.dto.TurmaDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ public class SchoolController {
     public String managementSchool(Model model){
         model.addAttribute("aluno", new AlunoDTO());
         model.addAttribute("professor", new ProfessorDTO());
+        model.addAttribute("turma", new TurmaDTO());
         return "ManagementPages/SchoolManagement";
     }
 

@@ -2,6 +2,7 @@ package br.com.TupiGames.repository;
 
 import br.com.TupiGames.domain.Aluno;
 import br.com.TupiGames.domain.Escola;
+import br.com.TupiGames.domain.Professor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

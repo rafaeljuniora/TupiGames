@@ -2,11 +2,16 @@ package br.com.TupiGames.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @Table(name = "professor")
 public class Professor {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(columnDefinition = "serial")
     private Long professor_id;
 
@@ -19,6 +24,9 @@ public class Professor {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "escola_id", nullable = false)
     private Escola escola;
+
+    @ManyToMany(mappedBy = "professores")
+    private Set<Turma> turmas = new HashSet<>();
 
     public Professor(String nomeProfessor, String dataNascimento, String email, String senha) {
         this.nomeProfessor = nomeProfessor;
@@ -73,4 +81,13 @@ public class Professor {
     public Long getId() {
         return professor_id;
     }
+
+    public void adicionarTurma(Turma turma) {
+        this.turmas.add(turma);
+    }
+
+    public void removerTurma(Turma turma) {
+        this.turmas.remove(turma);
+    }
+
 }

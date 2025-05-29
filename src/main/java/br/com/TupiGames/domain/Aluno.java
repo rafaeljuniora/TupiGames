@@ -2,11 +2,14 @@ package br.com.TupiGames.domain;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "aluno")
 public class Aluno {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(columnDefinition = "serial")
     private Long aluno_id;
 
@@ -17,11 +20,15 @@ public class Aluno {
     @JoinColumn(name = "escola_id", nullable = false)
     private Escola escola;
 
+    @ManyToMany(mappedBy = "alunos")
+    private Set<Turma> turmas = new HashSet<>();
+
+
     public Aluno() {
     }
 
     public Aluno(String nomeAluno, String senha) {
-        this.nomeAluno=nomeAluno;
+        this.nomeAluno = nomeAluno;
         this.senha = senha;
     }
 
@@ -37,19 +44,27 @@ public class Aluno {
         return senha;
     }
 
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
     public Long getId() {
         return aluno_id;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public Escola getEscola() {
+        return escola;
     }
 
     public void setEscola(Escola escola) {
         this.escola = escola;
     }
 
-    public Escola getEscola() {
-        return escola;
+    public void adicionarTurma(Turma turma) {
+        this.turmas.add(turma);
+    }
+
+    public void removerTurma(Turma turma) {
+        this.turmas.remove(turma);
     }
 }

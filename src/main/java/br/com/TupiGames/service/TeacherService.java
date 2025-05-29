@@ -27,4 +27,9 @@ public class TeacherService {
     public List<Professor> getAllBySchool(Escola escola){
         return teacherRepository.findAllByescola(escola);
     }
+
+    public Professor findById(Long professor_id){
+        return teacherRepository.findById(professor_id)
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+    }
 }
