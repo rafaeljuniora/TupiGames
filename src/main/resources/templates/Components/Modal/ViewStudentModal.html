@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <style th:fragment="view-student-modal-style">
+      .view-student-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .view-student-hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      th:fragment="view-student-modal"
+      id="viewStudentModal"
+      class="view-student-modal-overlay view-student-hidden"
+    >
+      <div
+        class="bg-[#F1F1F1] rounded-b-[45px] rounded-tl-[45px] w-11/12 max-w-md p-6 shadow-lg"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <button
+            class="text-2xl font-bold p-2 cursor-pointer"
+            id="viewStudentCloseModalBtn"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-gray-700 font-medium mb-2">Nome</label>
+            <div
+              class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC]"
+            >
+              <span id="viewStudentName"></span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-medium mb-2"
+              >Data de Nascimento</label
+            >
+            <div
+              class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC]"
+            >
+              <span id="viewStudentBirthDate"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script th:fragment="view-student-modal-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const viewStudentModal = document.getElementById("viewStudentModal");
+        const viewStudentCloseBtn = document.getElementById(
+          "viewStudentCloseModalBtn"
+        );
+
+        if (viewStudentModal && viewStudentCloseBtn) {
+          viewStudentCloseBtn.addEventListener("click", function () {
+            viewStudentModal.classList.add("view-student-hidden");
+          });
+
+          viewStudentModal.addEventListener("click", function (e) {
+            if (e.target === viewStudentModal) {
+              viewStudentModal.classList.add("view-student-hidden");
+            }
+          });
+
+          document.addEventListener("keydown", function (e) {
+            if (
+              e.key === "Escape" &&
+              !viewStudentModal.classList.contains("view-student-hidden")
+            ) {
+              viewStudentModal.classList.add("view-student-hidden");
+            }
+          });
+        }
+
+        window.openStudentViewModal = function (aluno) {
+          document.getElementById("viewStudentName").textContent =
+            aluno.nomeAluno;
+          document.getElementById("viewStudentBirthDate").textContent =
+            aluno.senha;
+          document
+            .getElementById("viewStudentModal")
+            .classList.remove("view-student-hidden");
+        };
+      });
+    </script>
+  </body>
+</html>
