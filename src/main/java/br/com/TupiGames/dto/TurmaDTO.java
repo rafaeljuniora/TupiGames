@@ -1,7 +1,5 @@
 package br.com.TupiGames.dto;
 
-import br.com.TupiGames.domain.Aluno;
-import br.com.TupiGames.domain.Professor;
 import br.com.TupiGames.domain.Turma;
 
 import java.util.List;

@@ -1,7 +1,6 @@
 package br.com.TupiGames.dto;
 
 import br.com.TupiGames.domain.Aluno;
-import br.com.TupiGames.domain.Escola;
 
 public class AlunoDTO {
     private String nomeAluno;
