@@ -1,6 +1,5 @@
 package br.com.TupiGames.controller.api;
 
-import br.com.TupiGames.domain.Aluno;
 import br.com.TupiGames.domain.Professor;
 import br.com.TupiGames.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
