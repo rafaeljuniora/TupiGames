@@ -37,7 +37,7 @@ public class StudentRestController {
         }
     }
 
-    @PostMapping("getAllBySchool")
+    @PostMapping("/getAllBySchool")
     public List<Aluno> getAllStudentsBySchool(@RequestBody String email){
         Escola escola = schoolService.getSchoolByEmail(email);
         return studentService.getAllBySchool(escola);
