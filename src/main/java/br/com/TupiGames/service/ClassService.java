@@ -24,4 +24,8 @@ public class ClassService {
     public List<Turma> findAllBySchool(Escola escola){
         return classRepository.findAllByEscola(escola);
     }
+
+    public void removeTurmaById(Long turma_id){
+        classRepository.deleteById(turma_id);
+    }
 }
