@@ -10,8 +10,7 @@ public class Professor {
     @Column(columnDefinition = "serial")
     private Long professor_id;
 
-    private String primeiroNome;
-    private String sobreNome;
+    private String nomeProfessor;
     // Todo - Modificar para DATE ou Epoch
     private String dataNascimento;
     private String email;
@@ -21,9 +20,8 @@ public class Professor {
     @JoinColumn(name = "escola_id", nullable = false)
     private Escola escola;
 
-    public Professor(String primeiroNome, String sobreNome, String dataNascimento, String email, String senha) {
-        this.primeiroNome = primeiroNome;
-        this.sobreNome = sobreNome;
+    public Professor(String nomeProfessor, String dataNascimento, String email, String senha) {
+        this.nomeProfessor = nomeProfessor;
         this.dataNascimento = dataNascimento;
         this.email = email;
         this.senha = senha;
@@ -32,20 +30,12 @@ public class Professor {
     public Professor() {
     }
 
-    public String getPrimeiroNome() {
-        return primeiroNome;
+    public String getNomeProfessor() {
+        return nomeProfessor;
     }
 
-    public void setPrimeiroNome(String primeiroNome) {
-        this.primeiroNome = primeiroNome;
-    }
-
-    public String getSobreNome() {
-        return sobreNome;
-    }
-
-    public void setSobreNome(String sobreNome) {
-        this.sobreNome = sobreNome;
+    public void setNomeProfessor(String nomeProfessor) {
+        this.nomeProfessor = nomeProfessor;
     }
 
     public String getDataNascimento() {

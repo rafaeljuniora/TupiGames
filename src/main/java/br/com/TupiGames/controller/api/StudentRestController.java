@@ -21,12 +21,11 @@ public class StudentRestController {
 
     @PostMapping("/login")
     public ResponseEntity<?> studentLogin(
-            @RequestParam String primeiroNome,
-            @RequestParam String sobreNome,
+            @RequestParam String nomeAluno,
             @RequestParam String senha) {
 
         try {
-            Aluno aluno = studentService.getStudentByName(primeiroNome,sobreNome);
+            Aluno aluno = studentService.getStudentByName(nomeAluno);
 
             if (aluno != null && aluno.getSenha().equals(senha)) {
                 return ResponseEntity.ok().build();

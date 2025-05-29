@@ -4,33 +4,23 @@ import br.com.TupiGames.domain.Aluno;
 import br.com.TupiGames.domain.Escola;
 
 public class AlunoDTO {
-    private String primeiroNome;
-    private String sobreNome;
+    private String nomeAluno;
     private String senha;
 
-    public AlunoDTO(String primeiroNome, String sobreNome, String senha) {
-        this.primeiroNome = primeiroNome;
-        this.sobreNome = sobreNome;
+    public AlunoDTO(String nomeAluno, String senha) {
+        this.nomeAluno = nomeAluno;
         this.senha = senha;
     }
 
     public AlunoDTO() {
     }
 
-    public String getPrimeiroNome() {
-        return primeiroNome;
+    public String getNomeAluno() {
+        return nomeAluno;
     }
 
-    public void setPrimeiroNome(String primeiroNome) {
-        this.primeiroNome = primeiroNome;
-    }
-
-    public String getSobreNome() {
-        return sobreNome;
-    }
-
-    public void setSobreNome(String sobreNome) {
-        this.sobreNome = sobreNome;
+    public void setNomeAluno(String nomeAluno) {
+        this.nomeAluno = nomeAluno;
     }
 
     public String getSenha() {
@@ -42,6 +32,6 @@ public class AlunoDTO {
     }
 
     public Aluno toAluno() {
-        return new Aluno(this.primeiroNome, this.sobreNome, this.senha);
+        return new Aluno(this.nomeAluno, this.senha);
     }
 }
