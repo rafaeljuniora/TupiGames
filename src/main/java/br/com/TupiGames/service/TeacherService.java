@@ -7,6 +7,8 @@ import br.com.TupiGames.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TeacherService {
 
@@ -20,5 +22,9 @@ public class TeacherService {
     public Professor getTeacherByEmail(String email) {
         return teacherRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+    }
+
+    public List<Professor> getAllBySchool(Escola escola){
+        return teacherRepository.findAllByescola(escola);
     }
 }

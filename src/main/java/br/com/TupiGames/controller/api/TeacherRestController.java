@@ -1,20 +1,25 @@
 package br.com.TupiGames.controller.api;
 
+import br.com.TupiGames.domain.Aluno;
+import br.com.TupiGames.domain.Escola;
 import br.com.TupiGames.domain.Professor;
+import br.com.TupiGames.service.SchoolService;
 import br.com.TupiGames.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/professor")
 public class TeacherRestController {
     @Autowired
     TeacherService teacherService;
+
+    @Autowired
+    SchoolService schoolService;
 
     @PostMapping("/login")
     public ResponseEntity<?> studentLogin(
@@ -32,5 +37,11 @@ public class TeacherRestController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @PostMapping("getAllBySchool")
+    public List<Professor> getAllTeachersBySchool(@RequestBody String email){
+        Escola escola = schoolService.getSchoolByEmail(email);
+        return teacherService.getAllBySchool(escola);
     }
 }
