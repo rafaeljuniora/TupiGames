@@ -3,11 +3,12 @@ package br.com.TupiGames.domain;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "professor")
 public class Professor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
-    private Long id;
+    private Long professor_id;
 
     private String primeiroNome;
     private String sobreNome;
@@ -15,6 +16,10 @@ public class Professor {
     private String dataNascimento;
     private String email;
     private String senha;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "escola_id", nullable = false)
+    private Escola escola;
 
     public Professor(String primeiroNome, String sobreNome, String dataNascimento, String email, String senha) {
         this.primeiroNome = primeiroNome;
@@ -67,7 +72,15 @@ public class Professor {
         this.senha = senha;
     }
 
+    public void setEscola(Escola escola) {
+        this.escola = escola;
+    }
+
+    public Escola getEscola() {
+        return escola;
+    }
+
     public Long getId() {
-        return id;
+        return professor_id;
     }
 }

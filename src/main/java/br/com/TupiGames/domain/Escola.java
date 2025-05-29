@@ -6,25 +6,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "escola")
 public class Escola {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long escola_id;
+    @Column(nullable = false, unique = true)
     private String nomeEscola;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String senha;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Turma> turmas;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Professor> professores;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(
-            name = "escola_alunos",
-            joinColumns = @JoinColumn(name = "escola_id"),
-            inverseJoinColumns = @JoinColumn(name = "aluno_id")
-    )
-    private List<Aluno> alunos;
+    @OneToMany(mappedBy = "escola", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Turma> turmas = new ArrayList<>();
+
+    @OneToMany(mappedBy = "escola", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Professor> professores = new ArrayList<>();
+
+    @OneToMany(mappedBy = "escola", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Aluno> alunos = new ArrayList<>();
 
     public Escola(String nomeEscola, String email, String senha) {
         this.nomeEscola = nomeEscola;
