@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - TupiGames</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
+    <style th:replace="~{components/TeacherHeader :: sidebar-style}"></style>
+    <link href="/css/output.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script th:replace="~{components/TeacherHeader :: sidebar-script}"></script>
+  </head>
+  <body class="bg-[#F5E5C7] min-h-screen">
+    <header
+      th:replace="~{components/TeacherHeader :: header('inicio')}"
+    ></header>
+    <aside
+      th:replace="~{components/TeacherHeader :: sidebar('inicio')}"
+    ></aside>
+
+    <main class="container mx-auto px-4 py-8 pt-24">
+      <div class="flex flex-col items-center gap-6 mb-16">
+        <a
+          href="#"
+          th:href="@{/atividades/professores/criar}"
+          class="bg-[#FFD700] hover:bg-[#FFC107] transition-colors duration-200 rounded-full px-12 py-4 text-2xl jersey-10 w-80 text-center text-black shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+        >
+          Criar nova atividade
+        </a>
+        <a
+          href="#"
+          th:href="@{/turmas}"
+          class="bg-[#FFD700] hover:bg-[#FFC107] transition-colors duration-200 rounded-full px-12 py-4 text-2xl jersey-10 w-80 text-center text-black shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+        >
+          Visualizar turmas
+        </a>
+      </div>
+
+      <div class="mb-16">
+        <h2 class="text-4xl jersey-10 text-center text-[#8B4513] mb-8">
+          Atividades anteriores
+        </h2>
+
+        <div class="bg-white rounded-3xl p-8 shadow-lg max-w-4xl mx-auto">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div
+              th:if="${#lists.isEmpty(atividadesAnteriores)}"
+              class="col-span-full text-center py-8"
+            >
+              <p class="text-gray-500 jersey-10 text-xl">
+                Nenhuma atividade anterior encontrada
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-4xl jersey-10 text-center text-[#8B4513] mb-8">
+          Atividades Globais
+        </h2>
+        <div class="bg-white rounded-3xl p-8 shadow-lg">
+          <div
+            th:if="${#lists.isEmpty(atividadesGlobais)}"
+            class="text-center py-16"
+          >
+            <p class="text-gray-500 jersey-10 text-xl">
+              Nenhuma atividade global disponível
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

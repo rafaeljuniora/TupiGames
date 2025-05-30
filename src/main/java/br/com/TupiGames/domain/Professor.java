@@ -1,24 +1,32 @@
 package br.com.TupiGames.domain;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Table(name = "professor")
 public class Professor {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(columnDefinition = "serial")
-    private Long id;
+    private Long professor_id;
 
-    private String primeiroNome;
-    private String sobreNome;
+    private String nomeProfessor;
     // Todo - Modificar para DATE ou Epoch
     private String dataNascimento;
     private String email;
     private String senha;
 
-    public Professor(String primeiroNome, String sobreNome, String dataNascimento, String email, String senha) {
-        this.primeiroNome = primeiroNome;
-        this.sobreNome = sobreNome;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "escola_id", nullable = false)
+    private Escola escola;
+
+    @ManyToMany(mappedBy = "professores")
+    private Set<Turma> turmas = new HashSet<>();
+
+    public Professor(String nomeProfessor, String dataNascimento, String email, String senha) {
+        this.nomeProfessor = nomeProfessor;
         this.dataNascimento = dataNascimento;
         this.email = email;
         this.senha = senha;
@@ -27,20 +35,12 @@ public class Professor {
     public Professor() {
     }
 
-    public String getPrimeiroNome() {
-        return primeiroNome;
+    public String getNomeProfessor() {
+        return nomeProfessor;
     }
 
-    public void setPrimeiroNome(String primeiroNome) {
-        this.primeiroNome = primeiroNome;
-    }
-
-    public String getSobreNome() {
-        return sobreNome;
-    }
-
-    public void setSobreNome(String sobreNome) {
-        this.sobreNome = sobreNome;
+    public void setNomeProfessor(String nomeProfessor) {
+        this.nomeProfessor = nomeProfessor;
     }
 
     public String getDataNascimento() {
@@ -67,7 +67,24 @@ public class Professor {
         this.senha = senha;
     }
 
-    public Long getId() {
-        return id;
+    public void setEscola(Escola escola) {
+        this.escola = escola;
     }
+
+    public Escola getEscola() {
+        return escola;
+    }
+
+    public Long getId() {
+        return professor_id;
+    }
+
+    public void adicionarTurma(Turma turma) {
+        this.turmas.add(turma);
+    }
+
+    public void removerTurma(Turma turma) {
+        this.turmas.remove(turma);
+    }
+
 }
