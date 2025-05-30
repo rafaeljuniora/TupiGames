@@ -20,5 +20,9 @@ public class ConfigurationController {
     public String loginProfessor() { return "ConfigurationPages/TeacherConfiguration";
     }
 
+    @GetMapping("/escola")
+    public String configProfessor() { return "ConfigurationPages/SchoolConfiguration";
+    }
+
 
 }
