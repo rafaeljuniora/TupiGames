@@ -13,4 +13,8 @@ public class ClassService {
     public Turma turmaregister(Turma turma){
         return classRepository.save(turma);
     }
+
+    public Turma findBynomeTurma(String nomeTurma){
+        return classRepository.findBynomeTurma(nomeTurma);
+    }
 }

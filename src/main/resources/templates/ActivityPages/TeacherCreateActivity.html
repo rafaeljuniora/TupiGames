@@ -9,6 +9,7 @@
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
       .jersey-10 {
         font-family: "Jersey 10", cursive;
@@ -272,7 +273,7 @@
           tag.className =
             "turma-tag rounded-full px-4 py-2 flex items-center space-x-2";
           tag.innerHTML = `
-                <span class="text-white text-sm">${turma.nome}</span>
+                <span id="turmaSelecionada" class="text-white text-sm">${turma.nome}</span>
                 <button type="button" onclick="removeTurma(${index})" class="text-white hover:text-red-300">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
@@ -676,6 +677,8 @@
             img.src = e.target.result;
             preview.classList.remove("hidden");
 
+            input.setAttribute("data-base64", e.target.result);
+
             img.onload = function () {
               const ratio = img.naturalWidth / img.naturalHeight;
               if (ratio > 1) {
@@ -704,12 +707,186 @@
             const img = preview.querySelector("img");
             img.src = e.target.result;
             preview.classList.remove("hidden");
+
+            input.setAttribute("data-base64", e.target.result);
           };
           reader.readAsDataURL(file);
         }
       }
 
-      document.addEventListener("DOMContentLoaded", function () {});
+      async function carregarTurmas() {
+        try {
+          const usuarioSalvo = sessionStorage.getItem("usuario");
+          if (!usuarioSalvo) {
+            console.error("Usuário não encontrado na sessionStorage");
+            return;
+          }
+
+          const usuario = JSON.parse(usuarioSalvo);
+          const response = await fetch(
+            "/api/v1/professor/getTurmasByProfessor",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: usuario.email,
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Erro ao carregar turmas");
+          }
+
+          const turmas = await response.json();
+          preencherSelectTurmas(turmas);
+        } catch (error) {
+          console.error("Erro ao carregar turmas:", error);
+        }
+      }
+
+      function preencherSelectTurmas(turmasDTO) {
+        const select = document.getElementById("turmaSelect");
+        select.innerHTML = '<option value="">Selecione uma Turma</option>';
+
+        turmasDTO.forEach((turma) => {
+          const option = document.createElement("option");
+          option.value = turma.id;
+          option.textContent = turma.nomeTurma;
+          select.appendChild(option);
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        carregarTurmas();
+      });
+
+      document
+        .getElementById("criarBtn")
+        .addEventListener("click", function () {
+          const atividadeDTO = {
+            nomeAtividade: document.getElementById("nomeAtividade").value,
+            global: false,
+            perguntas: [],
+            nomeTurma: document.getElementById("turmaSelecionada").textContent,
+          };
+
+          document
+            .querySelectorAll('[id^="question-"]')
+            .forEach((questionElement) => {
+              const selectElement = questionElement.querySelector("select");
+              if (!selectElement) {
+                console.error("Select não encontrado em:", questionElement.id);
+                return;
+              }
+
+              const tipo = selectElement.value;
+              const textarea = questionElement.querySelector("textarea");
+              const imageInput =
+                questionElement.querySelector(".question-image");
+
+              let valorPergunta = "";
+              if (tipo === "texto") {
+                valorPergunta = textarea ? textarea.value : "";
+              } else if (tipo === "imagem" && imageInput) {
+                valorPergunta = imageInput.getAttribute("data-base64") || "";
+              } else if (tipo === "imagem-texto") {
+                valorPergunta =
+                  (textarea ? textarea.value : "") +
+                  (imageInput
+                    ? "\nIMAGE:" +
+                      (imageInput.getAttribute("data-base64") || "")
+                    : "");
+              }
+
+              const pergunta = {
+                questionario: {
+                  imagem: tipo === "imagem",
+                  enunciado: tipo === "texto",
+                  imagemEnunciado: tipo === "imagem-texto",
+                  valor: valorPergunta,
+                },
+                alternativas: [],
+              };
+
+              questionElement
+                .querySelectorAll(".option-card")
+                .forEach((optionElement) => {
+                  const optionSelect = optionElement.querySelector(
+                    ".option-type-select"
+                  );
+                  const optionTextarea =
+                    optionElement.querySelector("textarea");
+                  const checkbox = optionElement.querySelector(
+                    ".correct-answer-checkbox"
+                  );
+                  const optionImageInput =
+                    optionElement.querySelector(".option-image");
+
+                  if (!optionSelect || !checkbox) {
+                    console.error(
+                      "Elementos da opção não encontrados em:",
+                      optionElement
+                    );
+                    return;
+                  }
+
+                  let valorAlternativa = "";
+                  if (optionSelect.value === "texto") {
+                    valorAlternativa = optionTextarea?.value || "";
+                  } else if (
+                    optionSelect.value === "imagem" &&
+                    optionImageInput
+                  ) {
+                    valorAlternativa =
+                      optionImageInput.getAttribute("data-base64") || "";
+                  }
+
+                  const alternativa = {
+                    imagem: optionSelect.value === "imagem",
+                    enunciado: optionSelect.value === "texto",
+                    valor: valorAlternativa,
+                    acerto: checkbox.checked,
+                  };
+                  pergunta.alternativas.push(alternativa);
+                });
+
+              atividadeDTO.perguntas.push(pergunta);
+            });
+
+          fetch("/api/v1/atividade/save", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(atividadeDTO),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Erro ao salvar atividade");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              Swal.fire({
+                icon: "success",
+                title: "Atividade criada!",
+                text: "Sua atividade foi salva com sucesso.",
+                confirmButtonColor: "#6b46c1",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+            })
+            .catch((error) => {
+              console.error("Erro:", error);
+              Swal.fire({
+                icon: "error",
+                title: "Erro ao criar atividade",
+                text: "Ocorreu um erro ao tentar salvar a atividade. Tente novamente.",
+                confirmButtonColor: "#6b46c1",
+              });
+            });
+        });
     </script>
   </body>
 </html>

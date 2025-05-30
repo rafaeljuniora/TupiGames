@@ -1,5 +1,6 @@
 package br.com.TupiGames.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -8,6 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "turma")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Turma {
     @Id
     @GeneratedValue

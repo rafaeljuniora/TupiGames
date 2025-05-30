@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ClassRepository extends JpaRepository <Turma, Long> {
-
+    Turma findBynomeTurma(String nomeTurma);
 }
