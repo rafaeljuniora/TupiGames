@@ -94,4 +94,8 @@ public class Turma {
     public void setAlunos(Set<Aluno> alunos) {
         this.alunos = alunos;
     }
+
+    public Long getTurma_id() {
+        return turma_id;
+    }
 }
