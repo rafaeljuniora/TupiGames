@@ -22,7 +22,7 @@ public class Professor {
     @JoinColumn(name = "escola_id", nullable = false)
     private Escola escola;
 
-    @ManyToMany(mappedBy = "professores")
+    @ManyToMany(mappedBy = "professores", cascade = CascadeType.REMOVE)
     private Set<Turma> turmas = new HashSet<>();
 
     public Professor(String nomeProfessor, String dataNascimento, String email, String senha) {

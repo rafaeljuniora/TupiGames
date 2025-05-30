@@ -78,4 +78,9 @@ public class TeacherRestController {
 
         return ResponseEntity.ok(turmasDTO);
     }
+
+    @PostMapping("/remove")
+    public void removeTeacher(@RequestBody Long professor_id){
+        teacherService.removeProfessorById(professor_id);
+    }
 }
