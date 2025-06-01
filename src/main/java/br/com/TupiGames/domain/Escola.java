@@ -1,5 +1,6 @@
 package br.com.TupiGames.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "escola")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Escola {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

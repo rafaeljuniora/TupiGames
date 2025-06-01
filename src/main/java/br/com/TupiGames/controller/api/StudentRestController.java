@@ -2,6 +2,7 @@ package br.com.TupiGames.controller.api;
 
 import br.com.TupiGames.domain.Aluno;
 import br.com.TupiGames.domain.Escola;
+import br.com.TupiGames.dto.AlunoDTO;
 import br.com.TupiGames.service.SchoolService;
 import br.com.TupiGames.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,4 +49,14 @@ public class StudentRestController {
         studentService.removeAlunoById(aluno_id);
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<Aluno> atualizarAluno(@RequestBody AlunoDTO alunoAtualizado) {
+        Aluno aluno = studentService.findById(alunoAtualizado.getAluno_id());
+
+        aluno.setNomeAluno(alunoAtualizado.getNomeAluno());
+        aluno.setSenha(alunoAtualizado.getSenha());
+
+        Aluno alunoAtualizadoSalvo = studentService.save(aluno);
+        return ResponseEntity.ok(alunoAtualizadoSalvo);
+    }
 }
