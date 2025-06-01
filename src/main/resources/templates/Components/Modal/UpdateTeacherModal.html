@@ -41,8 +41,8 @@
 
         <div>
           <form id="updateTeacherForm" class="space-y-4" method="post">
-            <input type="hidden" id="updateTeacherId" name="professor_id">
-            
+            <input type="hidden" id="updateTeacherId" name="professor_id" />
+
             <div>
               <input
                 type="text"
@@ -102,8 +102,11 @@
 
     <script th:fragment="update-teacher-modal-script">
       document.addEventListener("DOMContentLoaded", function () {
-        const updateTeacherModal = document.getElementById("updateTeacherModal");
-        const updateTeacherCloseBtn = document.getElementById("updateTeacherCloseModalBtn");
+        const updateTeacherModal =
+          document.getElementById("updateTeacherModal");
+        const updateTeacherCloseBtn = document.getElementById(
+          "updateTeacherCloseModalBtn"
+        );
         const updateTeacherForm = document.getElementById("updateTeacherForm");
 
         if (updateTeacherModal && updateTeacherCloseBtn) {
@@ -129,10 +132,13 @@
 
         window.openTeacherUpdateModal = function (professor) {
           document.getElementById("updateTeacherId").value = professor.id;
-          document.getElementById("updateTeacherName").value = professor.nomeProfessor;
-          document.getElementById("updateTeacherBirthDate").value = professor.dataNascimento;
+          document.getElementById("updateTeacherName").value =
+            professor.nomeProfessor;
+          document.getElementById("updateTeacherBirthDate").value =
+            professor.dataNascimento;
           document.getElementById("updateTeacherEmail").value = professor.email;
-          document.getElementById("updateTeacherPassword").value = professor.senha;
+          document.getElementById("updateTeacherPassword").value =
+            professor.senha;
 
           updateTeacherModal.classList.remove("update-teacher-hidden");
         };
@@ -143,7 +149,7 @@
 
             const formData = new FormData(this);
             const professorData = Object.fromEntries(formData.entries());
-            
+
             try {
               const response = await axios.put(
                 "/api/v1/professor/update",
@@ -157,13 +163,15 @@
                 confirmButtonText: "OK",
               }).then(() => {
                 updateTeacherModal.classList.add("update-teacher-hidden");
-                getTeachersBySchool(); // Atualiza a lista de professores
+                getTeachersBySchool();
               });
             } catch (error) {
               console.error("Erro ao atualizar professor:", error);
               Swal.fire({
                 title: "Erro!",
-                text: error.response?.data?.message || "Erro ao atualizar professor",
+                text:
+                  error.response?.data?.message ||
+                  "Erro ao atualizar professor",
                 icon: "error",
                 confirmButtonText: "OK",
               });
