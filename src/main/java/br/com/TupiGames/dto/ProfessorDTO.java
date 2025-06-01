@@ -3,6 +3,7 @@ package br.com.TupiGames.dto;
 import br.com.TupiGames.domain.Professor;
 
 public class ProfessorDTO {
+    private Long professor_id;
     private String nomeProfessor;
     // Todo - Modificar para DATE ou Epoch
     private String dataNascimento;
@@ -10,6 +11,14 @@ public class ProfessorDTO {
     private String senha;
 
     public ProfessorDTO(String nomeProfessor, String dataNascimento, String email, String senha) {
+        this.nomeProfessor = nomeProfessor;
+        this.dataNascimento = dataNascimento;
+        this.email = email;
+        this.senha = senha;
+    }
+
+    public ProfessorDTO(Long professor_id, String nomeProfessor, String dataNascimento, String email, String senha) {
+        this.professor_id = professor_id;
         this.nomeProfessor = nomeProfessor;
         this.dataNascimento = dataNascimento;
         this.email = email;
@@ -51,7 +60,15 @@ public class ProfessorDTO {
         this.senha = senha;
     }
 
+    public Long getProfessor_id() {
+        return professor_id;
+    }
+
     public Professor toProfessor() {
         return new Professor(this.nomeProfessor, this.dataNascimento, this.email, this.senha);
+    }
+
+    public Professor toProfessorWithId() {
+        return new Professor(this.professor_id,this.nomeProfessor, this.dataNascimento, this.email, this.senha);
     }
 }

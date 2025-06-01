@@ -4,6 +4,7 @@ import br.com.TupiGames.domain.Aluno;
 import br.com.TupiGames.domain.Escola;
 import br.com.TupiGames.domain.Professor;
 import br.com.TupiGames.domain.Turma;
+import br.com.TupiGames.dto.ProfessorDTO;
 import br.com.TupiGames.dto.TurmaDTO;
 import br.com.TupiGames.service.SchoolService;
 import br.com.TupiGames.service.TeacherService;
@@ -82,5 +83,18 @@ public class TeacherRestController {
     @PostMapping("/remove")
     public void removeTeacher(@RequestBody Long professor_id){
         teacherService.removeProfessorById(professor_id);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Professor> atualizarProfessor(@RequestBody ProfessorDTO professorAtualizado) {
+        Professor professor = teacherService.findById(professorAtualizado.getProfessor_id());
+
+        professor.setNomeProfessor(professorAtualizado.getNomeProfessor());
+        professor.setDataNascimento(professorAtualizado.getDataNascimento());
+        professor.setEmail(professorAtualizado.getEmail());
+        professor.setSenha(professorAtualizado.getSenha());
+
+        Professor professorAtualizadoSalvo = teacherService.save(professor);
+        return ResponseEntity.ok(professorAtualizadoSalvo);
     }
 }
