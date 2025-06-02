@@ -24,4 +24,9 @@ public class ActivityController {
     public String feedbackStudentActivities(){
         return "ActivityPages/StudentFeedbackActivities";
     }
+
+    @GetMapping("/aluno/ranking")
+    public String rankingStudentActivities(){
+        return "ActivityPages/StudentRankingActivities";
+    }
 }
