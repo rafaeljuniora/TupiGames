@@ -31,4 +31,19 @@ public class ActivityRestController {
         Atividade atividadeSalva = activityService.salvar(atividade);
         return ResponseEntity.status(HttpStatus.CREATED).body(atividadeSalva);
     }
+
+    @PostMapping("/getByCode")
+    public ResponseEntity<Atividade> getByCode(@RequestBody Long atividadeCode) {
+        Atividade atividade = activityService.findByatividadeCode(atividadeCode);
+        if(atividade==null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }else {
+            return ResponseEntity.status(HttpStatus.CREATED).body(atividade);
+        }
+    }
+
+    @GetMapping("/getActivityByCode")
+    public Atividade getActivityByCode(@RequestBody Long atividadeCode) {
+        return activityService.findByatividadeCode(atividadeCode);
+    }
 }

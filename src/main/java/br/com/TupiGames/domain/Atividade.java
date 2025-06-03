@@ -34,6 +34,9 @@ public class Atividade {
         this.global = global;
     }
 
+    public Atividade() {
+    }
+
     public String getNomeAtividade() {
         return nomeAtividade;
     }

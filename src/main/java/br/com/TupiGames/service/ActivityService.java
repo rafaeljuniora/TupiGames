@@ -38,4 +38,8 @@ public class ActivityService {
 
         return actvityRepository.save(atividade);
     }
+
+    public Atividade findByatividadeCode(long atividadeCode){
+        return actvityRepository.findByatividadeCode(atividadeCode);
+    }
 }

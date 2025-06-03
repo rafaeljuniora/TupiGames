@@ -11,6 +11,7 @@
     <style th:replace="~{components/StudentHeader :: sidebar-style}"></style>
     <link href="/css/output.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script th:replace="~{components/StudentHeader :: sidebar-script}"></script>
   </head>
   <body class="bg-[#F5E5C7] min-h-screen">
@@ -35,7 +36,8 @@
         </div>
         <button
           class="bg-[#FFCD03] hover:bg-[#FFC107] transition-colors duration-200 rounded-full py-3 text-xl jersey-10 w-32 text-center text-black shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-        >
+          id="btnEntrar"
+          >
           Entrar
         </button>
       </div>
@@ -78,5 +80,74 @@
         </div>
       </div>
     </main>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const btnEntrar = document.getElementById('btnEntrar');
+        const inputCodigo = document.getElementById('codigoAtividade');
+        
+        btnEntrar.addEventListener('click', validarCodigoAtividade);
+        
+        inputCodigo.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            validarCodigoAtividade();
+          }
+        });
+        
+        async function validarCodigoAtividade() {
+          const codigo = inputCodigo.value.trim();
+          
+          if (!codigo) {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Código vazio',
+              text: 'Por favor, insira um código de atividade',
+              confirmButtonColor: '#FFCD03'
+            });
+            return;
+          }
+          
+          if (!/^\d+$/.test(codigo)) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Código inválido',
+              text: 'O código deve conter apenas números',
+              confirmButtonColor: '#FFCD03'
+            });
+            return;
+          }
+          
+          try {
+            const response = await fetch('/api/v1/atividade/getByCode', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(parseInt(codigo))
+            });
+            
+            if (response.ok) {
+              window.location.href = `/atividades/aluno/realizar?${codigo}`;
+            } else if (response.status === 404) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Código não encontrado',
+                text: 'Não existe uma atividade com este código',
+                confirmButtonColor: '#FFCD03'
+              });
+            } else {
+              throw new Error(`Erro ${response.status}: ${response.statusText}`);
+            }
+          } catch (error) {
+            console.error('Erro:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Erro',
+              text: 'Ocorreu um erro ao validar o código. Por favor, tente novamente.',
+              confirmButtonColor: '#FFCD03'
+            });
+          }
+        }
+      });
+    </script>
   </body>
 </html>
