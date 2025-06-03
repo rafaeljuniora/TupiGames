@@ -390,7 +390,6 @@
           }
 
           const atividade = await response.json();
-          console.log("Dados da API:", atividade);
           Swal.close();
 
           atividadeData = {
@@ -421,8 +420,7 @@
               };
             }),
           };
-
-          console.log("Dados mapeados:", atividadeData);
+          
           loadQuestion(0);
         } catch (error) {
           Swal.fire({
