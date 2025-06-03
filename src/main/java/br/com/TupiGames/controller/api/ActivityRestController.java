@@ -1,6 +1,7 @@
 package br.com.TupiGames.controller.api;
 
 import br.com.TupiGames.domain.Atividade;
+import br.com.TupiGames.domain.Pergunta;
 import br.com.TupiGames.domain.Turma;
 import br.com.TupiGames.dto.AtividadeDTO;
 import br.com.TupiGames.service.ActivityService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/atividade")
@@ -42,7 +44,7 @@ public class ActivityRestController {
         }
     }
 
-    @GetMapping("/getActivityByCode")
+    @PostMapping("/getActivityByCode")
     public Atividade getActivityByCode(@RequestBody Long atividadeCode) {
         return activityService.findByatividadeCode(atividadeCode);
     }

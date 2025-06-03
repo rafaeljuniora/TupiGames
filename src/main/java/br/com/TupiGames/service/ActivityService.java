@@ -3,14 +3,11 @@ package br.com.TupiGames.service;
 import br.com.TupiGames.domain.Alternativa;
 import br.com.TupiGames.domain.Atividade;
 import br.com.TupiGames.domain.Pergunta;
-import br.com.TupiGames.domain.Turma;
 import br.com.TupiGames.repository.ActvityRepository;
 import br.com.TupiGames.repository.ClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class ActivityService {

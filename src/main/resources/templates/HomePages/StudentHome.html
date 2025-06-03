@@ -126,7 +126,7 @@
             });
             
             if (response.ok) {
-              window.location.href = `/atividades/aluno/realizar?${codigo}`;
+              window.location.href = `/atividades/aluno/realizar?codigo=${codigo}`;
             } else if (response.status === 404) {
               Swal.fire({
                 icon: 'error',

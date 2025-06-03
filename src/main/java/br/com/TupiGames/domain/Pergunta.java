@@ -1,5 +1,7 @@
 package br.com.TupiGames.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -13,11 +15,13 @@ public class Pergunta {
     @Embedded
     private Questionario questionario;
 
-    @OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Alternativa> alternativas;
 
     @ManyToOne
     @JoinColumn(name = "atividade_id")
+    @JsonBackReference
     private Atividade atividade;
 
     public Pergunta(Questionario questionario, List<Alternativa> alternativas, Atividade atividade) {

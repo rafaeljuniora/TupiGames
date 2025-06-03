@@ -1,5 +1,6 @@
 package br.com.TupiGames.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class Atividade {
     private Boolean global;
 
     @OneToMany(mappedBy = "atividade", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Pergunta> perguntas;
 
     @ManyToMany
