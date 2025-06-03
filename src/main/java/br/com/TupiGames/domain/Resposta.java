@@ -1,11 +1,11 @@
 package br.com.TupiGames.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"aluno_id", "atividade_id"})
+})
 public class Resposta {
     @Id
     @GeneratedValue()
@@ -16,10 +16,12 @@ public class Resposta {
     private Integer total;
     private Long enviado;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "atividade_id")
     private Atividade atividade;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "aluno_id")
     private Aluno aluno;
 
     public Resposta(Long pontos, Integer acertos, Integer total, Long enviado) {
