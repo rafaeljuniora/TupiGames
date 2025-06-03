@@ -420,7 +420,7 @@
               };
             }),
           };
-          
+
           loadQuestion(0);
         } catch (error) {
           Swal.fire({
@@ -502,16 +502,14 @@
         });
 
         if (questionario.imagem && questionario.valor) {
-          questionImage.querySelector(
-            "img"
-          ).src = `${questionario.valor}`;
+          questionImage.querySelector("img").src = `${questionario.valor}`;
           questionImage.classList.remove("hidden");
 
           if (!questionario.valor) {
             questionText.style.display = "none";
           }
           questionText.classList.add("hidden");
-          questionText.style.display="none";
+          questionText.style.display = "none";
         } else {
           questionImage.classList.add("hidden");
         }

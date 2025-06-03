@@ -37,7 +37,7 @@
         <button
           class="bg-[#FFCD03] hover:bg-[#FFC107] transition-colors duration-200 rounded-full py-3 text-xl jersey-10 w-32 text-center text-black shadow-lg hover:shadow-xl transform hover:-translate-y-1"
           id="btnEntrar"
-          >
+        >
           Entrar
         </button>
       </div>
@@ -48,16 +48,17 @@
         </h2>
 
         <div class="bg-white rounded-3xl p-8 shadow-lg max-w-4xl mx-auto">
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+          ></div>
 
-            <div
-              th:if="${#lists.isEmpty(atividadesAnteriores)}"
-              class="col-span-full text-center py-8"
-            >
-              <p class="text-gray-500 jersey-10 text-xl">
-                Nenhuma atividade anterior encontrada
-              </p>
-            </div>
+          <div
+            th:if="${#lists.isEmpty(atividadesAnteriores)}"
+            class="col-span-full text-center py-8"
+          >
+            <p class="text-gray-500 jersey-10 text-xl">
+              Nenhuma atividade anterior encontrada
+            </p>
           </div>
         </div>
       </div>
@@ -67,83 +68,86 @@
           Atividades Globais
         </h2>
         <div class="bg-white rounded-3xl p-8 shadow-lg">
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
-            <div
-              th:if="${#lists.isEmpty(atividadesGlobais)}"
-              class="col-span-full text-center py-16"
-            >
-              <p class="text-gray-500 jersey-10 text-xl">
-                Nenhuma atividade global disponível
-              </p>
-            </div>
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"
+          ></div>
+          <div
+            th:if="${#lists.isEmpty(atividadesGlobais)}"
+            class="col-span-full text-center py-16"
+          >
+            <p class="text-gray-500 jersey-10 text-xl">
+              Nenhuma atividade global disponível
+            </p>
           </div>
         </div>
       </div>
     </main>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const btnEntrar = document.getElementById('btnEntrar');
-        const inputCodigo = document.getElementById('codigoAtividade');
-        
-        btnEntrar.addEventListener('click', validarCodigoAtividade);
-        
-        inputCodigo.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
+      document.addEventListener("DOMContentLoaded", function () {
+        const btnEntrar = document.getElementById("btnEntrar");
+        const inputCodigo = document.getElementById("codigoAtividade");
+
+        btnEntrar.addEventListener("click", validarCodigoAtividade);
+
+        inputCodigo.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
             validarCodigoAtividade();
           }
         });
-        
+
         async function validarCodigoAtividade() {
           const codigo = inputCodigo.value.trim();
-          
+
           if (!codigo) {
             Swal.fire({
-              icon: 'warning',
-              title: 'Código vazio',
-              text: 'Por favor, insira um código de atividade',
-              confirmButtonColor: '#FFCD03'
+              icon: "warning",
+              title: "Código vazio",
+              text: "Por favor, insira um código de atividade",
+              confirmButtonColor: "#FFCD03",
             });
             return;
           }
-          
+
           if (!/^\d+$/.test(codigo)) {
             Swal.fire({
-              icon: 'error',
-              title: 'Código inválido',
-              text: 'O código deve conter apenas números',
-              confirmButtonColor: '#FFCD03'
+              icon: "error",
+              title: "Código inválido",
+              text: "O código deve conter apenas números",
+              confirmButtonColor: "#FFCD03",
             });
             return;
           }
-          
+
           try {
-            const response = await fetch('/api/v1/atividade/getByCode', {
-              method: 'POST',
+            const response = await fetch("/api/v1/atividade/getByCode", {
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json",
               },
-              body: JSON.stringify(parseInt(codigo))
+              body: JSON.stringify(parseInt(codigo)),
             });
-            
+
             if (response.ok) {
               window.location.href = `/atividades/aluno/realizar?codigo=${codigo}`;
             } else if (response.status === 404) {
               Swal.fire({
-                icon: 'error',
-                title: 'Código não encontrado',
-                text: 'Não existe uma atividade com este código',
-                confirmButtonColor: '#FFCD03'
+                icon: "error",
+                title: "Código não encontrado",
+                text: "Não existe uma atividade com este código",
+                confirmButtonColor: "#FFCD03",
               });
             } else {
-              throw new Error(`Erro ${response.status}: ${response.statusText}`);
+              throw new Error(
+                `Erro ${response.status}: ${response.statusText}`
+              );
             }
           } catch (error) {
-            console.error('Erro:', error);
+            console.error("Erro:", error);
             Swal.fire({
-              icon: 'error',
-              title: 'Erro',
-              text: 'Ocorreu um erro ao validar o código. Por favor, tente novamente.',
-              confirmButtonColor: '#FFCD03'
+              icon: "error",
+              title: "Erro",
+              text: "Ocorreu um erro ao validar o código. Por favor, tente novamente.",
+              confirmButtonColor: "#FFCD03",
             });
           }
         }
