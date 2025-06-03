@@ -39,19 +39,19 @@
       }
 
       .rankings-button {
-        background: linear-gradient(135deg, #8F33A5, #7C2A90);
+        background: linear-gradient(135deg, #8f33a5, #7c2a90);
       }
 
       .rankings-button:hover {
-        background: linear-gradient(135deg, #9F43B5, #8C3AA0);
+        background: linear-gradient(135deg, #9f43b5, #8c3aa0);
       }
 
       .restart-button {
-        background: linear-gradient(135deg, #7C2A90, #682179);
+        background: linear-gradient(135deg, #7c2a90, #682179);
       }
 
       .restart-button:hover {
-        background: linear-gradient(135deg, #8C3AA0, #783189);
+        background: linear-gradient(135deg, #8c3aa0, #783189);
       }
 
       .exit-button {
@@ -186,7 +186,7 @@
 
       function initializeFeedback() {
         getDataFromURL();
-        
+
         document.getElementById("pointsDisplay").textContent =
           resultData.pontos;
 
@@ -243,9 +243,11 @@
         if (urlParams.has("codigo")) {
           resultData.codigo = urlParams.get("codigo") || 0;
         }
-        
+
         if (resultData.total > 0) {
-          resultData.percentual = Math.round((resultData.acertos / resultData.total) * 100);
+          resultData.percentual = Math.round(
+            (resultData.acertos / resultData.total) * 100
+          );
         }
       }
 
