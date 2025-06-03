@@ -100,7 +100,6 @@
                         type="text"
                         id="nome"
                         name="nome"
-                        th:value="${aluno?.nome}"
                         class="input-field"
                         placeholder="Digite seu nome completo"
                         readonly
@@ -115,7 +114,6 @@
                             type="password"
                             id="senha"
                             name="senha"
-                            th:value="${aluno?.senha}"
                             class="input-field pr-20"
                             placeholder=""
                             readonly
@@ -155,6 +153,13 @@
         const togglePassword = document.getElementById('togglePassword');
         const passwordField = document.getElementById('senha');
         const editPasswordButton = document.getElementById('editPasswordButton');
+        const nomeField = document.getElementById('nome');
+
+        const alunoSalvo = sessionStorage.getItem('aluno');
+        if (alunoSalvo) {
+            const aluno = JSON.parse(alunoSalvo);
+            nomeField.value = aluno.nomeAluno;
+        }
 
         if (editPasswordButton && passwordField) {
             editPasswordButton.addEventListener('click', function() {
@@ -206,9 +211,24 @@
                     return;
                 }
 
+                const alunoSalvo = sessionStorage.getItem('aluno');
+                if (!alunoSalvo) {
+                    alert('Sessão expirada. Faça login novamente.');
+                    window.location.href = '/login/aluno';
+                    return;
+                }
+
+                const aluno = JSON.parse(alunoSalvo);
                 const senha = passwordField.value;
                 const statusElement = document.getElementById('statusMessage');
                 const button = document.getElementById('submitButton');
+
+                if (!senha || senha.trim() === '') {
+                    statusElement.textContent = 'Por favor, digite uma senha válida.';
+                    statusElement.classList.remove('hidden');
+                    statusElement.classList.add('text-red-600');
+                    return;
+                }
 
                 button.disabled = true;
                 button.textContent = 'Salvando...';
@@ -217,6 +237,7 @@
 
                 try {
                     const response = await axios.post('/api/v1/aluno/configuracoes', {
+                        nomeAluno: aluno.nomeAluno,
                         senha: senha
                     });
 
@@ -236,7 +257,14 @@
                     button.textContent = 'Salvar Alterações';
 
                     if (error.response) {
-                        statusElement.textContent = error.response.data?.message || 'Erro ao salvar as configurações';
+                        if (error.response.status === 404) {
+                            statusElement.textContent = 'Aluno não encontrado. Faça login novamente.';
+                            setTimeout(() => {
+                                window.location.href = '/login/aluno';
+                            }, 2000);
+                        } else {
+                            statusElement.textContent = error.response.data?.message || 'Erro ao salvar as configurações';
+                        }
                     } else {
                         statusElement.textContent = 'Erro ao conectar com o servidor';
                         console.error('Erro:', error);

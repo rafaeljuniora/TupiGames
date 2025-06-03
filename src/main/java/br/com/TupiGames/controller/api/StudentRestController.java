@@ -2,6 +2,7 @@ package br.com.TupiGames.controller.api;
 
 import br.com.TupiGames.domain.Aluno;
 import br.com.TupiGames.domain.Escola;
+import br.com.TupiGames.dto.AlunoConfigDTO;
 import br.com.TupiGames.service.SchoolService;
 import br.com.TupiGames.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/aluno")
@@ -45,20 +45,22 @@ public class StudentRestController {
     }
 
     @PostMapping("/configuracoes")
-    public ResponseEntity<?> updateStudentConfig(@RequestBody Map<String, String> config) {
+    public ResponseEntity<?> updateStudentConfiguration(@RequestBody AlunoConfigDTO alunoConfigDTO) {
         try {
-            String senha = config.get("senha");
+            Aluno aluno = studentService.getStudentByName(alunoConfigDTO.getNomeAluno());
 
-            if (senha == null || senha.trim().isEmpty()) {
-                return ResponseEntity.badRequest()
-                        .body(Map.of("message", "Senha é obrigatória"));
+            if (aluno != null) {
+                if (alunoConfigDTO.getSenha() != null && !alunoConfigDTO.getSenha().trim().isEmpty()) {
+                    aluno.setSenha(alunoConfigDTO.getSenha());
+                }
+
+                studentService.save(aluno);
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-
-            return ResponseEntity.ok(Map.of("message", "Configurações atualizadas com sucesso"));
-
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("message", "Erro interno do servidor"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

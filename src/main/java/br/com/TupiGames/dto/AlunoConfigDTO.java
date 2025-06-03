@@ -1,17 +1,15 @@
 package br.com.TupiGames.dto;
 
-import br.com.TupiGames.domain.Aluno;
-
-public class AlunoDTO {
+public class AlunoConfigDTO {
     private String nomeAluno;
     private String senha;
 
-    public AlunoDTO(String nomeAluno, String senha) {
-        this.nomeAluno = nomeAluno;
-        this.senha = senha;
+    public AlunoConfigDTO() {
     }
 
-    public AlunoDTO() {
+    public AlunoConfigDTO(String nomeAluno, String senha) {
+        this.nomeAluno = nomeAluno;
+        this.senha = senha;
     }
 
     public String getNomeAluno() {
@@ -29,11 +27,4 @@ public class AlunoDTO {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-
-    public Aluno toAluno() {
-        return new Aluno(this.nomeAluno, this.senha);
-    }
 }
-
-
-

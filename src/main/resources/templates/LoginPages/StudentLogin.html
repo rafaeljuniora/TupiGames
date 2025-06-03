@@ -1,131 +1,131 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login Alunos</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
-      rel="stylesheet"
-    />
-    <link href="/css/output.css" rel="stylesheet" />
-    <link href="/css/login.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  </head>
-  <body
-    class="min-h-screen flex items-center justify-center bg-[url('/images/back_azul.png')] bg-[#23aef9] bg-cover"
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Alunos</title>
+  <link
+          href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+          rel="stylesheet"
+  />
+  <link href="/css/output.css" rel="stylesheet" />
+  <link href="/css/login.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body
+        class="min-h-screen flex items-center justify-center bg-[url('/images/back_azul.png')] bg-[#23aef9] bg-cover"
+>
+<div class="absolute top-16 left-4">
+  <a
+          th:href="@{/}"
+          class="px-12 py-4 bg-[#FFE889] rounded-full text-black jersey-10-regular text-3xl"
   >
-    <div class="absolute top-16 left-4">
-      <a
-        th:href="@{/}"
-        class="px-12 py-4 bg-[#FFE889] rounded-full text-black jersey-10-regular text-3xl"
-      >
-        Voltar
-      </a>
-    </div>
-    <div class="relative">
-      <h1
-        class="bg-gradient-to-r from-[#FFF2BD] to-[#FEFE02] text-transparent bg-clip-text text-8xl text-center mb-6 jersey-10-regular"
-      >
-        Login Alunos
-      </h1>
-      <div
-        class="bg-[#FFD735] rounded-3xl px-10 py-12 w-80 md:w-96 flex flex-col items-center"
-      >
-        <form id="loginForm" class="w-full flex flex-col h-full">
-          <div class="flex flex-col gap-5 mb-40">
-            <div>
-              <input
-                type="text"
-                id="primeiroNome"
-                required
-                placeholder="Primeiro Nome"
-                class="w-full px-4 py-3 rounded-full focus:outline-none bg-white border-2 border-[#C7C3C3]"
-              />
-              <input
-                type="text"
-                id="sobreNome"
-                required
-                placeholder="Sobrenome"
-                class="w-full px-4 py-3 rounded-full focus:outline-none bg-white border-2 border-[#C7C3C3] mt-4"
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                id="senha"
-                required
-                placeholder="Data de Nascimento (Senha)"
-                class="w-full px-4 py-3 rounded-full focus:outline-none bg-white border-2 border-[#C7C3C3]"
-              />
-            </div>
-          </div>
-          <div
-            id="errorMessage"
-            class="text-[#6C0CFF] text-center font-extrabold mb-4 hidden"
-          ></div>
-
-          <div class="mt-auto">
-            <button
-              type="submit"
-              class="w-full bg-white hover:bg-gray-200 text-black font-medium py-3 px-6 rounded-full transition-colors"
-            >
-              Login
-            </button>
-          </div>
-        </form>
+    Voltar
+  </a>
+</div>
+<div class="relative">
+  <h1
+          class="bg-gradient-to-r from-[#FFF2BD] to-[#FEFE02] text-transparent bg-clip-text text-8xl text-center mb-6 jersey-10-regular"
+  >
+    Login Alunos
+  </h1>
+  <div
+          class="bg-[#FFD735] rounded-3xl px-10 py-12 w-80 md:w-96 flex flex-col items-center"
+  >
+    <form id="loginForm" class="w-full flex flex-col h-full">
+      <div class="flex flex-col gap-5 mb-40">
+        <div>
+          <input
+                  type="text"
+                  id="primeiroNome"
+                  required
+                  placeholder="Primeiro Nome"
+                  class="w-full px-4 py-3 rounded-full focus:outline-none bg-white border-2 border-[#C7C3C3]"
+          />
+          <input
+                  type="text"
+                  id="sobreNome"
+                  required
+                  placeholder="Sobrenome"
+                  class="w-full px-4 py-3 rounded-full focus:outline-none bg-white border-2 border-[#C7C3C3] mt-4"
+          />
+        </div>
+        <div>
+          <input
+                  type="password"
+                  id="senha"
+                  required
+                  placeholder="Data de Nascimento (Senha)"
+                  class="w-full px-4 py-3 rounded-full focus:outline-none bg-white border-2 border-[#C7C3C3]"
+          />
+        </div>
       </div>
-    </div>
+      <div
+              id="errorMessage"
+              class="text-[#6C0CFF] text-center font-extrabold mb-4 hidden"
+      ></div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        document
-          .getElementById("loginForm")
-          .addEventListener("submit", async function (e) {
-            e.preventDefault();
+      <div class="mt-auto">
+        <button
+                type="submit"
+                class="w-full bg-white hover:bg-gray-200 text-black font-medium py-3 px-6 rounded-full transition-colors"
+        >
+          Login
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
-            const primeiroNome = document.getElementById("primeiroNome").value;
-            const sobreNome = document.getElementById("sobreNome").value;
-            const senha = document.getElementById("senha").value;
-            const errorElement = document.getElementById("errorMessage");
-            const button = e.target.querySelector('button[type="submit"]');
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document
+      .getElementById("loginForm")
+      .addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-            button.disabled = true;
-            button.textContent = "Autenticando...";
-            errorElement.classList.add("hidden");
+        const primeiroNome = document.getElementById("primeiroNome").value;
+        const sobreNome = document.getElementById("sobreNome").value;
+        const senha = document.getElementById("senha").value;
+        const errorElement = document.getElementById("errorMessage");
+        const button = e.target.querySelector('button[type="submit"]');
 
-            try {
-              const response = await axios.post("/api/v1/aluno/login", null, {
-                params: {
-                  primeiroNome: primeiroNome,
-                  sobreNome: sobreNome,
-                  senha: senha,
-                },
-              });
+        const nomeCompleto = primeiroNome + " " + sobreNome;
 
-              sessionStorage.setItem(
-                "aluno",
-                JSON.stringify({
-                  primeiroNome: primeiroNome,
-                  sobreNome: sobreNome,
-                })
-              );
-              window.location.href = "/aluno/home";
-            } catch (error) {
-              button.disabled = false;
-              button.textContent = "Login";
+        button.disabled = true;
+        button.textContent = "Autenticando...";
+        errorElement.classList.add("hidden");
 
-              if (error.response && error.response.status === 401) {
-                errorElement.textContent = "Nome ou senha incorretos";
-                errorElement.classList.remove("hidden");
-              } else {
-                errorElement.textContent = "Erro ao conectar com o servidor";
-                errorElement.classList.remove("hidden");
-                console.error("Erro:", error);
-              }
-            }
+        try {
+          const response = await axios.post("/api/v1/aluno/login", null, {
+            params: {
+              nomeAluno: nomeCompleto,
+              senha: senha,
+            },
           });
+
+          sessionStorage.setItem(
+            "aluno",
+            JSON.stringify({
+              nomeAluno: nomeCompleto,
+            })
+          );
+          window.location.href = "/aluno/home";
+        } catch (error) {
+          button.disabled = false;
+          button.textContent = "Login";
+
+          if (error.response && error.response.status === 401) {
+            errorElement.textContent = "Nome ou senha incorretos";
+            errorElement.classList.remove("hidden");
+          } else {
+            errorElement.textContent = "Erro ao conectar com o servidor";
+            errorElement.classList.remove("hidden");
+            console.error("Erro:", error);
+          }
+        }
       });
-    </script>
-  </body>
+  });
+</script>
+</body>
 </html>
