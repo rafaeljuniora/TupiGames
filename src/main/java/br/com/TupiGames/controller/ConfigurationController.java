@@ -12,13 +12,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ConfigurationController {
 
     @GetMapping("/aluno")
-    public String configAluno() {
+    public String configAluno(Model model) {
         return "ConfigurationPages/StudentConfiguration";
     }
 
     @GetMapping("/professor")
-    public String configProfessor() { return "ConfigurationPages/TeacherConfiguration";
+    public String configProfessor() {
+        return "ConfigurationPages/TeacherConfiguration";
     }
 
-
+    @GetMapping("/escola")
+    public String configEscola() {
+        return "ConfigurationPages/SchoolConfiguration";
+    }
 }
