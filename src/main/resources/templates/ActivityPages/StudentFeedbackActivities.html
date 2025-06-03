@@ -181,6 +181,7 @@
         total: 0,
         nomeAtividade: "",
         percentual: 0,
+        codigo: 0,
       };
 
       function initializeFeedback() {
@@ -217,7 +218,7 @@
       }
 
       function restartActivity() {
-        window.location.href = "/atividades/aluno/realizar";
+        window.location.href = `/atividades/aluno/realizar?codigo=${resultData.codigo}`;
       }
 
       function exitActivity() {
@@ -238,6 +239,9 @@
         }
         if (urlParams.has("atividade")) {
           resultData.nomeAtividade = urlParams.get("atividade") || "Atividade";
+        }
+        if (urlParams.has("codigo")) {
+          resultData.codigo = urlParams.get("codigo") || 0;
         }
         
         if (resultData.total > 0) {
