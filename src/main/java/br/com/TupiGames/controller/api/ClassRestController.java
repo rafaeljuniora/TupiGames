@@ -26,4 +26,10 @@ public class ClassRestController {
         Escola escola = schoolService.getSchoolByEmail(email);
         return classService.findAllBySchool(escola);
     }
+
+    @PostMapping("/remove")
+    public void removeTurma(@RequestBody String nomeTurma){
+        Turma turma= classService.findBynomeTurma(nomeTurma);
+        classService.removeTurmaById(turma.getTurma_id());
+    }
 }

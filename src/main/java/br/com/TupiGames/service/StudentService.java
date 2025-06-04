@@ -31,4 +31,8 @@ public class StudentService {
                 .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
     }
 
+    public void removeAlunoById(Long aluno_id){
+        studentRepository.deleteById(aluno_id);
+    }
+
 }

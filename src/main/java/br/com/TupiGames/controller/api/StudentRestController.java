@@ -43,4 +43,9 @@ public class StudentRestController {
         return studentService.getAllBySchool(escola);
     }
 
+    @PostMapping("/remove")
+    public void removeStudent(@RequestBody Long aluno_id){
+        studentService.removeAlunoById(aluno_id);
+    }
+
 }

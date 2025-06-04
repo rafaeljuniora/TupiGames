@@ -37,4 +37,8 @@ public class TeacherService {
     public List<Turma> getTurmasByProfessorId(Long professorId) {
         return teacherRepository.findTurmasByProfessorId(professorId);
     }
+
+    public void removeProfessorById(Long professor_id){
+        teacherRepository.deleteById(professor_id);
+    }
 }
