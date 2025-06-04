@@ -1,5 +1,6 @@
 package br.com.TupiGames.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -7,6 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "aluno")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Aluno {
     @Id
     @GeneratedValue
@@ -28,6 +30,12 @@ public class Aluno {
     }
 
     public Aluno(String nomeAluno, String senha) {
+        this.nomeAluno = nomeAluno;
+        this.senha = senha;
+    }
+
+    public Aluno(Long aluno_id, String nomeAluno, String senha) {
+        this.aluno_id = aluno_id;
         this.nomeAluno = nomeAluno;
         this.senha = senha;
     }

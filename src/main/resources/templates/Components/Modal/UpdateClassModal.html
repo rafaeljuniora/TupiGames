@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <style th:fragment="update-class-modal-style">
+      .update-class-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .update-class-hidden {
+        display: none;
+      }
+
+      .update-class-modal-content {
+        max-height: 80vh;
+        overflow-y: auto;
+        background-color: #f1f1f1;
+        width: 90%;
+        max-width: 28rem;
+        padding: 1.5rem;
+        border-radius: 0 0 45px 45px;
+        border-top-left-radius: 45px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .update-class-dropdown {
+        border: 1px solid #e5e7eb;
+        border-radius: 45px;
+        background-color: white;
+        margin-bottom: 1rem;
+        overflow: hidden;
+      }
+
+      .update-class-dropdown-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        cursor: pointer;
+      }
+
+      .update-class-dropdown-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        padding: 0 1rem;
+      }
+
+      .update-class-dropdown-open .update-class-dropdown-content {
+        max-height: 300px;
+        overflow-y: auto;
+        padding-bottom: 1rem;
+        transition: max-height 0.5s ease-in;
+      }
+
+      .update-class-dropdown-arrow {
+        transition: transform 0.3s ease;
+      }
+
+      .update-class-dropdown-open .update-class-dropdown-arrow {
+        transform: rotate(180deg);
+      }
+
+      .update-class-list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f3f4f6;
+      }
+
+      .update-class-add-btn {
+        color: #10b981;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .update-class-remove-btn {
+        color: #ef4444;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .update-class-selected {
+        background-color: #eff6ff;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      th:fragment="update-class-modal"
+      id="updateClassModal"
+      class="update-class-modal-overlay update-class-hidden"
+    >
+      <div class="update-class-modal-content">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-bold">Editar Turma</h2>
+          <button
+            class="text-3xl font-bold p-2 cursor-pointer"
+            id="updateClassCloseModalBtn"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div>
+          <form id="updateClassForm" class="space-y-4" method="post">
+            <input type="hidden" id="updateClassId" name="turma_id" />
+            <input
+              type="hidden"
+              id="updateClassEscolaEmail"
+              name="escolaEmail"
+            />
+
+            <div>
+              <input
+                type="text"
+                id="updateClassName"
+                name="nomeTurma"
+                placeholder="Nome da Turma"
+                class="w-full p-4 bg-white rounded-full border border-gray-200 focus:outline-none"
+                required
+              />
+            </div>
+
+            <div>
+              <select
+                id="updateClassPeriod"
+                name="periodo"
+                class="w-full p-4 bg-white rounded-full border border-gray-200 focus:outline-none appearance-none"
+                required
+              >
+                <option value="" disabled>Selecione o período</option>
+                <option value="Matutino">Matutino</option>
+                <option value="Vespertino">Vespertino</option>
+                <option value="Noturno">Noturno</option>
+              </select>
+            </div>
+
+            <div>
+              <input
+                type="number"
+                id="updateClassStudentCount"
+                name="qntAlunos"
+                placeholder="Quantidade de Alunos"
+                class="w-full p-4 bg-white rounded-full border border-gray-200 focus:outline-none"
+                required
+              />
+            </div>
+
+            <div class="update-class-dropdown">
+              <div
+                class="update-class-dropdown-toggle"
+                id="updateClassProfessorDropdownToggle"
+              >
+                <span class="text-gray-700 font-medium">Professores</span>
+                <svg
+                  class="w-6 h-6 update-class-dropdown-arrow"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                class="update-class-dropdown-content"
+                id="updateProfessoresContainer"
+              ></div>
+            </div>
+
+            <div class="update-class-dropdown">
+              <div
+                class="update-class-dropdown-toggle"
+                id="updateClassAlunoDropdownToggle"
+              >
+                <span class="text-gray-700 font-medium">Alunos</span>
+                <svg
+                  class="w-6 h-6 update-class-dropdown-arrow"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </div>
+              <div
+                class="update-class-dropdown-content"
+                id="updateAlunosContainer"
+              ></div>
+            </div>
+
+            <input
+              type="hidden"
+              id="updateSelectedProfessores"
+              name="selectedProfessores"
+              value=""
+            />
+            <input
+              type="hidden"
+              id="updateSelectedAlunos"
+              name="selectedAlunos"
+              value=""
+            />
+
+            <div class="flex justify-center mt-6">
+              <button
+                type="submit"
+                class="bg-[#FFE889] text-black font-medium px-10 py-3 rounded-full hover:bg-yellow-300"
+              >
+                Salvar Alterações
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script th:fragment="update-class-modal-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const updateClassModal = document.getElementById("updateClassModal");
+        const updateClassCloseBtn = document.getElementById(
+          "updateClassCloseModalBtn"
+        );
+        const updateClassForm = document.getElementById("updateClassForm");
+        const professoresContainer = document.getElementById(
+          "updateProfessoresContainer"
+        );
+        const alunosContainer = document.getElementById(
+          "updateAlunosContainer"
+        );
+
+        if (updateClassModal && updateClassCloseBtn) {
+          updateClassCloseBtn.addEventListener("click", function () {
+            updateClassModal.classList.add("update-class-hidden");
+          });
+
+          updateClassModal.addEventListener("click", function (e) {
+            if (e.target === updateClassModal) {
+              updateClassModal.classList.add("update-class-hidden");
+            }
+          });
+
+          document.addEventListener("keydown", function (e) {
+            if (
+              e.key === "Escape" &&
+              !updateClassModal.classList.contains("update-class-hidden")
+            ) {
+              updateClassModal.classList.add("update-class-hidden");
+            }
+          });
+        }
+
+        window.openUpdateClassModal = async function (turma) {
+          document.getElementById("updateClassId").value = turma.id;
+          document.getElementById("updateClassName").value = turma.nomeTurma;
+          document.getElementById("updateClassPeriod").value = turma.periodo;
+          document.getElementById("updateClassStudentCount").value =
+            turma.qntAlunos;
+
+          const usuarioSalvo = sessionStorage.getItem("usuario");
+          if (usuarioSalvo) {
+            const usuario = JSON.parse(usuarioSalvo);
+            document.getElementById("updateClassEscolaEmail").value =
+              usuario.email;
+          }
+
+          await loadProfessoresForUpdate(turma.professores);
+          await loadAlunosForUpdate(turma.alunos);
+
+          updateClassModal.classList.remove("update-class-hidden");
+        };
+
+        function setupDropdown(toggleId) {
+          const toggle = document.getElementById(toggleId);
+          if (toggle) {
+            toggle.addEventListener("click", function (e) {
+              e.stopPropagation();
+              const dropdown = this.closest(".update-class-dropdown");
+              if (dropdown) {
+                dropdown.classList.toggle("update-class-dropdown-open");
+
+                document
+                  .querySelectorAll(".update-class-dropdown")
+                  .forEach((otherDropdown) => {
+                    if (
+                      otherDropdown !== dropdown &&
+                      otherDropdown.classList.contains(
+                        "update-class-dropdown-open"
+                      )
+                    ) {
+                      otherDropdown.classList.remove(
+                        "update-class-dropdown-open"
+                      );
+                    }
+                  });
+              }
+            });
+          }
+        }
+
+        setupDropdown("updateClassProfessorDropdownToggle");
+        setupDropdown("updateClassAlunoDropdownToggle");
+
+        document.addEventListener("click", function (e) {
+          if (!e.target.closest(".update-class-dropdown")) {
+            document
+              .querySelectorAll(".update-class-dropdown")
+              .forEach((dropdown) => {
+                dropdown.classList.remove("update-class-dropdown-open");
+              });
+          }
+        });
+
+        function toggleButtonState(button) {
+          const isAdd = button.classList.contains("update-class-add-btn");
+          button.textContent = isAdd ? "−" : "+";
+          button.classList.toggle("update-class-add-btn", !isAdd);
+          button.classList.toggle("update-class-remove-btn", isAdd);
+          button
+            .closest(".update-class-list-item")
+            .classList.toggle("update-class-selected", isAdd);
+        }
+
+        professoresContainer.addEventListener("click", function (e) {
+          if (
+            e.target.classList.contains("update-class-add-btn") ||
+            e.target.classList.contains("update-class-remove-btn")
+          ) {
+            e.preventDefault();
+            toggleButtonState(e.target);
+            updateSelectedItems();
+          }
+        });
+
+        alunosContainer.addEventListener("click", function (e) {
+          if (
+            e.target.classList.contains("update-class-add-btn") ||
+            e.target.classList.contains("update-class-remove-btn")
+          ) {
+            e.preventDefault();
+            toggleButtonState(e.target);
+            updateSelectedItems();
+          }
+        });
+
+        function updateSelectedItems() {
+          const professoresSelecionados = Array.from(
+            professoresContainer.querySelectorAll(".update-class-remove-btn"),
+            (btn) => btn.getAttribute("data-id")
+          );
+
+          const alunosSelecionados = Array.from(
+            alunosContainer.querySelectorAll(".update-class-remove-btn"),
+            (btn) => btn.getAttribute("data-id")
+          );
+
+          document.getElementById("updateSelectedProfessores").value =
+            professoresSelecionados.join(",");
+          document.getElementById("updateSelectedAlunos").value =
+            alunosSelecionados.join(",");
+        }
+
+        async function loadProfessoresForUpdate(professoresDaTurma) {
+          try {
+            const usuarioSalvo = sessionStorage.getItem("usuario");
+            const usuario = JSON.parse(usuarioSalvo);
+
+            const response = await axios.post(
+              "/api/v1/professor/getAllBySchool",
+              usuario.email,
+              { headers: { "Content-Type": "text/plain" } }
+            );
+
+            professoresContainer.innerHTML = "";
+
+            if (response.data?.length > 0) {
+              response.data.forEach((professor) => {
+                const isSelected = professoresDaTurma?.some(
+                  (p) => p.id === professor.id
+                );
+
+                const professorItem = document.createElement("div");
+                professorItem.className = `update-class-list-item ${
+                  isSelected ? "update-class-selected" : ""
+                }`;
+                professorItem.innerHTML = `
+                  <span>${professor.nomeProfessor}</span>
+                  <button 
+                    type="button" 
+                    class="${
+                      isSelected
+                        ? "update-class-remove-btn"
+                        : "update-class-add-btn"
+                    }" 
+                    data-id="${professor.id}"
+                  >
+                    ${isSelected ? "−" : "+"}
+                  </button>
+                `;
+                professoresContainer.appendChild(professorItem);
+              });
+            } else {
+              professoresContainer.innerHTML =
+                '<div class="p-2 text-gray-500">Nenhum professor encontrado</div>';
+            }
+          } catch (error) {
+            console.error("Erro ao carregar professores:", error);
+            professoresContainer.innerHTML =
+              '<div class="p-2 text-red-500">Erro ao carregar professores</div>';
+          }
+        }
+
+        async function loadAlunosForUpdate(alunosDaTurma) {
+          try {
+            const usuarioSalvo = sessionStorage.getItem("usuario");
+            const usuario = JSON.parse(usuarioSalvo);
+
+            const response = await axios.post(
+              "/api/v1/aluno/getAllBySchool",
+              usuario.email,
+              { headers: { "Content-Type": "text/plain" } }
+            );
+
+            alunosContainer.innerHTML = "";
+
+            if (response.data?.length > 0) {
+              response.data.forEach((aluno) => {
+                const isSelected = alunosDaTurma?.some(
+                  (a) => a.id === aluno.id
+                );
+
+                const alunoItem = document.createElement("div");
+                alunoItem.className = `update-class-list-item ${
+                  isSelected ? "update-class-selected" : ""
+                }`;
+                alunoItem.innerHTML = `
+                  <span>${aluno.nomeAluno}</span>
+                  <button 
+                    type="button" 
+                    class="${
+                      isSelected
+                        ? "update-class-remove-btn"
+                        : "update-class-add-btn"
+                    }" 
+                    data-id="${aluno.id}"
+                  >
+                    ${isSelected ? "−" : "+"}
+                  </button>
+                `;
+                alunosContainer.appendChild(alunoItem);
+              });
+            } else {
+              alunosContainer.innerHTML =
+                '<div class="p-2 text-gray-500">Nenhum aluno encontrado</div>';
+            }
+          } catch (error) {
+            console.error("Erro ao carregar alunos:", error);
+            alunosContainer.innerHTML =
+              '<div class="p-2 text-red-500">Erro ao carregar alunos</div>';
+          }
+        }
+
+        if (updateClassForm) {
+          updateClassForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const turmaData = Object.fromEntries(formData.entries());
+
+            try {
+              const response = await axios.put(
+                "/api/v1/turma/update",
+                turmaData
+              );
+
+              Swal.fire({
+                title: "Sucesso!",
+                text: "Turma atualizada com sucesso",
+                icon: "success",
+                confirmButtonText: "OK",
+              }).then(() => {
+                updateClassModal.classList.add("update-class-hidden");
+                getClassBySchool();
+              });
+            } catch (error) {
+              console.error("Erro ao atualizar turma:", error);
+              Swal.fire({
+                title: "Erro!",
+                text:
+                  error.response?.data?.message || "Erro ao atualizar turma",
+                icon: "error",
+                confirmButtonText: "OK",
+              });
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

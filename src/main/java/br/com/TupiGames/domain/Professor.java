@@ -32,6 +32,14 @@ public class Professor {
         this.senha = senha;
     }
 
+    public Professor(Long professor_id, String nomeProfessor, String dataNascimento, String email, String senha) {
+        this.professor_id = professor_id;
+        this.nomeProfessor = nomeProfessor;
+        this.dataNascimento = dataNascimento;
+        this.email = email;
+        this.senha = senha;
+    }
+
     public Professor() {
     }
 
