@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <style th:fragment="view-teacher-modal-style">
+      .view-teacher-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .view-teacher-hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      th:fragment="view-teacher-modal"
+      id="viewTeacherModal"
+      class="view-teacher-modal-overlay view-teacher-hidden"
+    >
+      <div
+        class="bg-[#F1F1F1] rounded-b-[45px] rounded-tl-[45px] w-11/12 max-w-md p-6 shadow-lg"
+      >
+        <div class="flex justify-end items-center mb-6">
+          <button
+            class="text-2xl font-bold p-2 cursor-pointer"
+            id="viewTeacherCloseModalBtn"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-gray-700 font-medium mb-2">Nome</label>
+            <div
+              class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC]"
+            >
+              <span id="viewTeacherName"></span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-medium mb-2"
+              >Data de Nascimento</label
+            >
+            <div
+              class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC]"
+            >
+              <span id="viewTeacherBirthDate"></span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-medium mb-2"
+              >Email Institucional</label
+            >
+            <div
+              class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC]"
+            >
+              <span id="viewTeacherEmail"></span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-medium mb-2"
+              >Senha</label
+            >
+            <div
+              class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC]"
+            >
+              <span id="viewTeacherPassword"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script th:fragment="view-teacher-modal-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const viewTeacherModal = document.getElementById("viewTeacherModal");
+        const viewTeacherCloseBtn = document.getElementById(
+          "viewTeacherCloseModalBtn"
+        );
+
+        if (viewTeacherModal) {
+          viewTeacherModal.classList.add("view-teacher-hidden");
+        }
+
+        if (viewTeacherModal && viewTeacherCloseBtn) {
+          viewTeacherCloseBtn.addEventListener("click", function () {
+            viewTeacherModal.classList.add("view-teacher-hidden");
+          });
+
+          viewTeacherModal.addEventListener("click", function (e) {
+            if (e.target === viewTeacherModal) {
+              viewTeacherModal.classList.add("view-teacher-hidden");
+            }
+          });
+
+          document.addEventListener("keydown", function (e) {
+            if (
+              e.key === "Escape" &&
+              !viewTeacherModal.classList.contains("view-teacher-hidden")
+            ) {
+              viewTeacherModal.classList.add("view-teacher-hidden");
+            }
+          });
+        }
+
+        window.openTeacherViewModal = function (professor) {
+          if (!viewTeacherModal) return;
+
+          document.getElementById("viewTeacherName").textContent =
+            professor.nomeProfessor || "Não informado";
+          document.getElementById("viewTeacherBirthDate").textContent =
+            professor.dataNascimento || "Não informado";
+          document.getElementById("viewTeacherEmail").textContent =
+            professor.email || "Não informado";
+          document.getElementById("viewTeacherPassword").textContent =
+            professor.senha || "Não informado";
+
+          viewTeacherModal.classList.remove("view-teacher-hidden");
+        };
+      });
+    </script>
+  </body>
+</html>
