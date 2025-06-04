@@ -44,6 +44,24 @@ public class StudentRestController {
         return studentService.getAllBySchool(escola);
     }
 
+    @PostMapping("/getAlunoByNome")
+    public ResponseEntity<AlunoConfigDTO> getAlunoByNome(@RequestBody String nomeAluno) {
+        try {
+            Aluno aluno = studentService.getStudentByName(nomeAluno);
+
+            if (aluno != null) {
+                AlunoConfigDTO alunoDTO = new AlunoConfigDTO();
+                alunoDTO.setNomeAluno(aluno.getNomeAluno());
+                alunoDTO.setSenha(aluno.getSenha());
+                return ResponseEntity.ok(alunoDTO);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @PostMapping("/configuracoes")
     public ResponseEntity<?> updateStudentConfiguration(@RequestBody AlunoConfigDTO alunoConfigDTO) {
         try {

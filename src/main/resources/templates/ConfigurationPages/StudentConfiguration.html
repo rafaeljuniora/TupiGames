@@ -155,11 +155,29 @@
         const editPasswordButton = document.getElementById('editPasswordButton');
         const nomeField = document.getElementById('nome');
 
-        const alunoSalvo = sessionStorage.getItem('aluno');
-        if (alunoSalvo) {
-            const aluno = JSON.parse(alunoSalvo);
-            nomeField.value = aluno.nomeAluno;
+        async function carregarDadosAluno() {
+            const alunoSalvo = sessionStorage.getItem('aluno');
+            if (alunoSalvo) {
+                const aluno = JSON.parse(alunoSalvo);
+                nomeField.value = aluno.nomeAluno;
+
+                try {
+                    const response = await axios.post('/api/v1/aluno/getAlunoByNome', aluno.nomeAluno, {
+                        headers: {
+                            'Content-Type': 'text/plain'
+                        }
+                    });
+
+                    if (response.data) {
+                        passwordField.value = response.data.senha;
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar dados do aluno:', error);
+                }
+            }
         }
+
+        carregarDadosAluno();
 
         if (editPasswordButton && passwordField) {
             editPasswordButton.addEventListener('click', function() {
