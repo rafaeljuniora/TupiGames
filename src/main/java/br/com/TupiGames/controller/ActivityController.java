@@ -14,4 +14,9 @@ public class ActivityController {
     public String createActivity(@ModelAttribute("atividade") AtividadeDTO atividadeDTO){
         return "ActivityPages/TeacherCreateActivity";
     }
+
+    @GetMapping("/aluno/realizar")
+    public String realizationActivities(){
+        return "ActivityPages/StudentActivitiesRealization";
+    }
 }
