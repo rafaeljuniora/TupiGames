@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ranking - TupiGames</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .jersey-10 {
+        font-family: "Jersey 10", cursive;
+      }
+
+      .player-card {
+        background: rgba(51, 29, 85, 0.9);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      .ranking-container {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+    <style
+      th:replace="~{components/StudentHeaderDark :: sidebar-style}"
+    ></style>
+    <script
+      th:replace="~{components/StudentHeaderDark :: sidebar-script}"
+    ></script>
+  </head>
+  <body
+    class="min-h-screen bg-[url('/images/back_emy.png')] bg-[#331D55] bg-cover bg-fixed"
+  >
+    <header
+      th:replace="~{components/StudentHeaderDark :: header('inicio')}"
+    ></header>
+    <aside
+      th:replace="~{components/StudentHeaderDark :: sidebar('inicio')}"
+    ></aside>
+
+    <div class="flex flex-col min-h-screen pt-[5.4rem] px-4 relative">
+      <div
+        class="player-card rounded-3xl p-6 mb-8 mx-auto w-full max-w-md text-center"
+      >
+        <h2 class="text-white text-4xl jersey-10 mb-2">NOME ALUNO</h2>
+        <div class="text-purple-300 text-2xl jersey-10 mb-2">XXXX PONTOS</div>
+        <div class="text-purple-300 text-2xl jersey-10">X° LUGAR</div>
+
+        <div class="ranking-container rounded-3xl p-6 w-full max-w-md mx-auto">
+          <div class="space-y-3">
+            <div
+              class="flex items-center justify-between py-4 px-5 rounded-xl bg-yellow-100 border-2 border-yellow-300 transform hover:scale-[1.02] transition-transform"
+            >
+              <div class="flex items-center space-x-4">
+                <span class="text-yellow-600 font-bold text-2xl jersey-10"
+                  >1°</span
+                >
+                <span class="text-gray-800 text-xl jersey-10">NOME ALUNO</span>
+              </div>
+              <span class="text-yellow-600 font-bold text-xl jersey-10"
+                >XXXX</span
+              >
+            </div>
+
+            <div
+              class="flex items-center justify-between py-4 px-5 rounded-xl bg-gray-100 border-2 border-gray-300 transform hover:scale-[1.02] transition-transform"
+            >
+              <div class="flex items-center space-x-4">
+                <span class="text-gray-600 font-bold text-2xl jersey-10"
+                  >2°</span
+                >
+                <span class="text-gray-800 text-xl jersey-10">NOME ALUNO</span>
+              </div>
+              <span class="text-gray-600 font-bold text-xl jersey-10"
+                >XXXX</span
+              >
+            </div>
+
+            <div
+              class="flex items-center justify-between py-4 px-5 rounded-xl bg-orange-100 border-2 border-orange-300 transform hover:scale-[1.02] transition-transform"
+            >
+              <div class="flex items-center space-x-4">
+                <span class="text-orange-600 font-bold text-2xl jersey-10"
+                  >3°</span
+                >
+                <span class="text-gray-800 text-xl jersey-10">NOME ALUNO</span>
+              </div>
+              <span class="text-orange-600 font-bold text-xl jersey-10"
+                >XXXX</span
+              >
+            </div>
+
+            <div
+              class="flex items-center justify-between py-3 px-4 rounded-xl bg-white bg-opacity-80 border-2 border-purple-200 transform hover:scale-[1.01] transition-transform"
+            >
+              <div class="flex items-center space-x-4">
+                <span class="text-purple-600 font-bold text-xl jersey-10"
+                  >4°</span
+                >
+                <span class="text-gray-700 text-lg jersey-10">NOME ALUNO</span>
+              </div>
+              <span class="text-purple-600 font-semibold text-lg jersey-10"
+                >XXXX</span
+              >
+            </div>
+
+            <div
+              class="flex items-center justify-between py-3 px-4 rounded-xl bg-white bg-opacity-80 border-2 border-purple-200 transform hover:scale-[1.01] transition-transform"
+            >
+              <div class="flex items-center space-x-4">
+                <span class="text-purple-600 font-bold text-xl jersey-10"
+                  >5°</span
+                >
+                <span class="text-gray-700 text-lg jersey-10">NOME ALUNO</span>
+              </div>
+              <span class="text-purple-600 font-semibold text-lg jersey-10"
+                >XXXX</span
+              >
+            </div>
+
+            <div class="text-center py-3">
+              <span class="text-purple-500 text-3xl font-bold">. . .</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button
+        class="fixed bottom-6 right-6 bg-[#8F33A5] hover:bg-[#7C2A90] text-white text-xl jersey-10 py-3 px-8 rounded-full transition-all duration-200 shadow-lg transform hover:scale-105"
+        onclick="window.history.back()"
+      >
+        VOLTAR
+      </button>
+    </div>
+  </body>
+</html>
