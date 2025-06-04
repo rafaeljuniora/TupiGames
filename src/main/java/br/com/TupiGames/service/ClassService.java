@@ -1,9 +1,12 @@
 package br.com.TupiGames.service;
 
+import br.com.TupiGames.domain.Escola;
 import br.com.TupiGames.domain.Turma;
 import br.com.TupiGames.repository.ClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ClassService {
@@ -16,5 +19,9 @@ public class ClassService {
 
     public Turma findBynomeTurma(String nomeTurma){
         return classRepository.findBynomeTurma(nomeTurma);
+    }
+
+    public List<Turma> findAllBySchool(Escola escola){
+        return classRepository.findAllByEscola(escola);
     }
 }

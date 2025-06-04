@@ -42,7 +42,7 @@ public class TeacherRestController {
         }
     }
 
-    @PostMapping("getAllBySchool")
+    @PostMapping("/getAllBySchool")
     public List<Professor> getAllTeachersBySchool(@RequestBody String email){
         Escola escola = schoolService.getSchoolByEmail(email);
         return teacherService.getAllBySchool(escola);
