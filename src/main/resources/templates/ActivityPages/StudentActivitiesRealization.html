@@ -364,7 +364,6 @@
           if (!codigo) {
             throw new Error("Código da atividade não encontrado na URL");
           }
-
           Swal.fire({
             title: "Carregando atividade...",
             allowOutsideClick: false,
@@ -614,15 +613,38 @@
         }
       }
 
-      function finishActivity() {
+      async function finishActivity() {
         const totalQuestions = atividadeData.perguntas.length;
         const correctAnswers = score / 100;
+
+        const usuarioSalvo = sessionStorage.getItem("aluno");
+        const usuarioObj = JSON.parse(usuarioSalvo);
+        const nomeAluno = usuarioObj.nomeAluno;
+        const urlParams = new URLSearchParams(window.location.search);
+        const codigoAtividade = urlParams.get("codigo");
+
+        const url = new URL("/api/v1/resposta/save", window.location.origin);
+        url.searchParams.append("nomeAluno", nomeAluno);
+        url.searchParams.append("atividadeCode", codigoAtividade);
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            pontos: score,
+            acertos: correctAnswers,
+            total: totalQuestions,
+          }),
+        });
 
         const params = new URLSearchParams({
           pontos: score,
           acertos: correctAnswers,
           total: totalQuestions,
           atividade: atividadeData.nomeAtividade,
+          codigo: codigoAtividade,
         });
 
         window.location.href = `/atividades/aluno/feedback?${params.toString()}`;

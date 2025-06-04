@@ -2,8 +2,10 @@ package br.com.TupiGames.controller.api;
 
 import br.com.TupiGames.domain.Atividade;
 import br.com.TupiGames.domain.Pergunta;
+import br.com.TupiGames.domain.Resposta;
 import br.com.TupiGames.domain.Turma;
 import br.com.TupiGames.dto.AtividadeDTO;
+import br.com.TupiGames.dto.RespostaDTO;
 import br.com.TupiGames.service.ActivityService;
 import br.com.TupiGames.service.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;

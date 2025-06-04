@@ -25,6 +25,8 @@ public class Aluno {
     @ManyToMany(mappedBy = "alunos", cascade = CascadeType.REMOVE)
     private Set<Turma> turmas = new HashSet<>();
 
+    @OneToMany(mappedBy = "aluno")
+    private Set<Resposta> respostas = new HashSet<>();
 
     public Aluno() {
     }
@@ -74,5 +76,13 @@ public class Aluno {
 
     public void removerTurma(Turma turma) {
         this.turmas.remove(turma);
+    }
+
+    public Set<Resposta> getRespostas() {
+        return respostas;
+    }
+
+    public void setRespostas(Set<Resposta> respostas) {
+        this.respostas = respostas;
     }
 }
