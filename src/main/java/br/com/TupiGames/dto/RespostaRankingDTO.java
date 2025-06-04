@@ -24,7 +24,6 @@ public class RespostaRankingDTO {
         this.nomeAluno = nomeAluno;
     }
 
-    // Getters e Setters
     public Long getResposta_id() {
         return resposta_id;
     }
