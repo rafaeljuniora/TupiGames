@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TupiGames - Estudante</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
+    <style th:replace="~{components/StudentHeader :: sidebar-style}"></style>
+    <link href="/css/output.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script th:replace="~{components/StudentHeader :: sidebar-script}"></script>
+  </head>
+  <body class="bg-[#F5E5C7] min-h-screen">
+    <header
+      th:replace="~{components/StudentHeader :: header('inicio')}"
+    ></header>
+    <aside
+      th:replace="~{components/StudentHeader :: sidebar('inicio')}"
+    ></aside>
+
+    <main class="container mx-auto px-4 py-8 pt-24">
+      <div class="flex flex-col items-center gap-6 mb-16">
+        <div
+          class="bg-[#FFCD03] hover:bg-[#FFC107] transition-colors duration-200 rounded-full px-12 py-4 text-2xl jersey-10 w-80 text-center text-black shadow-lg cursor-pointer relative"
+        >
+          <input
+            type="text"
+            placeholder="Insira o código"
+            class="bg-transparent outline-none placeholder-black text-black text-center w-full jersey-10"
+            id="codigoAtividade"
+          />
+        </div>
+        <button
+          class="bg-[#FFCD03] hover:bg-[#FFC107] transition-colors duration-200 rounded-full py-3 text-xl jersey-10 w-32 text-center text-black shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+        >
+          Entrar
+        </button>
+      </div>
+
+      <div class="mb-16">
+        <h2 class="text-4xl jersey-10 text-center text-[#8B4513] mb-8">
+          Atividades anteriores
+        </h2>
+
+        <div class="bg-white rounded-3xl p-8 shadow-lg max-w-4xl mx-auto">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+
+            <div
+              th:if="${#lists.isEmpty(atividadesAnteriores)}"
+              class="col-span-full text-center py-8"
+            >
+              <p class="text-gray-500 jersey-10 text-xl">
+                Nenhuma atividade anterior encontrada
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-4xl jersey-10 text-center text-[#8B4513] mb-8">
+          Atividades Globais
+        </h2>
+        <div class="bg-white rounded-3xl p-8 shadow-lg">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+            <div
+              th:if="${#lists.isEmpty(atividadesGlobais)}"
+              class="col-span-full text-center py-16"
+            >
+              <p class="text-gray-500 jersey-10 text-xl">
+                Nenhuma atividade global disponível
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
