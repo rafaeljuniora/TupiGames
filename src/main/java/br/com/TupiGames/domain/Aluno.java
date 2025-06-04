@@ -1,6 +1,8 @@
 package br.com.TupiGames.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -26,6 +28,7 @@ public class Aluno {
     private Set<Turma> turmas = new HashSet<>();
 
     @OneToMany(mappedBy = "aluno")
+    @JsonManagedReference
     private Set<Resposta> respostas = new HashSet<>();
 
     public Aluno() {

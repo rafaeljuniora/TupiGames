@@ -1,5 +1,6 @@
 package br.com.TupiGames.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -18,10 +19,12 @@ public class Resposta {
 
     @ManyToOne
     @JoinColumn(name = "atividade_id")
+    @JsonBackReference
     private Atividade atividade;
 
     @ManyToOne
     @JoinColumn(name = "aluno_id")
+    @JsonBackReference
     private Aluno aluno;
 
     public Resposta(Long pontos, Integer acertos, Integer total, Long enviado) {
@@ -32,6 +35,14 @@ public class Resposta {
     }
 
     public Resposta() {
+    }
+
+    public Long getPontos() {
+        return pontos;
+    }
+
+    public void setPontos(Long pontos) {
+        this.pontos = pontos;
     }
 
     public Long getResposta_id() {

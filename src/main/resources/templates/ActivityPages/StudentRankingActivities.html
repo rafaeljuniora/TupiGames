@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -27,6 +27,28 @@
         border: 2px solid rgba(255, 255, 255, 0.3);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
       }
+      
+      .ranking-scroll {
+        max-height: 650px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #8F33A5 #f1f1f1;
+        padding: 8px;
+      }
+      
+      .ranking-scroll::-webkit-scrollbar {
+        width: 8px;
+      }
+      
+      .ranking-scroll::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+      
+      .ranking-scroll::-webkit-scrollbar-thumb {
+        background-color: #8F33A5;
+        border-radius: 10px;
+      }
     </style>
     <style
       th:replace="~{components/StudentHeaderDark :: sidebar-style}"
@@ -49,84 +71,14 @@
       <div
         class="player-card rounded-3xl p-6 mb-8 mx-auto w-full max-w-md text-center"
       >
-        <h2 class="text-white text-4xl jersey-10 mb-2">NOME ALUNO</h2>
-        <div class="text-purple-300 text-2xl jersey-10 mb-2">XXXX PONTOS</div>
-        <div class="text-purple-300 text-2xl jersey-10">X° LUGAR</div>
+        <h2 id="playerName" class="text-white text-4xl jersey-10 mb-2">Carregando...</h2>
+        <div id="playerPoints" class="text-purple-300 text-2xl jersey-10 mb-2">0 PONTOS</div>
+        <div id="playerPosition" class="text-purple-300 text-2xl jersey-10">0° LUGAR</div>
 
         <div class="ranking-container rounded-3xl p-6 w-full max-w-md mx-auto">
-          <div class="space-y-3">
-            <div
-              class="flex items-center justify-between py-4 px-5 rounded-xl bg-yellow-100 border-2 border-yellow-300 transform hover:scale-[1.02] transition-transform"
-            >
-              <div class="flex items-center space-x-4">
-                <span class="text-yellow-600 font-bold text-2xl jersey-10"
-                  >1°</span
-                >
-                <span class="text-gray-800 text-xl jersey-10">NOME ALUNO</span>
-              </div>
-              <span class="text-yellow-600 font-bold text-xl jersey-10"
-                >XXXX</span
-              >
-            </div>
-
-            <div
-              class="flex items-center justify-between py-4 px-5 rounded-xl bg-gray-100 border-2 border-gray-300 transform hover:scale-[1.02] transition-transform"
-            >
-              <div class="flex items-center space-x-4">
-                <span class="text-gray-600 font-bold text-2xl jersey-10"
-                  >2°</span
-                >
-                <span class="text-gray-800 text-xl jersey-10">NOME ALUNO</span>
-              </div>
-              <span class="text-gray-600 font-bold text-xl jersey-10"
-                >XXXX</span
-              >
-            </div>
-
-            <div
-              class="flex items-center justify-between py-4 px-5 rounded-xl bg-orange-100 border-2 border-orange-300 transform hover:scale-[1.02] transition-transform"
-            >
-              <div class="flex items-center space-x-4">
-                <span class="text-orange-600 font-bold text-2xl jersey-10"
-                  >3°</span
-                >
-                <span class="text-gray-800 text-xl jersey-10">NOME ALUNO</span>
-              </div>
-              <span class="text-orange-600 font-bold text-xl jersey-10"
-                >XXXX</span
-              >
-            </div>
-
-            <div
-              class="flex items-center justify-between py-3 px-4 rounded-xl bg-white bg-opacity-80 border-2 border-purple-200 transform hover:scale-[1.01] transition-transform"
-            >
-              <div class="flex items-center space-x-4">
-                <span class="text-purple-600 font-bold text-xl jersey-10"
-                  >4°</span
-                >
-                <span class="text-gray-700 text-lg jersey-10">NOME ALUNO</span>
-              </div>
-              <span class="text-purple-600 font-semibold text-lg jersey-10"
-                >XXXX</span
-              >
-            </div>
-
-            <div
-              class="flex items-center justify-between py-3 px-4 rounded-xl bg-white bg-opacity-80 border-2 border-purple-200 transform hover:scale-[1.01] transition-transform"
-            >
-              <div class="flex items-center space-x-4">
-                <span class="text-purple-600 font-bold text-xl jersey-10"
-                  >5°</span
-                >
-                <span class="text-gray-700 text-lg jersey-10">NOME ALUNO</span>
-              </div>
-              <span class="text-purple-600 font-semibold text-lg jersey-10"
-                >XXXX</span
-              >
-            </div>
-
-            <div class="text-center py-3">
-              <span class="text-purple-500 text-3xl font-bold">. . .</span>
+          <div id="rankingList" class="space-y-3 ranking-scroll">
+            <div class="text-center py-10">
+              <span class="text-purple-500 text-xl">Carregando ranking...</span>
             </div>
           </div>
         </div>
@@ -139,5 +91,144 @@
         VOLTAR
       </button>
     </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', async function() {
+        const usuarioSalvo = sessionStorage.getItem("aluno");
+        const usuarioObj = JSON.parse(usuarioSalvo);
+        const alunoNome = usuarioObj.nomeAluno;
+        if (!alunoNome) {
+          console.error('Nome do aluno não encontrado no sessionStorage');
+          return;
+        }
+        
+        document.getElementById('playerName').textContent = alunoNome.toUpperCase();
+        
+        try {
+          const userResponse = await fetchUserAnswer(alunoNome);
+          console.log(userResponse)
+          if (userResponse) {
+            document.getElementById('playerPoints').textContent = `${userResponse.pontos || 0} PONTOS`;
+          }
+          
+          const rankingResponse = await fetchTop10Ranking();
+          console.log(rankingResponse)
+          if (rankingResponse && rankingResponse.length > 0) {
+            updateRankingList(rankingResponse, alunoNome);
+          } else {
+            document.getElementById('rankingList').innerHTML = `
+              <div class="text-center py-10">
+                <span class="text-purple-500 text-xl">Nenhum participante no ranking ainda</span>
+              </div>
+            `;
+          }
+          
+        } catch (error) {
+          console.error('Erro ao carregar dados:', error);
+          document.getElementById('rankingList').innerHTML = `
+            <div class="text-center py-10">
+              <span class="text-red-500 text-xl">Erro ao carregar o ranking</span>
+            </div>
+          `;
+        }
+      });
+      
+      async function fetchUserAnswer(nomeAluno) {
+        try {
+          const response = await fetch('/api/v1/resposta/userAnswerPoints', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: nomeAluno
+          });
+          
+          if (!response.ok) {
+            throw new Error('Erro ao buscar dados do usuário');
+          }
+          
+          return await response.json();
+        } catch (error) {
+          console.error('Erro na requisição do usuário:', error);
+          return null;
+        }
+      }
+      
+      async function fetchTop10Ranking() {
+        try {
+          const urlParams = new URLSearchParams(window.location.search);
+          const codigo = urlParams.get("codigo");
+          
+          const response = await fetch('/api/v1/resposta/getTop10AnswersByActivity', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(codigo)
+          });
+          
+          if (!response.ok) {
+            throw new Error('Erro ao buscar ranking');
+          }
+          
+          return await response.json();
+        } catch (error) {
+          console.error('Erro na requisição do ranking:', error);
+          return null;
+        }
+      }
+      
+      function updateRankingList(rankingData, currentUser) {
+        const rankingList = document.getElementById('rankingList');
+        rankingList.innerHTML = '';
+        
+        let currentUserPosition = 0;
+        
+        rankingData.forEach((resposta, index) => {
+          const position = index + 1;
+          const isCurrentUser = resposta.nomeAluno === currentUser;
+          
+          if (isCurrentUser) {
+            currentUserPosition = position;
+            document.getElementById('playerPosition').textContent = `${position}° LUGAR`;
+          }
+          
+          let positionClass = '';
+          let bgClass = 'bg-white bg-opacity-80 border-purple-200';
+          let textColor = 'text-purple-600';
+          
+          if (position === 1) {
+            bgClass = 'bg-yellow-100 border-yellow-300';
+            textColor = 'text-yellow-600';
+          } else if (position === 2) {
+            bgClass = 'bg-gray-100 border-gray-300';
+            textColor = 'text-gray-600';
+          } else if (position === 3) {
+            bgClass = 'bg-orange-100 border-orange-300';
+            textColor = 'text-orange-600';
+          }
+          
+          const rankingItem = document.createElement('div');
+          rankingItem.className = `flex items-center justify-between py-${position <= 3 ? '4' : '3'} px-${position <= 3 ? '5' : '4'} rounded-xl ${bgClass} border-2 ${isCurrentUser ? 'border-[#8F33A5]' : ''} transform hover:scale-[1.02] transition-transform`;
+          
+          rankingItem.innerHTML = `
+            <div class="flex items-center space-x-4">
+              <span class="${textColor} font-bold text-${position <= 3 ? '2xl' : 'xl'} jersey-10">${position}°</span>
+              <span class="text-gray-${position <= 3 ? '800' : '700'} text-${position <= 3 ? 'xl' : 'lg'} jersey-10 ${isCurrentUser ? 'font-bold text-[#8F33A5]' : ''}">${resposta.nomeAluno}</span>
+            </div>
+            <span class="${textColor} ${position <= 3 ? 'font-bold' : 'font-semibold'} text-${position <= 3 ? 'xl' : 'lg'} jersey-10">${resposta.pontos || 0}</span>
+        `;
+          
+          rankingList.appendChild(rankingItem);
+        });
+        
+        if (currentUserPosition === 0) {
+          const separator = document.createElement('div');
+          separator.className = 'text-center py-3';
+          separator.innerHTML = '<span class="text-purple-500 text-3xl font-bold">. . .</span>';
+          rankingList.appendChild(separator);
+        }
+      }
+    </script>
   </body>
 </html>
