@@ -47,3 +47,6 @@ public class AlunoDTO {
 
     public Aluno toAlunoWithId(){return new Aluno(this.aluno_id,this.nomeAluno,this.senha);}
 }
+
+
+

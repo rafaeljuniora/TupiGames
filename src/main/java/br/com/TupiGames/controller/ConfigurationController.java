@@ -17,15 +17,12 @@ public class ConfigurationController {
     }
 
     @GetMapping("/professor")
-    public String configProfessor() { return "ConfigurationPages/TeacherConfiguration";
+    public String configProfessor() {
+        return "ConfigurationPages/TeacherConfiguration";
     }
 
     @GetMapping("/escola")
-    public String configEscola() { return "ConfigurationPages/SchoolConfiguration";
+    public String configEscola() {
+        return "ConfigurationPages/SchoolConfiguration";
     }
-
-
 }
-
-
-
