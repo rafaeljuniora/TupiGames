@@ -20,7 +20,7 @@ public class Alternativa {
 
     @ManyToOne
     @JoinColumn(name = "pergunta_id")
-    @JsonBackReference
+    @JsonBackReference("alternativa-pergunta")
     private Pergunta pergunta;
 
     public Alternativa(Boolean imagem, Boolean enunciado, String valor, Boolean acerto, Pergunta pergunta) {

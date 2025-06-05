@@ -390,7 +390,7 @@
 
           const atividade = await response.json();
           Swal.close();
-
+          console.log(atividade)
           atividadeData = {
             nomeAtividade: atividade.nomeAtividade,
             perguntas: atividade.perguntas.map((pergunta) => {

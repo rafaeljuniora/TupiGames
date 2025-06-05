@@ -112,7 +112,9 @@
           alunoNome.toUpperCase();
 
         try {
-          const userResponse = await fetchUserAnswer(alunoNome);
+          const urlParams = new URLSearchParams(window.location.search);
+          const codigo = urlParams.get("codigo");
+          const userResponse = await fetchUserAnswer(alunoNome,codigo);
           console.log(userResponse);
           if (userResponse) {
             document.getElementById("playerPoints").textContent = `${
@@ -141,14 +143,17 @@
         }
       });
 
-      async function fetchUserAnswer(nomeAluno) {
+      async function fetchUserAnswer(nomeAluno,atividadeCode) {
         try {
           const response = await fetch("/api/v1/resposta/userAnswerPoints", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: nomeAluno,
+            body: JSON.stringify({
+                nomeAluno: nomeAluno,
+                atividadeCode: atividadeCode
+            })
           });
 
           if (!response.ok) {

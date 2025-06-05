@@ -10,5 +10,6 @@ public interface AnswerRepository extends JpaRepository <Resposta, Long> {
     @Query("SELECT r FROM Resposta r WHERE r.atividade.atividade_id = ?1 ORDER BY r.pontos DESC, r.enviado ASC")
     List<Resposta> findTop10ByAtividadeIdOrderByPontosDescEnviadoAsc(Long atividadeId);
 
-    Resposta findByaluno_id(Long aluno_id);
+    @Query("SELECT r FROM Resposta r WHERE r.aluno.aluno_id = ?1 AND r.atividade.atividade_id = ?2")
+    Resposta findByAlunoAndAtividade(Long aluno_id, Long atividade_id);
 }

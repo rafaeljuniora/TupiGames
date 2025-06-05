@@ -3,6 +3,7 @@ package br.com.TupiGames.controller.api;
 import br.com.TupiGames.domain.Aluno;
 import br.com.TupiGames.domain.Atividade;
 import br.com.TupiGames.domain.Resposta;
+import br.com.TupiGames.dto.AlunoRespostaRequestDTO;
 import br.com.TupiGames.dto.RespostaDTO;
 import br.com.TupiGames.dto.RespostaRankingDTO;
 import br.com.TupiGames.service.ActivityService;
@@ -57,9 +58,10 @@ public class AnswerRestController {
     }
 
     @PostMapping("/userAnswerPoints")
-    public RespostaRankingDTO getUserAnswerPoints(@RequestBody String nomeAluno) {
-        Aluno aluno = studentService.getStudentByName(nomeAluno);
-        Resposta resposta = answerService.findByAlunoId(aluno.getId());
+    public RespostaRankingDTO getUserAnswerPoints(@RequestBody AlunoRespostaRequestDTO alunoRespostaRequestDTO) {
+        Aluno aluno = studentService.getStudentByName(alunoRespostaRequestDTO.getNomeAluno());
+        Atividade atividade = activityService.findByatividadeCode(alunoRespostaRequestDTO.getAtividadeCode());
+        Resposta resposta = answerService.findByAlunoIdAndAtividadeId(aluno.getId(),atividade.getAtividade_id());
 
         if (resposta == null) {
             return null;
