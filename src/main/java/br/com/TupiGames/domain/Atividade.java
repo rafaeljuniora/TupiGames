@@ -31,7 +31,6 @@ public class Atividade {
     private List<Turma> turmas = new ArrayList<>();
 
     @OneToMany(mappedBy = "atividade")
-    //@JsonManagedReference("resposta-atividade")
     private Set<Resposta> respostas = new HashSet<>();
 
     public Atividade(String nomeAtividade, Long atividadeCode, List<Pergunta> perguntas, Boolean global) {

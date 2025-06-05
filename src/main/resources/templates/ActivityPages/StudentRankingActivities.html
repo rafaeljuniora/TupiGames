@@ -115,7 +115,6 @@
           const urlParams = new URLSearchParams(window.location.search);
           const codigo = urlParams.get("codigo");
           const userResponse = await fetchUserAnswer(alunoNome,codigo);
-          console.log(userResponse);
           if (userResponse) {
             document.getElementById("playerPoints").textContent = `${
               userResponse.pontos || 0
@@ -123,7 +122,6 @@
           }
 
           const rankingResponse = await fetchTop10Ranking();
-          console.log(rankingResponse);
           if (rankingResponse && rankingResponse.length > 0) {
             updateRankingList(rankingResponse, alunoNome);
           } else {
