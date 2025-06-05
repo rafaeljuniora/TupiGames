@@ -26,7 +26,6 @@ public class Aluno {
     private Set<Turma> turmas = new HashSet<>();
 
     @OneToMany(mappedBy = "aluno")
-    @JsonManagedReference
     private Set<Resposta> respostas = new HashSet<>();
 
     public Aluno() {

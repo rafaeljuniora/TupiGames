@@ -20,7 +20,7 @@ public class AnswerService {
         return answerRepository.findTop10ByAtividadeIdOrderByPontosDescEnviadoAsc(atividade_id);
     }
 
-    public Resposta findByAlunoId(Long aluno_id){
-        return answerRepository.findByaluno_id(aluno_id);
+    public Resposta findByAlunoIdAndAtividadeId(Long aluno_id, Long atividade_id){
+        return answerRepository.findByAlunoAndAtividade(aluno_id,atividade_id);
     }
 }

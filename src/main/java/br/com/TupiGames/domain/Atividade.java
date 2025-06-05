@@ -19,7 +19,7 @@ public class Atividade {
     private Boolean global;
 
     @OneToMany(mappedBy = "atividade", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("pergunta-atividade")
     private List<Pergunta> perguntas;
 
     @ManyToMany
@@ -31,7 +31,6 @@ public class Atividade {
     private List<Turma> turmas = new ArrayList<>();
 
     @OneToMany(mappedBy = "atividade")
-    @JsonManagedReference
     private Set<Resposta> respostas = new HashSet<>();
 
     public Atividade(String nomeAtividade, Long atividadeCode, List<Pergunta> perguntas, Boolean global) {

@@ -112,8 +112,9 @@
           alunoNome.toUpperCase();
 
         try {
-          const userResponse = await fetchUserAnswer(alunoNome);
-          console.log(userResponse);
+          const urlParams = new URLSearchParams(window.location.search);
+          const codigo = urlParams.get("codigo");
+          const userResponse = await fetchUserAnswer(alunoNome,codigo);
           if (userResponse) {
             document.getElementById("playerPoints").textContent = `${
               userResponse.pontos || 0
@@ -121,7 +122,6 @@
           }
 
           const rankingResponse = await fetchTop10Ranking();
-          console.log(rankingResponse);
           if (rankingResponse && rankingResponse.length > 0) {
             updateRankingList(rankingResponse, alunoNome);
           } else {
@@ -141,14 +141,17 @@
         }
       });
 
-      async function fetchUserAnswer(nomeAluno) {
+      async function fetchUserAnswer(nomeAluno,atividadeCode) {
         try {
           const response = await fetch("/api/v1/resposta/userAnswerPoints", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: nomeAluno,
+            body: JSON.stringify({
+                nomeAluno: nomeAluno,
+                atividadeCode: atividadeCode
+            })
           });
 
           if (!response.ok) {
