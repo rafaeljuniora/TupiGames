@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -46,47 +46,47 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-    const usuarioString = sessionStorage.getItem("usuario");
-    if (!usuarioString) {
-        console.error("Usuário não encontrado no sessionStorage");
-        window.location.href = "/";
-        return;
-    }
+        const usuarioString = sessionStorage.getItem("usuario");
+        if (!usuarioString) {
+          console.error("Usuário não encontrado no sessionStorage");
+          window.location.href = "/";
+          return;
+        }
 
-    try {
-        const usuario = JSON.parse(usuarioString);
-        const email = usuario.email;
+        try {
+          const usuario = JSON.parse(usuarioString);
+          const email = usuario.email;
 
-        fetch("/api/v1/turma/getAllByTeacher", {
+          fetch("/api/v1/turma/getAllByTeacher", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+              "Content-Type": "application/json",
             },
             body: email,
-        })
-        .then(response => {
-            if (!response.ok) {
+          })
+            .then((response) => {
+              if (!response.ok) {
                 throw new Error("Erro ao carregar turmas");
-            }
-            return response.json();
-        })
-        .then(turmas => {
-            const container = document.getElementById("turmasContainer");
-            container.innerHTML = turmas.map(turma => criarCardTurma(turma)).join("");
-        })
-        .catch(error => {
-            console.error("Erro:", error);
-            alert("Erro ao carregar turmas. Tente novamente mais tarde.");
-        });
+              }
+              return response.json();
+            })
+            .then((turmas) => {
+              const container = document.getElementById("turmasContainer");
+              container.innerHTML = turmas
+                .map((turma) => criarCardTurma(turma))
+                .join("");
+            })
+            .catch((error) => {
+              console.error("Erro:", error);
+            });
+        } catch (e) {
+          console.error("Erro ao parsear usuário:", e);
+          window.location.href = "/login";
+        }
+      });
 
-    } catch (e) {
-        console.error("Erro ao parsear usuário:", e);
-        window.location.href = "/login";
-    }
-});
-
-function criarCardTurma(turma) {
-    return `
+      function criarCardTurma(turma) {
+        return `
         <div class="bg-[#7C4A24] rounded-lg p-6 text-[#66AD70]">
             <div class="flex justify-between items-center mb-4">
                 <h4 class="jersey-10 text-xl">${turma.nomeTurma}</h4>
@@ -117,18 +117,20 @@ function criarCardTurma(turma) {
                 </button>
             </div>
             <p class="jersey-10 text-lg mb-2">
-                Qnt de Alunos: ${turma.quantidadeAlunosAtual || 0}/${turma.qntAlunos || 30}
+                Qnt de Alunos: ${turma.quantidadeAlunosAtual || 0}/${
+          turma.qntAlunos || 30
+        }
             </p>
             <p class="jersey-10 text-lg">
                 Período: ${turma.periodo || "Não informado"}
             </p>
         </div>
     `;
-}
+      }
 
-function visualizarTurma(turmaId) {
-    window.location.href = `/turmas/${turmaId}`;
-}
+      function visualizarTurma(turmaId) {
+        window.location.href = `/turmas/${turmaId}`;
+      }
     </script>
   </body>
 </html>
