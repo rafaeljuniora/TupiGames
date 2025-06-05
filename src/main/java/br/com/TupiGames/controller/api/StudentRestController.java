@@ -3,6 +3,7 @@ package br.com.TupiGames.controller.api;
 import br.com.TupiGames.domain.Aluno;
 import br.com.TupiGames.domain.Escola;
 import br.com.TupiGames.dto.AlunoDTO;
+import br.com.TupiGames.dto.AlunoResponseDTO;
 import br.com.TupiGames.service.SchoolService;
 import br.com.TupiGames.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/aluno")
@@ -39,9 +41,12 @@ public class StudentRestController {
     }
 
     @PostMapping("/getAllBySchool")
-    public List<Aluno> getAllStudentsBySchool(@RequestBody String email){
+    public List<AlunoResponseDTO> getAllStudentsBySchool(@RequestBody String email){
         Escola escola = schoolService.getSchoolByEmail(email);
-        return studentService.getAllBySchool(escola);
+        List<Aluno> alunos = studentService.getAllBySchool(escola);
+        return alunos.stream()
+                .map(Aluno::toDTO)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/remove")

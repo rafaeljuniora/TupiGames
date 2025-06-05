@@ -1,5 +1,6 @@
 package br.com.TupiGames.domain;
 
+import br.com.TupiGames.dto.AlunoResponseDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -42,6 +43,10 @@ public class Aluno {
         this.senha = senha;
     }
 
+    public Long getAluno_id() {
+        return aluno_id;
+    }
+
     public String getNomeAluno() {
         return nomeAluno;
     }
@@ -70,6 +75,10 @@ public class Aluno {
         this.escola = escola;
     }
 
+    public Set<Turma> getTurmas() {
+        return turmas;
+    }
+
     public void adicionarTurma(Turma turma) {
         this.turmas.add(turma);
     }
@@ -84,5 +93,13 @@ public class Aluno {
 
     public void setRespostas(Set<Resposta> respostas) {
         this.respostas = respostas;
+    }
+
+    public AlunoResponseDTO toDTO() {
+        return new AlunoResponseDTO(
+                this.aluno_id,
+                this.nomeAluno,
+                this.senha
+        );
     }
 }
