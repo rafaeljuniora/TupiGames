@@ -11,7 +11,6 @@ public class RespostaRankingDTO {
     private Long enviado;
     private String nomeAluno;
 
-    // Construtores
     public RespostaRankingDTO() {
     }
 

@@ -113,5 +113,101 @@
         </div>
       </div>
     </main>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const usuarioString = sessionStorage.getItem("usuario");
+        if (!usuarioString) {
+          console.error("Usuário não encontrado no sessionStorage");
+          return;
+        }
+
+        try {
+          const usuario = JSON.parse(usuarioString);
+          const email = usuario.email;
+
+          fetch("/api/v1/turma/getAllBySchool", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: email,
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Erro na requisição");
+              }
+              return response.json();
+            })
+            .then((turmas) => {
+              const turmasContainer = document.querySelector(
+                ".grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.gap-4"
+              );
+
+              turmasContainer.innerHTML = "";
+
+              turmas.forEach((turma) => {
+                const turmaElement = document.createElement("div");
+                turmaElement.className =
+                  "bg-[#7C4A24] rounded-lg p-4 text-[#66AD70]";
+                turmaElement.innerHTML = `
+            <div class="flex justify-between items-center mb-2">
+              <h4 class="text-xl jersey-10">${turma.nomeTurma}</h4>
+              <a
+                href="/turmas/${turma.turma_id}"
+                class="bg-[#66AD70] rounded-full w-8 h-8 flex items-center justify-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#000000"
+                  class="w-5 h-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </a>
+            </div>
+            <p class="text-lg jersey-10">
+              Qnt de Alunos: ${turma.quantidadeAlunosAtual || 0}/${turma.qntAlunos || 0}
+            </p>
+            <p class="text-lg jersey-10">
+              Periodo: ${turma.periodo || ""}
+            </p>
+            <div class="mt-2">
+              ${
+                turma.professores && turma.professores.length > 0
+                  ? Array.from(turma.professores)
+                      .map(
+                        (nomeProfessor) =>
+                          `<p class="text-lg jersey-10">${nomeProfessor}</p>`
+                      )
+                      .join("")
+                  : "<p class='text-lg jersey-10'>Nenhum professor atribuído</p>"
+              }
+            </div>
+          `;
+            console.log(turmas)
+                turmasContainer.appendChild(turmaElement);
+              });
+            })
+            .catch((error) => {
+              console.error("Erro ao carregar turmas:", error);
+            });
+        } catch (e) {
+          console.error("Erro ao parsear usuário do sessionStorage:", e);
+        }
+      });
+    </script>
   </body>
 </html>
