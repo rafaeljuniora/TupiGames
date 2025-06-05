@@ -28,7 +28,9 @@
     ></aside>
 
     <main class="container mx-auto px-6 py-8 pt-[10vw]">
-      <h2 class="jersey-10 text-6xl text-center bg-gradient-to-r from-[#C26A45] to-[#A0522D] text-transparent bg-clip-text mb-12">
+      <h2
+        class="jersey-10 text-6xl text-center bg-gradient-to-r from-[#C26A45] to-[#A0522D] text-transparent bg-clip-text mb-12"
+      >
         Turmas
       </h2>
 
@@ -39,8 +41,7 @@
       <div
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         id="turmasContainer"
-      >
-      </div>
+      ></div>
     </main>
 
     <script>
@@ -135,8 +136,6 @@
         container.innerHTML = turmasMockadas
           .map((turma) => criarCardTurma(turma))
           .join("");
-      }
-      function visualizarTurma(turmaId) {
       }
       document.addEventListener("DOMContentLoaded", carregarTurmas);
     </script>
