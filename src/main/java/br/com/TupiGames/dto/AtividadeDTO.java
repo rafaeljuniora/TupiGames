@@ -10,19 +10,29 @@ public class AtividadeDTO {
     private Boolean global;
     private List<Pergunta> perguntas;
     private String nomeTurma;
+    private String criador;
 
-    public AtividadeDTO(String nomeAtividade, List<Pergunta> perguntas, Boolean global, String nomeTurma) {
+    public AtividadeDTO(String nomeAtividade, List<Pergunta> perguntas, Boolean global, String nomeTurma, String criador) {
         this.nomeAtividade = nomeAtividade;
         this.perguntas = perguntas;
         this.global = global;
         this.nomeTurma = nomeTurma;
+        this.criador = criador;
     }
 
     public AtividadeDTO() {
     }
 
     public Atividade toAtividade(){
-        return new Atividade(this.nomeAtividade,this.atividadeCode,this.perguntas,this.global);
+        return new Atividade(this.nomeAtividade,this.atividadeCode,this.perguntas,this.global,this.criador);
+    }
+
+    public String getCriador() {
+        return criador;
+    }
+
+    public void setCriador(String criador) {
+        this.criador = criador;
     }
 
     public String getNomeAtividade() {

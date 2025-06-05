@@ -764,11 +764,15 @@
       document
         .getElementById("criarBtn")
         .addEventListener("click", function () {
+          const usuarioSalvo = sessionStorage.getItem("usuario");
+          const usuario = JSON.parse(usuarioSalvo);
+          const email= usuario.email;
           const atividadeDTO = {
             nomeAtividade: document.getElementById("nomeAtividade").value,
             global: false,
             perguntas: [],
             nomeTurma: document.getElementById("turmaSelecionada").textContent,
+            criador: email,
           };
 
           document
