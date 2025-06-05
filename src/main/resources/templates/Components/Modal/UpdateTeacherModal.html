@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <style th:fragment="update-teacher-modal-style">
+      .update-teacher-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .update-teacher-hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      th:fragment="update-teacher-modal"
+      id="updateTeacherModal"
+      class="update-teacher-modal-overlay update-teacher-hidden"
+    >
+      <div
+        class="bg-[#F1F1F1] rounded-b-[45px] rounded-tl-[45px] w-11/12 max-w-md p-6 shadow-lg"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-bold">Editar Professor</h2>
+          <button
+            class="text-2xl font-bold p-2 cursor-pointer"
+            id="updateTeacherCloseModalBtn"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div>
+          <form id="updateTeacherForm" class="space-y-4" method="post">
+            <input type="hidden" id="updateTeacherId" name="professor_id" />
+
+            <div>
+              <input
+                type="text"
+                id="updateTeacherName"
+                name="nomeProfessor"
+                placeholder="Nome"
+                class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
+                required
+              />
+            </div>
+
+            <div>
+              <input
+                type="text"
+                id="updateTeacherBirthDate"
+                name="dataNascimento"
+                placeholder="Data de Nascimento"
+                class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
+                required
+              />
+            </div>
+
+            <div>
+              <input
+                type="email"
+                id="updateTeacherEmail"
+                name="email"
+                placeholder="Email Institucional"
+                class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
+                required
+              />
+            </div>
+
+            <div>
+              <input
+                type="password"
+                id="updateTeacherPassword"
+                name="senha"
+                placeholder="Senha"
+                class="w-full p-4 bg-white rounded-4xl border-1 border-[#CCCCCC] focus:ring-2 focus:ring-gray-200"
+                required
+              />
+            </div>
+
+            <div class="flex justify-center mt-6">
+              <button
+                type="submit"
+                class="bg-[#FFE889] text-black font-medium px-10 py-3 rounded-full hover:bg-yellow-300"
+              >
+                Salvar Alterações
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script th:fragment="update-teacher-modal-script">
+      document.addEventListener("DOMContentLoaded", function () {
+        const updateTeacherModal =
+          document.getElementById("updateTeacherModal");
+        const updateTeacherCloseBtn = document.getElementById(
+          "updateTeacherCloseModalBtn"
+        );
+        const updateTeacherForm = document.getElementById("updateTeacherForm");
+
+        if (updateTeacherModal && updateTeacherCloseBtn) {
+          updateTeacherCloseBtn.addEventListener("click", function () {
+            updateTeacherModal.classList.add("update-teacher-hidden");
+          });
+
+          updateTeacherModal.addEventListener("click", function (e) {
+            if (e.target === updateTeacherModal) {
+              updateTeacherModal.classList.add("update-teacher-hidden");
+            }
+          });
+
+          document.addEventListener("keydown", function (e) {
+            if (
+              e.key === "Escape" &&
+              !updateTeacherModal.classList.contains("update-teacher-hidden")
+            ) {
+              updateTeacherModal.classList.add("update-teacher-hidden");
+            }
+          });
+        }
+
+        window.openTeacherUpdateModal = function (professor) {
+          document.getElementById("updateTeacherId").value = professor.id;
+          document.getElementById("updateTeacherName").value =
+            professor.nomeProfessor;
+          document.getElementById("updateTeacherBirthDate").value =
+            professor.dataNascimento;
+          document.getElementById("updateTeacherEmail").value = professor.email;
+          document.getElementById("updateTeacherPassword").value =
+            professor.senha;
+
+          updateTeacherModal.classList.remove("update-teacher-hidden");
+        };
+
+        if (updateTeacherForm) {
+          updateTeacherForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const professorData = Object.fromEntries(formData.entries());
+
+            try {
+              const response = await axios.put(
+                "/api/v1/professor/update",
+                professorData
+              );
+
+              Swal.fire({
+                title: "Sucesso!",
+                text: "Professor atualizado com sucesso",
+                icon: "success",
+                confirmButtonText: "OK",
+              }).then(() => {
+                updateTeacherModal.classList.add("update-teacher-hidden");
+                getTeachersBySchool();
+              });
+            } catch (error) {
+              console.error("Erro ao atualizar professor:", error);
+              Swal.fire({
+                title: "Erro!",
+                text:
+                  error.response?.data?.message ||
+                  "Erro ao atualizar professor",
+                icon: "error",
+                confirmButtonText: "OK",
+              });
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

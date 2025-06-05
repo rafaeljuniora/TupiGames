@@ -1,9 +1,12 @@
 package br.com.TupiGames.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "atividade")
@@ -17,6 +20,7 @@ public class Atividade {
     private Boolean global;
 
     @OneToMany(mappedBy = "atividade", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Pergunta> perguntas;
 
     @ManyToMany
@@ -27,11 +31,17 @@ public class Atividade {
     )
     private List<Turma> turmas = new ArrayList<>();
 
+    @OneToMany(mappedBy = "atividade")
+    private Set<Resposta> respostas = new HashSet<>();
+
     public Atividade(String nomeAtividade, Long atividadeCode, List<Pergunta> perguntas, Boolean global) {
         this.nomeAtividade = nomeAtividade;
         this.atividadeCode = atividadeCode;
         this.perguntas = perguntas;
         this.global = global;
+    }
+
+    public Atividade() {
     }
 
     public String getNomeAtividade() {
@@ -76,5 +86,13 @@ public class Atividade {
 
     public void adicionarTurma(Turma turma) {
         this.turmas.add(turma);
+    }
+
+    public Set<Resposta> getRespostas() {
+        return respostas;
+    }
+
+    public void setRespostas(Set<Resposta> respostas) {
+        this.respostas = respostas;
     }
 }

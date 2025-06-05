@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface ClassRepository extends JpaRepository <Turma, Long> {
     Turma findBynomeTurma(String nomeTurma);
+    List<Turma> findAllByEscola(Escola escola);
 }

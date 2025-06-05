@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resultado da Atividade - TupiGames</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .jersey-10 {
+        font-family: "Jersey 10", cursive;
+      }
+
+      .feedback-card {
+        background: rgba(51, 29, 85, 0.9);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      .score-display {
+        background: linear-gradient(135deg, #8f33a5, #3c1347);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 20px rgba(139, 69, 19, 0.3);
+      }
+
+      .action-button {
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .action-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(143, 51, 165, 0.4);
+        border-color: rgba(255, 255, 255, 0.4);
+      }
+
+      .rankings-button {
+        background: linear-gradient(135deg, #8f33a5, #7c2a90);
+      }
+
+      .rankings-button:hover {
+        background: linear-gradient(135deg, #9f43b5, #8c3aa0);
+      }
+
+      .restart-button {
+        background: linear-gradient(135deg, #7c2a90, #682179);
+      }
+
+      .restart-button:hover {
+        background: linear-gradient(135deg, #8c3aa0, #783189);
+      }
+
+      .exit-button {
+        background: linear-gradient(135deg, #682179, #541869);
+      }
+
+      .exit-button:hover {
+        background: linear-gradient(135deg, #783189, #642879);
+      }
+
+      .points-animation {
+        animation: scaleIn 0.8s ease-out;
+      }
+
+      .result-animation {
+        animation: slideInUp 0.6s ease-out;
+      }
+
+      @keyframes scaleIn {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideInUp {
+        0% {
+          transform: translateY(50px);
+          opacity: 0;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .score-number {
+        background: linear-gradient(45deg, #10b981, #059669);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 900;
+      }
+    </style>
+    <style
+      th:replace="~{components/StudentHeaderDark :: sidebar-style}"
+    ></style>
+    <script
+      th:replace="~{components/StudentHeaderDark :: sidebar-script}"
+    ></script>
+  </head>
+
+  <body
+    class="min-h-screen bg-[url('/images/back_emy.png')] bg-[#331D55] bg-cover bg-fixed"
+  >
+    <header
+      th:replace="~{components/StudentHeaderDark :: header('inicio')}"
+    ></header>
+    <aside
+      th:replace="~{components/StudentHeaderDark :: sidebar('inicio')}"
+    ></aside>
+
+    <div class="flex items-center justify-center min-h-screen pt-20 px-6">
+      <div class="max-w-lg w-full">
+        <div class="feedback-card rounded-3xl p-8 text-center">
+          <h1
+            class="text-white text-4xl md:text-5xl jersey-10 mb-8 result-animation"
+          >
+            Parabéns
+          </h1>
+
+          <div class="score-display rounded-2xl p-6 mb-6 points-animation">
+            <div class="text-white mb-2 jersey-10 text-4xl md:text-5xl">
+              Pontos
+            </div>
+            <div
+              class="score-number text-6xl md:text-7xl jersey-10"
+              id="pointsDisplay"
+            >
+              0
+            </div>
+          </div>
+
+          <div class="result-animation mb-8">
+            <div class="text-white text-3xl jersey-10" id="questionsResult">
+              0/0
+            </div>
+          </div>
+
+          <div class="space-y-4 result-animation">
+            <button
+              class="action-button rankings-button w-full py-4 px-6 rounded-2xl text-white text-xl jersey-10"
+              onclick="goToRankings()"
+            >
+              Rankings
+            </button>
+
+            <button
+              class="action-button restart-button w-full py-4 px-6 rounded-2xl text-white text-xl jersey-10"
+              onclick="restartActivity()"
+            >
+              Reiniciar!
+            </button>
+
+            <button
+              class="action-button exit-button w-full py-4 px-6 rounded-2xl text-white text-xl jersey-10"
+              onclick="exitActivity()"
+            >
+              Sair!
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const resultData = {
+        pontos: 0,
+        acertos: 0,
+        total: 0,
+        nomeAtividade: "",
+        percentual: 0,
+        codigo: 0,
+      };
+
+      function initializeFeedback() {
+        getDataFromURL();
+
+        document.getElementById("pointsDisplay").textContent =
+          resultData.pontos;
+
+        document.getElementById(
+          "questionsResult"
+        ).textContent = `${resultData.acertos}/${resultData.total}`;
+
+        animateNumbers();
+      }
+
+      function animateNumbers() {
+        const pointsElement = document.getElementById("pointsDisplay");
+        const finalPoints = resultData.pontos;
+        let currentPoints = 0;
+        const increment = finalPoints / 50;
+
+        const animation = setInterval(() => {
+          currentPoints += increment;
+          if (currentPoints >= finalPoints) {
+            currentPoints = finalPoints;
+            clearInterval(animation);
+          }
+          pointsElement.textContent = Math.floor(currentPoints);
+        }, 30);
+      }
+
+      function goToRankings() {
+        window.location.href = "/atividades/aluno/ranking";
+      }
+
+      function restartActivity() {
+        window.location.href = `/atividades/aluno/realizar?codigo=${resultData.codigo}`;
+      }
+
+      function exitActivity() {
+        window.location.href = "/aluno/home";
+      }
+
+      function getDataFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.has("pontos")) {
+          resultData.pontos = parseInt(urlParams.get("pontos")) || 0;
+        }
+        if (urlParams.has("acertos")) {
+          resultData.acertos = parseInt(urlParams.get("acertos")) || 0;
+        }
+        if (urlParams.has("total")) {
+          resultData.total = parseInt(urlParams.get("total")) || 0;
+        }
+        if (urlParams.has("atividade")) {
+          resultData.nomeAtividade = urlParams.get("atividade") || "Atividade";
+        }
+        if (urlParams.has("codigo")) {
+          resultData.codigo = urlParams.get("codigo") || 0;
+        }
+
+        if (resultData.total > 0) {
+          resultData.percentual = Math.round(
+            (resultData.acertos / resultData.total) * 100
+          );
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeFeedback();
+      });
+
+      function testWithData(pontos, acertos, total) {
+        resultData.pontos = pontos;
+        resultData.acertos = acertos;
+        resultData.total = total;
+        initializeFeedback();
+      }
+    </script>
+  </body>
+</html>

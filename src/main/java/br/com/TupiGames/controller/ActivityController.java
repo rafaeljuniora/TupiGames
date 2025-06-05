@@ -14,4 +14,19 @@ public class ActivityController {
     public String createActivity(@ModelAttribute("atividade") AtividadeDTO atividadeDTO){
         return "ActivityPages/TeacherCreateActivity";
     }
+
+    @GetMapping("/aluno/realizar")
+    public String realizationActivities(){
+        return "ActivityPages/StudentActivitiesRealization";
+    }
+
+    @GetMapping("/aluno/feedback")
+    public String feedbackStudentActivities(){
+        return "ActivityPages/StudentFeedbackActivities";
+    }
+
+    @GetMapping("/aluno/ranking")
+    public String rankingStudentActivities(){
+        return "ActivityPages/StudentRankingActivities";
+    }
 }

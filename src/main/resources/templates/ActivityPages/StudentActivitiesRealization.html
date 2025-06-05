@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Realizar Atividade - TupiGames</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      .jersey-10 {
+        font-family: "Jersey 10", cursive;
+      }
+
+      .question-card {
+        background: #331d55;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .option-card-1 {
+        background: #432671;
+      }
+      .option-card-2 {
+        background: #532f8b;
+      }
+      .option-card-3 {
+        background: #6139a0;
+      }
+      .option-card-4 {
+        background: #7244b8;
+      }
+
+      .option-card {
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .option-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.4);
+      }
+
+      .option-card.selected {
+        border-color: #fbbf24;
+        box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+      }
+
+      .option-card.correct {
+        border-color: #10b981;
+        background: linear-gradient(135deg, #10b981, #059669);
+        transform: scale(1.05);
+        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+      }
+
+      .option-card.incorrect {
+        border-color: #ef4444;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        opacity: 0.7;
+      }
+
+      .option-card.correct::after {
+        content: "✓";
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        color: white;
+        font-size: 28px;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .option-card.incorrect::after {
+        content: "✗";
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        color: white;
+        font-size: 28px;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .feedback-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      .feedback-bar.correct {
+        background: linear-gradient(135deg, #10b981, #059669);
+      }
+
+      .feedback-bar.incorrect {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .progress-bar {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        background: linear-gradient(90deg, #8f33a5, #3c1347);
+        height: 100%;
+        transition: width 0.5s ease;
+      }
+
+      .question-counter {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .score-display {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .action-button {
+        background: linear-gradient(135deg, #6b46c1, #553c9a);
+        transition: all 0.3s ease;
+      }
+
+      .action-button:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(107, 70, 193, 0.4);
+      }
+
+      .action-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .correct-answer-highlight {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+        }
+        50% {
+          box-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+        }
+        100% {
+          box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+        }
+      }
+
+      .main-content {
+        padding-top: 12rem;
+      }
+    </style>
+    <style
+      th:replace="~{components/StudentHeaderDark :: sidebar-style}"
+    ></style>
+    <script
+      th:replace="~{components/StudentHeaderDark :: sidebar-script}"
+    ></script>
+  </head>
+
+  <body
+    class="min-h-screen bg-[url('/images/back_emy.png')] bg-[#331D55] bg-cover bg-fixed"
+  >
+    <header
+      th:replace="~{components/StudentHeaderDark :: header('inicio')}"
+    ></header>
+    <aside
+      th:replace="~{components/StudentHeaderDark :: sidebar('inicio')}"
+    ></aside>
+
+    <div
+      class="fixed top-20 left-0 right-0 z-10 bg-[#331D55] bg-opacity-90 backdrop-blur-sm p-4"
+    >
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="question-counter rounded-full px-4 py-2">
+            <span id="questionCounter" class="text-white font-semibold"
+              >1 / 5</span
+            >
+          </div>
+        </div>
+
+        <div class="flex-1 mx-8">
+          <div class="progress-bar h-4 w-full">
+            <div
+              id="progressBar"
+              class="progress-fill"
+              style="width: 20%"
+            ></div>
+          </div>
+        </div>
+
+        <div class="score-display rounded-full px-4 py-2">
+          <span id="scoreDisplay" class="text-white font-semibold"
+            >Score: 0</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content pb-1 px-6">
+      <div class="max-w-6xl mx-auto">
+        <div
+          class="question-card rounded-3xl p-8 mb-8 max-h-[250px] overflow-auto"
+        >
+          <div class="text-center w-full">
+            <div id="questionImage" class="mb-6 hidden">
+              <img
+                src=""
+                alt="Imagem da pergunta"
+                class="max-w-full max-h-64 mx-auto rounded-lg object-contain"
+              />
+            </div>
+
+            <h2
+              id="questionText"
+              class="text-2xl md:text-3xl text-white font-semibold leading-relaxed"
+            >
+              Qual é a capital do Brasil?
+            </h2>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div
+            class="option-card option-card-1 rounded-2xl p-6 relative max-h-[250px] overflow-auto"
+            onclick="selectOption(0)"
+          >
+            <div class="text-center w-full">
+              <div class="option-image mb-4 hidden">
+                <img
+                  src=""
+                  alt="Opção A"
+                  class="max-w-full max-h-32 mx-auto rounded object-contain"
+                />
+              </div>
+              <p class="option-text text-white text-lg font-medium">
+                São Paulo
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="option-card option-card-2 rounded-2xl p-6 relative max-h-[250px] overflow-auto"
+            onclick="selectOption(1)"
+          >
+            <div class="text-center w-full">
+              <div class="option-image mb-4 hidden">
+                <img
+                  src=""
+                  alt="Opção B"
+                  class="max-w-full max-h-32 mx-auto rounded object-contain"
+                />
+              </div>
+              <p class="option-text text-white text-lg font-medium">
+                Rio de Janeiro
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="option-card option-card-3 rounded-2xl p-6 relative max-h-[250px] overflow-auto"
+            onclick="selectOption(2)"
+          >
+            <div class="text-center w-full">
+              <div class="option-image mb-4 hidden">
+                <img
+                  src=""
+                  alt="Opção C"
+                  class="max-w-full max-h-32 mx-auto rounded object-contain"
+                />
+              </div>
+              <p class="option-text text-white text-lg font-medium">Brasília</p>
+            </div>
+          </div>
+
+          <div
+            class="option-card option-card-4 rounded-2xl p-6 relative max-h-[250px] overflow-auto"
+            onclick="selectOption(3)"
+          >
+            <div class="text-center w-full">
+              <div class="option-image mb-4 hidden">
+                <img
+                  src=""
+                  alt="Opção D"
+                  class="max-w-full max-h-32 mx-auto rounded object-contain"
+                />
+              </div>
+              <p class="option-text text-white text-lg font-medium">Salvador</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="feedbackBar" class="feedback-bar">
+      <div class="text-center">
+        <div id="feedbackIcon" class="text-4xl mb-2">✓</div>
+        <div id="feedbackText" class="text-white text-xl font-semibold">
+          Correto!
+        </div>
+      </div>
+    </div>
+
+    <div class="fixed bottom-6 right-6">
+      <button
+        id="actionButton"
+        class="action-button text-white px-8 py-3 rounded-full text-xl jersey-10 shadow-lg"
+        onclick="handleActionButton()"
+        disabled
+      >
+        Confirmar
+      </button>
+    </div>
+
+    <script>
+      let atividadeData = null;
+      let currentQuestionIndex = 0;
+      let score = 0;
+      let selectedOption = null;
+      let answered = false;
+      let showingFeedback = false;
+
+      async function loadActivityData() {
+        try {
+          const urlParams = new URLSearchParams(window.location.search);
+          const codigo = urlParams.get("codigo");
+
+          if (!codigo) {
+            throw new Error("Código da atividade não encontrado na URL");
+          }
+          Swal.fire({
+            title: "Carregando atividade...",
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+
+          const response = await fetch(`/api/v1/atividade/getActivityByCode`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(parseInt(codigo)),
+          });
+
+          if (!response.ok) {
+            if (response.status === 404) {
+              throw new Error("Atividade não encontrada");
+            } else {
+              throw new Error("Erro ao carregar atividade");
+            }
+          }
+
+          const atividade = await response.json();
+          Swal.close();
+
+          atividadeData = {
+            nomeAtividade: atividade.nomeAtividade,
+            perguntas: atividade.perguntas.map((pergunta) => {
+              const questionarioValue = pergunta.questionario?.valor || "";
+              const hasImage = questionarioValue.includes("IMAGE:");
+              let [textoEnunciado, imagemEnunciado] = hasImage
+                ? questionarioValue.split("IMAGE:")
+                : [questionarioValue, null];
+
+              textoEnunciado = textoEnunciado?.trim() || "";
+
+              return {
+                questionario: {
+                  imagem: pergunta.questionario?.imagem || false,
+                  enunciado: textoEnunciado !== "",
+                  imagemEnunciado: hasImage,
+                  valor: textoEnunciado,
+                  imagemBase64: imagemEnunciado,
+                },
+                alternativas: pergunta.alternativas.map((alt, index) => ({
+                  imagem: alt.imagem || false,
+                  enunciado: alt.enunciado !== false,
+                  valor: alt.imagem ? alt.valor : alt.valor || alt.texto || "",
+                  acerto: alt.acerto || alt.correta || false,
+                })),
+              };
+            }),
+          };
+
+          loadQuestion(0);
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Erro",
+            text: error.message || "Não foi possível carregar a atividade",
+            confirmButtonColor: "#FFCD03",
+          }).then(() => {
+            window.location.href = "/estudante/inicio";
+          });
+        }
+      }
+
+      function loadQuestion(index) {
+        if (!atividadeData || !atividadeData.perguntas[index]) return;
+
+        const pergunta = atividadeData.perguntas[index];
+        const questionario = pergunta.questionario;
+
+        document.getElementById("questionCounter").textContent = `${
+          index + 1
+        } / ${atividadeData.perguntas.length}`;
+        document.getElementById("progressBar").style.width = `${
+          ((index + 1) / atividadeData.perguntas.length) * 100
+        }%`;
+
+        document.querySelectorAll(".option-card").forEach((card) => {
+          card.classList.remove(
+            "selected",
+            "correct",
+            "incorrect",
+            "correct-answer-highlight"
+          );
+        });
+
+        selectedOption = null;
+        answered = false;
+        showingFeedback = false;
+        document.getElementById("actionButton").disabled = true;
+        document.getElementById("actionButton").textContent = "Confirmar";
+        document.getElementById("feedbackBar").style.display = "none";
+
+        const questionText = document.getElementById("questionText");
+        const questionImage = document.getElementById("questionImage");
+
+        questionText.style.display = "block";
+        questionText.textContent = questionario.valor;
+
+        if (questionario.imagemEnunciado && questionario.imagemBase64) {
+          questionImage.querySelector(
+            "img"
+          ).src = `${questionario.imagemBase64}`;
+          questionImage.classList.remove("hidden");
+
+          if (!questionario.valor) {
+            questionText.style.display = "none";
+          }
+        } else {
+          questionImage.classList.add("hidden");
+        }
+
+        const optionCards = document.querySelectorAll(".option-card");
+        pergunta.alternativas.forEach((alternativa, i) => {
+          if (i < optionCards.length) {
+            const card = optionCards[i];
+            const textElement = card.querySelector(".option-text");
+            const imageElement = card.querySelector(".option-image");
+
+            if (alternativa.imagem) {
+              textElement.style.display = "none";
+              imageElement.querySelector("img").src = `${alternativa.valor}`;
+              imageElement.classList.remove("hidden");
+            } else {
+              imageElement.classList.add("hidden");
+              textElement.textContent = alternativa.valor;
+              textElement.style.display = "block";
+            }
+          }
+        });
+
+        if (questionario.imagem && questionario.valor) {
+          questionImage.querySelector("img").src = `${questionario.valor}`;
+          questionImage.classList.remove("hidden");
+
+          if (!questionario.valor) {
+            questionText.style.display = "none";
+          }
+          questionText.classList.add("hidden");
+          questionText.style.display = "none";
+        } else {
+          questionImage.classList.add("hidden");
+        }
+
+        for (let i = pergunta.alternativas.length; i < 4; i++) {
+          if (optionCards[i]) {
+            optionCards[i].style.display = "none";
+          }
+        }
+        for (let i = 0; i < pergunta.alternativas.length; i++) {
+          if (optionCards[i]) {
+            optionCards[i].style.display = "flex";
+          }
+        }
+      }
+
+      function selectOption(index) {
+        if (answered) return;
+
+        document.querySelectorAll(".option-card").forEach((card) => {
+          card.classList.remove("selected");
+        });
+
+        document
+          .querySelectorAll(".option-card")
+          [index].classList.add("selected");
+        selectedOption = index;
+        document.getElementById("actionButton").disabled = false;
+      }
+
+      function checkAnswer() {
+        if (selectedOption === null || answered) return;
+
+        answered = true;
+        showingFeedback = true;
+        const pergunta = atividadeData.perguntas[currentQuestionIndex];
+        const isCorrect = pergunta.alternativas[selectedOption].acerto;
+
+        const correctIndex = pergunta.alternativas.findIndex(
+          (alt) => alt.acerto
+        );
+
+        const optionCards = document.querySelectorAll(".option-card");
+        optionCards[selectedOption].classList.add(
+          isCorrect ? "correct" : "incorrect"
+        );
+
+        if (!isCorrect && correctIndex !== -1) {
+          optionCards[correctIndex].classList.add(
+            "correct",
+            "correct-answer-highlight"
+          );
+        }
+
+        score += isCorrect ? 100 : 0;
+        document.getElementById("scoreDisplay").textContent = `Score: ${score}`;
+
+        showFeedback(isCorrect);
+
+        const actionButton = document.getElementById("actionButton");
+        actionButton.textContent =
+          currentQuestionIndex < atividadeData.perguntas.length - 1
+            ? "Próxima"
+            : "Finalizar";
+        actionButton.disabled = false;
+      }
+
+      function showFeedback(isCorrect) {
+        const feedbackBar = document.getElementById("feedbackBar");
+        const feedbackIcon = document.getElementById("feedbackIcon");
+        const feedbackText = document.getElementById("feedbackText");
+
+        feedbackBar.className = isCorrect
+          ? "feedback-bar correct"
+          : "feedback-bar incorrect";
+        feedbackIcon.textContent = isCorrect ? "✓" : "✗";
+        feedbackText.textContent = isCorrect ? "Correto!" : "Incorreto!";
+        feedbackBar.style.display = "flex";
+
+        setTimeout(() => {
+          feedbackBar.style.display = "none";
+        }, 3000);
+      }
+
+      function nextQuestion() {
+        document.getElementById("feedbackBar").style.display = "none";
+        showingFeedback = false;
+
+        if (currentQuestionIndex < atividadeData.perguntas.length - 1) {
+          currentQuestionIndex++;
+          loadQuestion(currentQuestionIndex);
+        } else {
+          finishActivity();
+        }
+      }
+
+      function handleActionButton() {
+        if (!answered) {
+          checkAnswer();
+        } else {
+          nextQuestion();
+        }
+      }
+
+      async function finishActivity() {
+        const totalQuestions = atividadeData.perguntas.length;
+        const correctAnswers = score / 100;
+
+        const usuarioSalvo = sessionStorage.getItem("aluno");
+        const usuarioObj = JSON.parse(usuarioSalvo);
+        const nomeAluno = usuarioObj.nomeAluno;
+        const urlParams = new URLSearchParams(window.location.search);
+        const codigoAtividade = urlParams.get("codigo");
+
+        const url = new URL("/api/v1/resposta/save", window.location.origin);
+        url.searchParams.append("nomeAluno", nomeAluno);
+        url.searchParams.append("atividadeCode", codigoAtividade);
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            pontos: score,
+            acertos: correctAnswers,
+            total: totalQuestions,
+          }),
+        });
+
+        const params = new URLSearchParams({
+          pontos: score,
+          acertos: correctAnswers,
+          total: totalQuestions,
+          atividade: atividadeData.nomeAtividade,
+          codigo: codigoAtividade,
+        });
+
+        window.location.href = `/atividades/aluno/feedback?${params.toString()}`;
+      }
+
+      document.addEventListener("DOMContentLoaded", loadActivityData);
+    </script>
+  </body>
+</html>

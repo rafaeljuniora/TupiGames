@@ -22,7 +22,7 @@ public class Turma {
     @JoinColumn(name = "escola_id", nullable = false)
     private Escola escola;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "turma_professor",
             joinColumns = @JoinColumn(name = "turma_id"),
@@ -30,7 +30,7 @@ public class Turma {
     )
     private Set<Professor> professores = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "turma_aluno",
             joinColumns = @JoinColumn(name = "turma_id"),
@@ -93,5 +93,9 @@ public class Turma {
 
     public void setAlunos(Set<Aluno> alunos) {
         this.alunos = alunos;
+    }
+
+    public Long getTurma_id() {
+        return turma_id;
     }
 }

@@ -1,5 +1,6 @@
 package br.com.TupiGames.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -19,6 +20,7 @@ public class Alternativa {
 
     @ManyToOne
     @JoinColumn(name = "pergunta_id")
+    @JsonBackReference
     private Pergunta pergunta;
 
     public Alternativa(Boolean imagem, Boolean enunciado, String valor, Boolean acerto, Pergunta pergunta) {

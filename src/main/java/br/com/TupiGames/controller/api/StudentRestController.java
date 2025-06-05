@@ -3,6 +3,7 @@ package br.com.TupiGames.controller.api;
 import br.com.TupiGames.domain.Aluno;
 import br.com.TupiGames.domain.Escola;
 import br.com.TupiGames.dto.AlunoConfigDTO;
+import br.com.TupiGames.dto.AlunoDTO;
 import br.com.TupiGames.service.SchoolService;
 import br.com.TupiGames.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/aluno")
 public class StudentRestController {
+
     @Autowired
     StudentService studentService;
 
@@ -38,8 +40,8 @@ public class StudentRestController {
         }
     }
 
-    @PostMapping("getAllBySchool")
-    public List<Aluno> getAllStudentsBySchool(@RequestBody String email){
+    @PostMapping("/getAllBySchool")
+    public List<Aluno> getAllStudentsBySchool(@RequestBody String email) {
         Escola escola = schoolService.getSchoolByEmail(email);
         return studentService.getAllBySchool(escola);
     }
@@ -48,7 +50,6 @@ public class StudentRestController {
     public ResponseEntity<AlunoConfigDTO> getAlunoByNome(@RequestBody String nomeAluno) {
         try {
             Aluno aluno = studentService.getStudentByName(nomeAluno);
-
             if (aluno != null) {
                 AlunoConfigDTO alunoDTO = new AlunoConfigDTO();
                 alunoDTO.setNomeAluno(aluno.getNomeAluno());
@@ -66,12 +67,10 @@ public class StudentRestController {
     public ResponseEntity<?> updateStudentConfiguration(@RequestBody AlunoConfigDTO alunoConfigDTO) {
         try {
             Aluno aluno = studentService.getStudentByName(alunoConfigDTO.getNomeAluno());
-
             if (aluno != null) {
                 if (alunoConfigDTO.getSenha() != null && !alunoConfigDTO.getSenha().trim().isEmpty()) {
                     aluno.setSenha(alunoConfigDTO.getSenha());
                 }
-
                 studentService.save(aluno);
                 return ResponseEntity.ok().build();
             } else {
@@ -80,5 +79,21 @@ public class StudentRestController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @PostMapping("/remove")
+    public void removeStudent(@RequestBody Long aluno_id) {
+        studentService.removeAlunoById(aluno_id);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Aluno> atualizarAluno(@RequestBody AlunoDTO alunoAtualizado) {
+        Aluno aluno = studentService.findById(alunoAtualizado.getAluno_id());
+
+        aluno.setNomeAluno(alunoAtualizado.getNomeAluno());
+        aluno.setSenha(alunoAtualizado.getSenha());
+
+        Aluno alunoAtualizadoSalvo = studentService.save(aluno);
+        return ResponseEntity.ok(alunoAtualizadoSalvo);
     }
 }

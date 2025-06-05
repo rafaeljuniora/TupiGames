@@ -22,10 +22,18 @@ public class Professor {
     @JoinColumn(name = "escola_id", nullable = false)
     private Escola escola;
 
-    @ManyToMany(mappedBy = "professores")
+    @ManyToMany(mappedBy = "professores", cascade = CascadeType.REMOVE)
     private Set<Turma> turmas = new HashSet<>();
 
     public Professor(String nomeProfessor, String dataNascimento, String email, String senha) {
+        this.nomeProfessor = nomeProfessor;
+        this.dataNascimento = dataNascimento;
+        this.email = email;
+        this.senha = senha;
+    }
+
+    public Professor(Long professor_id, String nomeProfessor, String dataNascimento, String email, String senha) {
+        this.professor_id = professor_id;
         this.nomeProfessor = nomeProfessor;
         this.dataNascimento = dataNascimento;
         this.email = email;
