@@ -3,25 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home - TupiGames</title>
+    <title>Home - Escola</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
       rel="stylesheet"
     />
-    <style th:replace="~{components/TeacherHeader :: sidebar-style}"></style>
+    <style th:replace="~{components/SchoolHeader :: sidebar-style}"></style>
     <link href="/css/output.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script th:replace="~{components/TeacherHeader :: sidebar-script}"></script>
+    <script th:replace="~{components/SchoolHeader :: sidebar-script}"></script>
   </head>
   <body class="bg-[#F5E5C7] min-h-screen">
     <header
-      th:replace="~{components/TeacherHeader :: header('inicio')}"
+      th:replace="~{components/SchoolHeader :: header('inicio')}"
     ></header>
     <aside
-      th:replace="~{components/TeacherHeader :: sidebar('inicio')}"
+      th:replace="~{components/SchoolHeader :: sidebar('inicio')}"
     ></aside>
 
     <main class="container mx-auto px-4 py-8 pt-24">
+      <h2 class="text-[4rem] jersey-10 text-center text-[#8B4513] mb-8">
+        Nome da Escola
+      </h2>
       <div class="flex flex-col items-center gap-6 mb-16">
         <a
           href="#"
@@ -41,22 +44,46 @@
 
       <div class="mb-16">
         <h2 class="text-4xl jersey-10 text-center text-[#8B4513] mb-8">
-          Turmas cadastradas
+          Últimas Atividades
         </h2>
         <div class="bg-white rounded-3xl p-8 shadow-lg max-w-4xl mx-auto">
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <div th:if="${#lists.isEmpty(turmas)}" class="col-span-full text-center py-8">
+            <div th:if="${#lists.isEmpty(ultimasAtividades)}" class="col-span-full text-center py-8">
               <p class="text-gray-500 jersey-10 text-xl">
-                Nenhuma turma cadastrada
+                Nenhuma atividade recente
               </p>
             </div>
-            <div th:each="turma : ${turmas}" class="bg-[#FFD700] rounded-lg p-4 text-black shadow-md">
+            <div th:each="atividade : ${ultimasAtividades}" class="bg-[#FFD700] rounded-lg p-4 text-black shadow-md">
               <div class="flex justify-between items-center mb-2">
-                <span class="text-lg font-bold" th:text="${turma.nome}"></span>
-                <span class="text-sm" th:text="${turma.ano}"></span>
+                <span class="text-lg font-bold" th:text="${atividade.nome}"></span>
+                <span class="text-sm" th:text="${#temporals.format(atividade.dataCriacao, 'dd/MM/yyyy')}"></span>
               </div>
-              <div class="text-sm" th:text="${turma.descricao}"></div>
+              <div class="text-sm mb-2" th:text="${atividade.descricao}"></div>
+              <div class="text-sm text-gray-700">
+                <span th:text="${atividade.professor.nome}"></span> -
+                <span th:text="${atividade.turma.nome}"></span>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-16">
+        <h2 class="text-4xl jersey-10 text-center text-[#8B4513] mb-8">
+          Visualização de Turmas
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div th:if="${#lists.isEmpty(turmas)}" class="col-span-full text-center py-8">
+            <p class="text-gray-500 jersey-10 text-xl">
+              Nenhuma turma cadastrada
+            </p>
+          </div>
+          <div th:each="turma : ${turmas}" class="bg-[#FFD700] rounded-lg p-4 text-black shadow-md">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-lg font-bold" th:text="${turma.nome}"></span>
+              <span class="text-sm" th:text="${turma.ano}"></span>
+            </div>
+            <div class="text-sm" th:text="${turma.descricao}"></div>
           </div>
         </div>
       </div>
@@ -65,7 +92,7 @@
         <h2 class="text-4xl jersey-10 text-center text-[#8B4513] mb-8">
           Atividades globais
         </h2>
-        <div class="bg-white rounded-3xl p-8 shadow-lg">
+        <div class="bg-white rounded-3xl p-8 shadow-lg max-w-4xl mx-auto">
           <div th:if="${#lists.isEmpty(atividadesGlobais)}" class="text-center py-16">
             <p class="text-gray-500 jersey-10 text-xl">
               Nenhuma atividade global disponível
