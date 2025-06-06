@@ -1,22 +1,21 @@
 package br.com.TupiGames.dto;
 
-import br.com.TupiGames.domain.Resposta;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-public class RespostaDTO {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class RespostaRankingDTO {
+    private Long resposta_id;
     private Long pontos;
     private Integer acertos;
     private Integer total;
     private Long enviado;
     private String nomeAluno;
 
-    public RespostaDTO(Long pontos, Integer acertos, Integer total) {
-        this.pontos = pontos;
-        this.acertos = acertos;
-        this.total = total;
-        this.enviado = System.currentTimeMillis();
+    public RespostaRankingDTO() {
     }
 
-    public RespostaDTO(Long pontos, Integer acertos, Integer total, Long enviado, String nomeAluno) {
+    public RespostaRankingDTO(Long resposta_id, Long pontos, Integer acertos, Integer total, Long enviado, String nomeAluno) {
+        this.resposta_id = resposta_id;
         this.pontos = pontos;
         this.acertos = acertos;
         this.total = total;
@@ -24,7 +23,12 @@ public class RespostaDTO {
         this.nomeAluno = nomeAluno;
     }
 
-    public RespostaDTO() {
+    public Long getResposta_id() {
+        return resposta_id;
+    }
+
+    public void setResposta_id(Long resposta_id) {
+        this.resposta_id = resposta_id;
     }
 
     public Long getPontos() {
@@ -65,9 +69,5 @@ public class RespostaDTO {
 
     public void setNomeAluno(String nomeAluno) {
         this.nomeAluno = nomeAluno;
-    }
-
-    public Resposta toResposta(){
-        return new Resposta(this.pontos, this.acertos, this.total, this.enviado);
     }
 }

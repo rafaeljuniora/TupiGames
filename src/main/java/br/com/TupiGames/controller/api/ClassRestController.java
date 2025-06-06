@@ -2,6 +2,7 @@ package br.com.TupiGames.controller.api;
 
 import br.com.TupiGames.domain.Escola;
 import br.com.TupiGames.domain.Turma;
+import br.com.TupiGames.dto.TurmaRequestDTO;
 import br.com.TupiGames.service.ClassService;
 import br.com.TupiGames.service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/turma")
@@ -20,9 +22,12 @@ public class ClassRestController {
     SchoolService schoolService;
 
     @PostMapping("/getAllBySchool")
-    public List<Turma> getAllClassBySchool(@RequestBody String email){
+    public List<TurmaRequestDTO> getAllClassBySchool(@RequestBody String email){
         Escola escola = schoolService.getSchoolByEmail(email);
-        return classService.findAllBySchool(escola);
+        List<Turma> turmas = classService.findAllBySchool(escola);
+        return turmas.stream()
+                .map(TurmaRequestDTO::new)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/remove")

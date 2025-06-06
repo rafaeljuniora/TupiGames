@@ -2,7 +2,6 @@ package br.com.TupiGames.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +19,7 @@ public class Atividade {
     private Boolean global;
 
     @OneToMany(mappedBy = "atividade", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("pergunta-atividade")
     private List<Pergunta> perguntas;
 
     @ManyToMany
@@ -94,5 +93,9 @@ public class Atividade {
 
     public void setRespostas(Set<Resposta> respostas) {
         this.respostas = respostas;
+    }
+
+    public Long getAtividade_id() {
+        return atividade_id;
     }
 }

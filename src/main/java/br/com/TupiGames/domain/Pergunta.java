@@ -16,12 +16,13 @@ public class Pergunta {
     private Questionario questionario;
 
     @OneToMany(mappedBy = "pergunta", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference("alternativa-pergunta")
     private List<Alternativa> alternativas;
+
 
     @ManyToOne
     @JoinColumn(name = "atividade_id")
-    @JsonBackReference
+    @JsonBackReference("pergunta-atividade")
     private Atividade atividade;
 
     public Pergunta(Questionario questionario, List<Alternativa> alternativas, Atividade atividade) {
