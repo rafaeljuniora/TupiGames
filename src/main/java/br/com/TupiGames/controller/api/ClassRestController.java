@@ -31,7 +31,7 @@ public class ClassRestController {
         Escola escola = schoolService.getSchoolByEmail(email);
         List<Turma> turmas = classService.findAllBySchool(escola);
         return turmas.stream()
-                .map(turma -> new TurmaRequestDTO(turma,true))
+                .map(turma -> new TurmaRequestDTO(turma,false))
                 .collect(Collectors.toList());
     }
 
@@ -40,7 +40,7 @@ public class ClassRestController {
         Professor professor = teacherService.getTeacherByEmail(email);
         List<Turma> turmas = classService.findAllByTeacher(professor);
         return turmas.stream()
-                .map(turma -> new TurmaRequestDTO(turma,false))
+                .map(turma -> new TurmaRequestDTO(turma,true))
                 .collect(Collectors.toList());
     }
 
