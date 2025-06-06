@@ -740,7 +740,6 @@
           }
 
           const turmas = await response.json();
-          console.log(turmas)
           preencherSelectTurmas(turmas);
         } catch (error) {
           console.error("Erro ao carregar turmas:", error);
@@ -773,7 +772,7 @@
     
     const atividadeDTO = {
         nomeAtividade: document.getElementById("nomeAtividade").value,
-        global: isGlobal,  // Aqui definimos true se for GLOBAL, false caso contrário
+        global: isGlobal,
         perguntas: [],
         nomeTurma: isGlobal ? "GLOBAL" : document.getElementById("turmaSelecionada")?.textContent || "",
         criador: email,
