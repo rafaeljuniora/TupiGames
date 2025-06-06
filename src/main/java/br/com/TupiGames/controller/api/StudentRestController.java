@@ -86,41 +86,6 @@ public class StudentRestController {
         }
     }
 
-    @PostMapping("/getAlunoByNome")
-    public ResponseEntity<AlunoConfigDTO> getAlunoByNome(@RequestBody String nomeAluno) {
-        try {
-            Aluno aluno = studentService.getStudentByName(nomeAluno);
-            if (aluno != null) {
-                AlunoConfigDTO alunoDTO = new AlunoConfigDTO();
-                alunoDTO.setNomeAluno(aluno.getNomeAluno());
-                alunoDTO.setSenha(aluno.getSenha());
-                return ResponseEntity.ok(alunoDTO);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @PostMapping("/configuracoes")
-    public ResponseEntity<?> updateStudentConfiguration(@RequestBody AlunoConfigDTO alunoConfigDTO) {
-        try {
-            Aluno aluno = studentService.getStudentByName(alunoConfigDTO.getNomeAluno());
-            if (aluno != null) {
-                if (alunoConfigDTO.getSenha() != null && !alunoConfigDTO.getSenha().trim().isEmpty()) {
-                    aluno.setSenha(alunoConfigDTO.getSenha());
-                }
-                studentService.save(aluno);
-                return ResponseEntity.ok().build();
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
     @PostMapping("/remove")
     public void removeStudent(@RequestBody Long aluno_id) {
         studentService.removeAlunoById(aluno_id);
