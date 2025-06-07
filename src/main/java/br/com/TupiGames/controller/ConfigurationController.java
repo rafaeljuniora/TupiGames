@@ -1,19 +1,15 @@
 package br.com.TupiGames.controller;
 
-import br.com.TupiGames.domain.Professor;
-import br.com.TupiGames.service.TeacherService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/configuration")
 public class ConfigurationController {
-
-    @Autowired
-    TeacherService teacherService;
 
     @GetMapping("/aluno")
     public String configAluno() {
@@ -21,13 +17,12 @@ public class ConfigurationController {
     }
 
     @GetMapping("/professor")
-    public String configProfessor(Model model) {
-        try {
-            model.addAttribute("professor", new Professor());
-        } catch (Exception e) {
-            model.addAttribute("professor", new Professor());
-        }
-
+    public String configProfessor() {
         return "ConfigurationPages/TeacherConfiguration";
+    }
+
+    @GetMapping("/escola")
+    public String configEscola() {
+        return "ConfigurationPages/SchoolConfiguration";
     }
 }
