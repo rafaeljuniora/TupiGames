@@ -11,10 +11,47 @@
     <link href="/css/output.css" rel="stylesheet" />
     <link href="/css/login.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      body {
+        position: relative;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #8F33A5 0%, #432671 100%), url('/images/back_emy.png');
+        background-blend-mode: multiply;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        overflow-x: hidden;
+        font-family: 'Jersey 10', sans-serif;
+      }
+
+      .gradient-text {
+        background: linear-gradient(to right, #FFFFFF, #6C0CFF);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      input::placeholder {
+        color: #999;
+        font-size: 1rem;
+      }
+
+      input {
+        font-size: 1rem;
+        background-color: #ffffffcc;
+      }
+
+      button {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      }
+
+      .jersey-10-regular {
+        font-family: 'Jersey 10', cursive;
+      }
+    </style>
+
   </head>
-  <body
-    class="min-h-screen flex items-center justify-center bg-[url('/images/back_emy.png')] bg-[#342238] bg-cover"
-  >
+  <body class="min-h-screen flex items-center justify-center">
     <div class="absolute top-16 left-4">
       <a
         href="#"
