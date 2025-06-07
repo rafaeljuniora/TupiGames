@@ -103,7 +103,6 @@ public class TeacherRestController {
             configDTO.setNomeProfessor(professor.getNomeProfessor());
             configDTO.setEmail(professor.getEmail());
             configDTO.setDataNascimento(professor.getDataNascimento());
-            configDTO.setSenha(professor.getSenha());
 
             return ResponseEntity.ok(configDTO);
 
