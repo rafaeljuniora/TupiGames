@@ -4,6 +4,7 @@ import br.com.TupiGames.domain.Aluno;
 import br.com.TupiGames.domain.Escola;
 import br.com.TupiGames.domain.Professor;
 import br.com.TupiGames.domain.Turma;
+import br.com.TupiGames.dto.ProfessorDTO;
 import br.com.TupiGames.dto.ProfessorConfigDTO;
 import br.com.TupiGames.dto.TurmaDTO;
 import br.com.TupiGames.service.SchoolService;
@@ -43,7 +44,7 @@ public class TeacherRestController {
         }
     }
 
-    @PostMapping("getAllBySchool")
+    @PostMapping("/getAllBySchool")
     public List<Professor> getAllTeachersBySchool(@RequestBody String email){
         Escola escola = schoolService.getSchoolByEmail(email);
         return teacherService.getAllBySchool(escola);
@@ -80,53 +81,61 @@ public class TeacherRestController {
         return ResponseEntity.ok(turmasDTO);
     }
 
-    @PostMapping("/configuracoes")
-    public ResponseEntity<?> updateTeacherConfiguration(@RequestBody ProfessorConfigDTO configDTO) {
-        try {
-            Professor professor = teacherService.updateConfiguration(configDTO);
-            return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponse("Erro ao atualizar configurações: " + e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Erro interno do servidor"));
-        }
+    @PostMapping("/remove")
+    public void removeTeacher(@RequestBody Long professor_id){
+        teacherService.removeProfessorById(professor_id);
     }
 
-    @GetMapping("/configuracoes")
-    public ResponseEntity<ProfessorConfigDTO> getTeacherConfiguration(@RequestParam String email) {
+    @PutMapping("/update")
+    public ResponseEntity<Professor> atualizarProfessor(@RequestBody ProfessorDTO professorAtualizado) {
+        Professor professor = teacherService.findById(professorAtualizado.getProfessor_id());
+
+        professor.setNomeProfessor(professorAtualizado.getNomeProfessor());
+        professor.setDataNascimento(professorAtualizado.getDataNascimento());
+        professor.setEmail(professorAtualizado.getEmail());
+        professor.setSenha(professorAtualizado.getSenha());
+
+        Professor professorAtualizadoSalvo = teacherService.save(professor);
+        return ResponseEntity.ok(professorAtualizadoSalvo);
+    }
+
+    @PostMapping("/getProfessorByEmail")
+    public ResponseEntity<ProfessorConfigDTO> getProfessorByEmail(@RequestBody String email) {
         try {
             Professor professor = teacherService.getTeacherByEmail(email);
-
-            ProfessorConfigDTO configDTO = new ProfessorConfigDTO();
-            configDTO.setNomeProfessor(professor.getNomeProfessor());
-            configDTO.setEmail(professor.getEmail());
-            configDTO.setDataNascimento(professor.getDataNascimento());
-            configDTO.setSenha(professor.getSenha());
-
-            return ResponseEntity.ok(configDTO);
-
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            if (professor != null) {
+                ProfessorConfigDTO professorDTO = new ProfessorConfigDTO();
+                professorDTO.setNomeProfessor(professor.getNomeProfessor());
+                professorDTO.setDataNascimento(professor.getDataNascimento());
+                professorDTO.setSenha(professor.getSenha());
+                return ResponseEntity.ok(professorDTO);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    private static class ErrorResponse {
-        private String message;
+    @PostMapping("/configuracoes")
+    public ResponseEntity<?> updateTeacherConfiguration(@RequestBody ProfessorConfigDTO professorConfigDTO) {
+        try {
+            Professor professor = teacherService.getTeacherByEmail(professorConfigDTO.getEmail());
+            if (professor != null) {
 
-        public ErrorResponse(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
+                if (professorConfigDTO.getSenha() != null && !professorConfigDTO.getSenha().trim().isEmpty()) {
+                    professor.setSenha(professorConfigDTO.getSenha());
+                }
+                if (professorConfigDTO.getDataNascimento() != null && !professorConfigDTO.getDataNascimento().trim().isEmpty()) {
+                    professor.setDataNascimento(professorConfigDTO.getDataNascimento());
+                }
+                teacherService.save(professor);
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

@@ -85,8 +85,8 @@
     </style>
 </head>
 <body class="bg-[#F5E5C7]">
-<header th:replace="~{components/TeacherHeader :: header('configuracoes')}"></header>
-<aside th:replace="~{components/TeacherHeader :: sidebar('configuracoes')}"></aside>
+<header th:replace="~{components/TeacherHeader :: header('inicio')}"></header>
+<aside th:replace="~{components/TeacherHeader :: sidebar('inicio')}"></aside>
 
 <main class="pt-24 px-6 pb-16 max-w-4xl mx-auto">
     <h2 class="text-4xl text-center jersey-10 bg-gradient-to-r from-[#C26A45] to-[#A0522D] text-transparent bg-clip-text mb-8">
@@ -165,23 +165,15 @@
 
                     <div class="mb-6">
                         <label for="email" class="form-label">Email Institucional:</label>
-                        <div class="relative">
-                            <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    class="input-field pr-10"
-                                    placeholder="professor@escola.com"
-                                    readonly
-                                    disabled
-                                    required
-                            />
-                            <button type="button" class="edit-icon text-gray-500 hover:text-gray-700" id="editEmailButton">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                                </svg>
-                            </button>
-                        </div>
+                        <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="input-field"
+                                placeholder="professor@escola.com"
+                                readonly
+                                disabled
+                        />
                     </div>
                 </div>
             </div>
@@ -203,9 +195,33 @@
         const passwordField = document.getElementById('senha');
         const editPasswordButton = document.getElementById('editPasswordButton');
         const editDataNascimentoButton = document.getElementById('editDataNascimentoButton');
-        const editEmailButton = document.getElementById('editEmailButton');
         const dataNascimentoField = document.getElementById('dataNascimento');
+        const nomeField = document.getElementById('nome');
         const emailField = document.getElementById('email');
+
+        async function carregarDadosProfessor() {
+            const usuarioSalvo = sessionStorage.getItem('usuario');
+            if (usuarioSalvo) {
+                const usuario = JSON.parse(usuarioSalvo);
+                emailField.value = usuario.email;
+
+                try {
+                    const response = await axios.post('/api/v1/professor/getProfessorByEmail', usuario.email, {
+                        headers: {
+                            'Content-Type': 'text/plain'
+                        }
+                    });
+
+                    if (response.data) {
+                        nomeField.value = response.data.nomeProfessor;
+                        passwordField.value = response.data.senha;
+                        dataNascimentoField.value = response.data.dataNascimento;
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar dados do professor:', error);
+                }
+            }
+        }
 
         carregarDadosProfessor();
 
@@ -226,7 +242,6 @@
 
         setupEditButton(editPasswordButton, passwordField);
         setupEditButton(editDataNascimentoButton, dataNascimentoField);
-        setupEditButton(editEmailButton, emailField);
 
         if (togglePassword && passwordField) {
             togglePassword.addEventListener('click', function() {
@@ -275,41 +290,6 @@
             });
         }
 
-        async function carregarDadosProfessor() {
-            try {
-                const usuarioSalvo = sessionStorage.getItem('usuario');
-                if (!usuarioSalvo) {
-                    console.log('Usuário não encontrado na sessão');
-                    return;
-                }
-
-                const usuario = JSON.parse(usuarioSalvo);
-                const response = await axios.get('/api/v1/professor/configuracoes', {
-                    params: {
-                        email: usuario.email
-                    }
-                });
-
-                const professor = response.data;
-
-                if (document.getElementById('nome')) {
-                    document.getElementById('nome').value = professor.nomeProfessor || '';
-                }
-                if (emailField) {
-                    emailField.value = professor.email || '';
-                }
-                if (dataNascimentoField) {
-                    dataNascimentoField.value = professor.dataNascimento || '';
-                }
-                if (passwordField) {
-                    passwordField.value = professor.senha || '';
-                }
-
-            } catch (error) {
-                console.error('Erro ao carregar dados do professor:', error);
-            }
-        }
-
         const configForm = document.getElementById('configForm');
         if (configForm) {
             configForm.addEventListener('submit', async function(e) {
@@ -318,61 +298,70 @@
                 const usuarioSalvo = sessionStorage.getItem('usuario');
                 if (!usuarioSalvo) {
                     alert('Sessão expirada. Faça login novamente.');
-                    window.location.href = '/';
+                    window.location.href = '/login/professor';
                     return;
                 }
 
                 const usuario = JSON.parse(usuarioSalvo);
                 const senha = passwordField.value;
                 const dataNascimento = dataNascimentoField.value;
-                const email = emailField.value;
                 const statusElement = document.getElementById('statusMessage');
                 const button = document.getElementById('submitButton');
 
+                // Verificar se pelo menos um campo editável foi alterado
+                if (passwordField.disabled && dataNascimentoField.disabled) {
+                    statusElement.textContent = 'Por favor, edite pelo menos um campo para salvar.';
+                    statusElement.classList.remove('hidden');
+                    statusElement.classList.add('text-red-600');
+                    return;
+                }
+
                 button.disabled = true;
                 button.textContent = 'Salvando...';
+
                 statusElement.classList.add('hidden');
 
                 try {
-                    const configData = {
-                        emailAtual: usuario.email,
+                    const response = await axios.post('/api/v1/professor/configuracoes', {
+                        email: usuario.email,
                         senha: senha,
-                        dataNascimento: dataNascimento,
-                        email: email
-                    };
-
-                    await axios.post('/api/v1/professor/configuracoes', configData);
+                        dataNascimento: dataNascimento
+                    });
 
                     statusElement.textContent = 'Configurações salvas com sucesso!';
                     statusElement.classList.remove('hidden');
                     statusElement.classList.add('text-green-600');
                     statusElement.classList.remove('text-red-600');
 
+                    button.disabled = false;
+                    button.textContent = 'Salvar Alterações';
+
                     passwordField.disabled = true;
                     passwordField.readOnly = true;
                     dataNascimentoField.disabled = true;
                     dataNascimentoField.readOnly = true;
-                    emailField.disabled = true;
-                    emailField.readOnly = true;
-
-                    if (email !== usuario.email && email.trim() !== '') {
-                        usuario.email = email;
-                        sessionStorage.setItem('usuario', JSON.stringify(usuario));
-                    }
 
                 } catch (error) {
-                    if (error.response && error.response.data) {
-                        statusElement.textContent = error.response.data.message || 'Erro ao salvar as configurações';
+                    button.disabled = false;
+                    button.textContent = 'Salvar Alterações';
+
+                    if (error.response) {
+                        if (error.response.status === 404) {
+                            statusElement.textContent = 'Professor não encontrado. Faça login novamente.';
+                            setTimeout(() => {
+                                window.location.href = '/login/professor';
+                            }, 2000);
+                        } else {
+                            statusElement.textContent = error.response.data?.message || 'Erro ao salvar as configurações';
+                        }
                     } else {
                         statusElement.textContent = 'Erro ao conectar com o servidor';
+                        console.error('Erro:', error);
                     }
 
                     statusElement.classList.remove('hidden');
                     statusElement.classList.add('text-red-600');
                     statusElement.classList.remove('text-green-600');
-                } finally {
-                    button.disabled = false;
-                    button.textContent = 'Salvar Alterações';
                 }
             });
         }
