@@ -1011,10 +1011,57 @@
 
         if (usuarioSalvo) {
           const usuario = JSON.parse(usuarioSalvo);
-          //console.log("Usuário logado:", usuario.email);
           document.getElementById("user-email").textContent = usuario.email;
         } else {
           window.location.href = "/";
+        }
+      });
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const alunoSection = document.getElementById('sectionAlunos');
+        if (alunoSection) {
+          const searchInput = alunoSection.querySelector('input[type="text"]');
+          const searchButton = alunoSection.querySelector('button');
+          const tableBody = alunoSection.querySelector('tbody');
+
+          async function buscarAlunos() {
+            const valorBusca = searchInput.value.trim();
+            let nomeAluno = '';
+            let nomeTurma = '';
+            if (valorBusca.includes(',')) {
+              const partes = valorBusca.split(',');
+              nomeAluno = partes[0].trim();
+              nomeTurma = partes[1].trim();
+            } else {
+              nomeAluno = valorBusca;
+            }
+            try {
+              const response = await fetch(`/aluno/buscar?nomeAluno=${encodeURIComponent(nomeAluno)}&nomeTurma=${encodeURIComponent(nomeTurma)}`);
+              if (!response.ok) throw new Error('Erro ao buscar alunos');
+              const alunos = await response.json();
+              atualizarTabela(alunos);
+            } catch (e) {
+              tableBody.innerHTML = '<tr><td colspan="3">Erro ao buscar alunos</td></tr>';
+            }
+          }
+
+          function atualizarTabela(alunos) {
+            if (!alunos || alunos.length === 0) {
+              tableBody.innerHTML = '<tr><td colspan="3">Nenhum aluno encontrado</td></tr>';
+              return;
+            }
+            tableBody.innerHTML = alunos.map(aluno => {
+              const turmas = aluno.turmas && aluno.turmas.length > 0 ? aluno.turmas.map(t => t.nomeTurma).join(', ') : '-';
+              return `<tr><td class='py-4 px-6'>${aluno.nomeAluno}</td><td class='py-4 px-6'>${turmas}</td><td class='py-4 px-4 text-center'>-</td></tr>`;
+            }).join('');
+          }
+
+          searchButton.addEventListener('click', buscarAlunos);
+          searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') buscarAlunos();
+          });
+
+          buscarAlunos();
         }
       });
     </script>
