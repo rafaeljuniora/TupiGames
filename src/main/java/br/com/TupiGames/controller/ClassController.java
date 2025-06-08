@@ -11,4 +11,9 @@ public class ClassController {
     public String turmaProfessor(){
         return "ClassViewPages/TeacherClassViewMacro";
     }
+
+    @GetMapping("/professor/details")
+    public String turmaDetalhadaProfessor(){
+        return "ClassViewPages/TeacherClassView";
+    }
 }
