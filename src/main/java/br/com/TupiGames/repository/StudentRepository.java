@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface StudentRepository extends JpaRepository<Aluno, Long> {
     Optional<Aluno> findBynomeAluno (String nomeAluno);
     List<Aluno> findAllByescola (Escola escola);
+    List<Aluno> findByNomeAlunoContainingIgnoreCaseOrTurmas_NomeTurmaContainingIgnoreCase(String nomeAluno, String nomeTurma);
 }
