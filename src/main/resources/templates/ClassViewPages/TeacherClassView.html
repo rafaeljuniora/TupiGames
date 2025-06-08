@@ -196,14 +196,14 @@
 
       function removerAtividade(atividadeId) {
         Swal.fire({
-          title: 'Tem certeza?',
+          title: "Tem certeza?",
           text: "Você deseja remover esta atividade da turma?",
-          icon: 'warning',
+          icon: "warning",
           showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Sim, remover!',
-          cancelButtonText: 'Cancelar'
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Sim, remover!",
+          cancelButtonText: "Cancelar",
         }).then((result) => {
           if (result.isConfirmed) {
             const cards = document.querySelectorAll(
@@ -217,13 +217,15 @@
 
             const container = document.getElementById("atividadesContainer");
             if (container.children.length === 0) {
-              document.getElementById("mensagemVazia").classList.remove("hidden");
+              document
+                .getElementById("mensagemVazia")
+                .classList.remove("hidden");
             }
-            
+
             Swal.fire(
-              'Removido!',
-              'A atividade foi removida com sucesso.',
-              'success'
+              "Removido!",
+              "A atividade foi removida com sucesso.",
+              "success"
             );
           }
         });
