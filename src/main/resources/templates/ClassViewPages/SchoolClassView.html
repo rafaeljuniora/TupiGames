@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalhes da Turma - TupiGames</title>
+    <style>
+      .jersey-10 {
+        font-family: "Jersey 10", cursive;
+      }
+    </style>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
+    <style th:replace="~{components/SchoolHeader :: sidebar-style}"></style>
+    <link href="/css/output.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:replace="~{components/SchoolHeader :: sidebar-script}"></script>
+  </head>
+  <body class="bg-[#F5E5C7]">
+    <header
+      th:replace="~{components/SchoolHeader :: header('turmas')}"
+    ></header>
+    <aside th:replace="~{components/SchoolHeader :: sidebar('turmas')}"></aside>
+
+    <main class="container mx-auto px-6 py-8 pt-[10vw]">
+      <h2
+        class="jersey-10 text-6xl text-center text-black mb-12"
+        id="nomeTurma"
+      >
+        Nome da Turma
+      </h2>
+
+      <div class="mb-12">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          id="professoresContainer"
+        ></div>
+
+        <div
+          id="mensagemVaziaProfessores"
+          class="text-center text-gray-600 jersey-10 text-xl mt-8 hidden"
+        >
+          Nenhum professor foi atribuído a esta turma ainda.
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="jersey-10 text-4xl text-center text-black mb-8">
+          Atividades Atribuídas:
+        </h3>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          id="atividadesContainer"
+        ></div>
+
+        <div
+          id="mensagemVaziaAtividades"
+          class="text-center text-gray-600 jersey-10 text-xl mt-8 hidden"
+        >
+          Nenhuma atividade foi atribuída a esta turma ainda.
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const dadosMockados = {
+        turma: {
+          id: 1,
+          nomeTurma: "7º Ano A",
+          periodo: "Manhã",
+          quantidadeAlunosAtual: 28,
+          qntAlunos: 30,
+        },
+        professores: [
+          {
+            id: 1,
+            nome: "Prof. Maria Silva",
+            email: "maria.silva@escola.com",
+            ultimaVezAtivo: "15/03/2024",
+          },
+          {
+            id: 2,
+            nome: "Prof. João Santos",
+            email: "joao.santos@escola.com",
+            ultimaVezAtivo: "14/03/2024",
+          },
+          {
+            id: 3,
+            nome: "Prof. Ana Costa",
+            email: "ana.costa@escola.com",
+            ultimaVezAtivo: "13/03/2024",
+          },
+        ],
+        atividades: [
+          {
+            id: 1,
+            nomeAtividade: "Equações do 1º Grau",
+            professor: "Prof. Maria Silva",
+            quantidadeQuestoes: 15,
+            dataAtribuicao: "15/03/2024",
+          },
+          {
+            id: 2,
+            nomeAtividade: "Frações e Decimais",
+            professor: "Prof. Maria Silva",
+            quantidadeQuestoes: 20,
+            dataAtribuicao: "10/03/2024",
+          },
+          {
+            id: 3,
+            nomeAtividade: "Brasil Império",
+            professor: "Prof. João Santos",
+            quantidadeQuestoes: 12,
+            dataAtribuicao: "08/03/2024",
+          },
+          {
+            id: 4,
+            nomeAtividade: "Análise Textual",
+            professor: "Prof. Ana Costa",
+            quantidadeQuestoes: 18,
+            dataAtribuicao: "05/03/2024",
+          },
+          {
+            id: 5,
+            nomeAtividade: "Regiões do Brasil",
+            professor: "Prof. João Santos",
+            quantidadeQuestoes: 10,
+            dataAtribuicao: "01/03/2024",
+          },
+          {
+            id: 6,
+            nomeAtividade: "Geometria Espacial",
+            professor: "Prof. Maria Silva",
+            quantidadeQuestoes: 14,
+            dataAtribuicao: "28/02/2024",
+          },
+        ],
+      };
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const turmaId = obterTurmaIdDaUrl();
+
+        carregarDadosTurma(turmaId);
+
+        carregarProfessores(turmaId);
+
+        carregarAtividades(turmaId);
+      });
+
+      function obterTurmaIdDaUrl() {
+        const pathParts = window.location.pathname.split("/");
+        return pathParts[pathParts.length - 1] || "1";
+      }
+
+      function carregarDadosTurma(turmaId) {
+        const turma = dadosMockados.turma;
+        document.getElementById("nomeTurma").textContent = turma.nomeTurma;
+      }
+
+      function carregarProfessores(turmaId) {
+        const professores = dadosMockados.professores;
+
+        const container = document.getElementById("professoresContainer");
+        const mensagemVazia = document.getElementById(
+          "mensagemVaziaProfessores"
+        );
+
+        if (professores.length === 0) {
+          mensagemVazia.classList.remove("hidden");
+          return;
+        }
+
+        container.innerHTML = professores
+          .map((professor) => criarCardProfessor(professor))
+          .join("");
+      }
+
+      function carregarAtividades(turmaId) {
+        const atividades = dadosMockados.atividades;
+
+        const container = document.getElementById("atividadesContainer");
+        const mensagemVazia = document.getElementById(
+          "mensagemVaziaAtividades"
+        );
+
+        if (atividades.length === 0) {
+          mensagemVazia.classList.remove("hidden");
+          return;
+        }
+
+        container.innerHTML = atividades
+          .map((atividade) => criarCardAtividade(atividade))
+          .join("");
+      }
+
+      function criarCardProfessor(professor) {
+        return `
+          <div class="bg-[#7C4A24] rounded-lg p-6 text-[#66AD70] hover:shadow-lg transition-shadow">
+
+            <div>
+              <h4 class="jersey-10 text-xl mb-3 text-[#66AD70]">
+                ${professor.nome}
+              </h4>
+              
+              <p class="jersey-10 text-lg mb-2">
+                <span class="text-[#66AD70]">Email:</span> ${professor.email}
+              </p>
+              
+              <p class="jersey-10 text-lg">
+                <span class="text-[#66AD70]">Ultima vez ativo:</span> ${professor.ultimaVezAtivo}
+              </p>
+            </div>
+          </div>
+        `;
+      }
+
+      function criarCardAtividade(atividade) {
+        return `
+          <div class="bg-[#7C4A24] rounded-lg p-6 text-[#66AD70] relative hover:shadow-lg transition-shadow cursor-pointer"
+              onclick="visualizarAtividade(${atividade.id})">
+            <button 
+              onclick="event.stopPropagation(); removerAtividade(${atividade.id})"
+              class="absolute top-2 right-2 bg-red-500 rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="white"
+                class="w-4 h-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            
+            <div class="mt-4">
+              <h4 class="jersey-10 text-xl mb-3 text-[#66AD70]">
+                ${atividade.nomeAtividade}
+              </h4>
+              
+              <p class="jersey-10 text-lg mb-2">
+                <span class="text-[#66AD70]">Professor:</span> ${atividade.professor}
+              </p>
+              
+              <p class="jersey-10 text-lg mb-2">
+                <span class="text-[#66AD70]">Qnt de questões:</span> ${atividade.quantidadeQuestoes}
+              </p>
+              
+              <p class="jersey-10 text-lg">
+                <span class="text-[#66AD70]">Data de Atribuição:</span> ${atividade.dataAtribuicao}
+              </p>
+            </div>
+          </div>
+        `;
+      }
+
+      function visualizarProfessor(professorId) {
+        window.location.href = `/professores/${professorId}`;
+      }
+
+      function visualizarAtividade(atividadeId) {
+        window.location.href = `/atividades/${atividadeId}`;
+      }
+
+      function removerAtividade(atividadeId) {
+        Swal.fire({
+          title: "Tem certeza?",
+          text: "Você deseja remover esta atividade da turma?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Sim, remover!",
+          cancelButtonText: "Cancelar",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            console.log(`Removendo atividade ${atividadeId} da turma`);
+
+            const cards = document.querySelectorAll(
+              '[onclick*="visualizarAtividade"]'
+            );
+            cards.forEach((card) => {
+              if (card.getAttribute("onclick").includes(atividadeId)) {
+                card.remove();
+              }
+            });
+
+            const container = document.getElementById("atividadesContainer");
+            if (container.children.length === 0) {
+              document
+                .getElementById("mensagemVaziaAtividades")
+                .classList.remove("hidden");
+            }
+
+            Swal.fire(
+              "Removido!",
+              "A atividade foi removida com sucesso.",
+              "success"
+            );
+          }
+        });
+      }
+
+      function gerenciarProfessores() {
+        window.location.href = "/professores/gerenciar";
+      }
+
+      function gerarRelatorio() {
+        window.location.href = `/turmas/${obterTurmaIdDaUrl()}/relatorio`;
+      }
+    </script>
+  </body>
+</html>
