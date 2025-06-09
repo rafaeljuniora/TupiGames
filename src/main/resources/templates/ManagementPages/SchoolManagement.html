@@ -960,12 +960,10 @@
           const currentHeight = cardsSection.offsetHeight;
           cardsSection.style.height = `${currentHeight}px`;
 
-          // Desabilitar eventos de clique durante a animação
           allCards.forEach((card) => {
             card.style.pointerEvents = "none";
           });
 
-          // Primeiro, mova os cards não selecionados para a direita e torne-os invisíveis
           allCards.forEach((card) => {
             if (card !== selectedCard) {
               card.style.transform = "translateX(100%)";
@@ -975,7 +973,6 @@
             }
           });
 
-          // Em seguida, posicione o card selecionado
           setTimeout(() => {
             selectedCard.style.position = "absolute";
             selectedCard.style.left = "50%";
@@ -1005,7 +1002,7 @@
 
             activeCard = selectedCard;
             isAnimating = false;
-          }, 300); // Tempo suficiente para a primeira animação completar
+          }, 300);
         }
 
         cardAlunos.addEventListener("click", (event) => {
