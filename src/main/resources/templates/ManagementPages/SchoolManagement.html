@@ -191,7 +191,8 @@
       <div id="cardsSection" class="card-container">
         <div
           id="cardAlunos"
-          class="bg-[#FFE889] relative rounded-3xl p-8 flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-105 w-full max-w-[300px]"
+          class="bg-[#FFE889] relative rounded-3xl p-8 flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-105 w-full max-w-[300px] pointer-events-auto"
+          style="touch-action: manipulation;"
         >
           <div class="mb-8">
             <img src="/img/aluno-icon.png" alt="Ícone de Alunos" />
@@ -201,7 +202,8 @@
 
         <div
           id="cardProfessores"
-          class="bg-[#FFE889] rounded-3xl p-8 flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-105 w-full max-w-[300px]"
+          class="bg-[#FFE889] rounded-3xl p-8 flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-105 w-full max-w-[300px] pointer-events-auto"
+          style="touch-action: manipulation;"
         >
           <div class="mb-8">
             <img src="/img/professor-icon.png" alt="Ícone de Professores" />
@@ -213,7 +215,8 @@
 
         <div
           id="cardTurmas"
-          class="bg-[#FFE889] rounded-3xl p-8 flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-105 w-full max-w-[300px]"
+          class="bg-[#FFE889] rounded-3xl p-8 flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-105 w-full max-w-[300px] pointer-events-auto"
+          style="touch-action: manipulation;"
         >
           <div class="mb-8">
             <img src="/img/escola-icon.png" alt="Ícone de Turmas" />
@@ -923,15 +926,19 @@
         const cardAlunos = document.getElementById("cardAlunos");
         const cardProfessores = document.getElementById("cardProfessores");
         const cardTurmas = document.getElementById("cardTurmas");
-
         const sectionAlunos = document.getElementById("sectionAlunos");
-        const sectionProfessores =
-          document.getElementById("sectionProfessores");
+        const sectionProfessores = document.getElementById("sectionProfessores");
         const sectionTurmas = document.getElementById("sectionTurmas");
 
         let activeCard = null;
+        let isAnimating = false;
 
-        function animateCardSelection(selectedCard) {
+        function animateCardSelection(selectedCard, event) {
+          if (isAnimating || !selectedCard.contains(event.target)) {
+            return;
+          }
+
+          isAnimating = true;
           const allCards = [cardAlunos, cardProfessores, cardTurmas];
 
           if (activeCard === selectedCard) {
@@ -941,72 +948,81 @@
               card.style.position = "";
               card.style.left = "";
               card.style.zIndex = "";
+              card.style.pointerEvents = "auto";
             });
-            document
-              .querySelector(".content-section.active")
-              ?.classList.remove("active");
+            cardsSection.style.height = "";
+            document.querySelector(".content-section.active")?.classList.remove("active");
             activeCard = null;
+            isAnimating = false;
             return;
           }
 
+          const currentHeight = cardsSection.offsetHeight;
+          cardsSection.style.height = `${currentHeight}px`;
+
+          allCards.forEach((card) => {
+            card.style.pointerEvents = "none";
+          });
+
           allCards.forEach((card) => {
             if (card !== selectedCard) {
-              card.style.transform = "translateX(-100%)";
+              card.style.transform = "translateX(100%)";
               card.style.opacity = "0";
+              card.style.position = "relative";
               card.style.zIndex = "0";
             }
           });
 
-          selectedCard.style.position = "absolute";
-          selectedCard.style.left = "50%";
-          selectedCard.style.transform = "translateX(-50%) scale(1.1)";
-          selectedCard.style.zIndex = "10";
-          selectedCard.style.opacity = "1";
+          setTimeout(() => {
+            selectedCard.style.position = "absolute";
+            selectedCard.style.left = "50%";
+            selectedCard.style.transform = "translateX(-50%) scale(1.1)";
+            selectedCard.style.zIndex = "10";
+            selectedCard.style.opacity = "1";
+            selectedCard.style.pointerEvents = "auto";
 
-          [sectionAlunos, sectionProfessores, sectionTurmas].forEach(
-            (section) => {
+            document.querySelectorAll(".content-section").forEach((section) => {
+              section.classList.add("hidden");
               section.classList.remove("active");
+            });
+
+            if (selectedCard === cardAlunos) {
+              sectionAlunos.classList.remove("hidden");
+              sectionAlunos.classList.add("active");
+              getStudentsBySchool();
+            } else if (selectedCard === cardProfessores) {
+              sectionProfessores.classList.remove("hidden");
+              sectionProfessores.classList.add("active");
+              getTeachersBySchool();
+            } else if (selectedCard === cardTurmas) {
+              sectionTurmas.classList.remove("hidden");
+              sectionTurmas.classList.add("active");
+              getClassBySchool();
             }
-          );
 
-          if (selectedCard === cardAlunos) {
-            sectionAlunos.classList.add("active");
-          } else if (selectedCard === cardProfessores) {
-            sectionProfessores.classList.add("active");
-          } else if (selectedCard === cardTurmas) {
-            sectionTurmas.classList.add("active");
-          }
-
-          document.querySelectorAll(".content-section").forEach((section) => {
-            section.classList.add("hidden");
-            section.classList.remove("active");
-          });
-
-          if (selectedCard === cardAlunos) {
-            sectionAlunos.classList.remove("hidden");
-            sectionAlunos.classList.add("active");
-          } else if (selectedCard === cardProfessores) {
-            sectionProfessores.classList.remove("hidden");
-            sectionProfessores.classList.add("active");
-          } else if (selectedCard === cardTurmas) {
-            sectionTurmas.classList.remove("hidden");
-            sectionTurmas.classList.add("active");
-          }
-
-          activeCard = selectedCard;
+            activeCard = selectedCard;
+            isAnimating = false;
+          }, 300);
         }
-        cardAlunos.addEventListener("click", () => {
-          animateCardSelection(cardAlunos);
-          getStudentsBySchool();
+
+        cardAlunos.addEventListener("click", (event) => {
+          animateCardSelection(cardAlunos, event);
         });
-        cardProfessores.addEventListener("click", () => {
-          animateCardSelection(cardProfessores);
-          getTeachersBySchool();
+
+        cardProfessores.addEventListener("click", (event) => {
+          animateCardSelection(cardProfessores, event);
         });
-        cardTurmas.addEventListener("click", () => {
-          animateCardSelection(cardTurmas);
-          getClassBySchool();
+
+        cardTurmas.addEventListener("click", (event) => {
+          animateCardSelection(cardTurmas, event);
         });
+
+        cardsSection.addEventListener("click", (event) => {
+          if (event.target === cardsSection) {
+            event.stopPropagation();
+          }
+        });
+
         const usuarioSalvo = sessionStorage.getItem("usuario");
 
         if (usuarioSalvo) {
