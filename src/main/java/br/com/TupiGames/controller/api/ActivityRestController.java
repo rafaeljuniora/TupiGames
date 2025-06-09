@@ -2,6 +2,7 @@ package br.com.TupiGames.controller.api;
 
 import br.com.TupiGames.domain.*;
 import br.com.TupiGames.dto.AtividadeDTO;
+import br.com.TupiGames.dto.AtividadeRequestDTO;
 import br.com.TupiGames.dto.RespostaDTO;
 import br.com.TupiGames.service.ActivityService;
 import br.com.TupiGames.service.ClassService;
@@ -11,8 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/atividade")
@@ -63,5 +67,33 @@ public class ActivityRestController {
     @PostMapping("/getActivityByCode")
     public Atividade getActivityByCode(@RequestBody Long atividadeCode) {
         return activityService.findByatividadeCode(atividadeCode);
+    }
+
+    @PostMapping("/getActivityByTurma")
+    public List<AtividadeRequestDTO> getActivityByTurma(Long id){
+        Turma turma = classService.findById(id);
+        List<Atividade> atividades = activityService.findByTurma(turma);
+
+        return atividades.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private AtividadeRequestDTO convertToDto(Atividade atividade) {
+        AtividadeRequestDTO dto = new AtividadeRequestDTO();
+        dto.setId(atividade.getAtividade_id());
+        dto.setNomeAtividade(atividade.getNomeAtividade());
+        dto.setProfessor(atividade.getCriador());
+        dto.setQuantidadeQuestoes(atividade.getPerguntas() != null ? atividade.getPerguntas().size() : 0);
+
+        if (atividade.getDataCriacao() != null) {
+            Date date = new Date(atividade.getDataCriacao());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            dto.setDataAtribuicao(sdf.format(date));
+        } else {
+            dto.setDataAtribuicao("Data não disponível");
+        }
+
+        return dto;
     }
 }

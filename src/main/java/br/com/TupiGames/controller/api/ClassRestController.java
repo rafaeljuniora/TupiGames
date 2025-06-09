@@ -49,4 +49,10 @@ public class ClassRestController {
         Turma turma= classService.findBynomeTurma(nomeTurma);
         classService.removeTurmaById(turma.getTurma_id());
     }
+
+    @PostMapping("/getClassById")
+    public TurmaRequestDTO getClassById(@RequestBody Long id){
+        Turma turma = classService.findById(id);
+        return turma.toTurmaRequestDTO(turma);
+    }
 }
