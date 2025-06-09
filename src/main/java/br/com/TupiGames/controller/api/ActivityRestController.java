@@ -1,13 +1,11 @@
 package br.com.TupiGames.controller.api;
 
-import br.com.TupiGames.domain.Atividade;
-import br.com.TupiGames.domain.Pergunta;
-import br.com.TupiGames.domain.Resposta;
-import br.com.TupiGames.domain.Turma;
+import br.com.TupiGames.domain.*;
 import br.com.TupiGames.dto.AtividadeDTO;
 import br.com.TupiGames.dto.RespostaDTO;
 import br.com.TupiGames.service.ActivityService;
 import br.com.TupiGames.service.ClassService;
+import br.com.TupiGames.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +24,28 @@ public class ActivityRestController {
     @Autowired
     private ClassService classService;
 
+    @Autowired
+    private TeacherService teacherService;
+
     @PostMapping("/save")
     public ResponseEntity<Atividade> createActivity(@RequestBody AtividadeDTO atividadeDTO) {
         atividadeDTO.setAtividadeCode((long) (Math.random() * 99999999));
         Turma turma = classService.findBynomeTurma(atividadeDTO.getNomeTurma());
         Atividade atividade = atividadeDTO.toAtividade();
+        Long data = System.currentTimeMillis();
+
+        try {
+            Professor professor = teacherService.getTeacherByEmail(atividadeDTO.getCriador());
+            if(professor != null) {
+                professor.setUltimaVezAtivo(data);
+                teacherService.save(professor);
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao atualizar professor: " + e.getMessage());
+        }
+
         atividade.adicionarTurma(turma);
+        atividade.setDataCriacao(data);
         Atividade atividadeSalva = activityService.salvar(atividade);
         return ResponseEntity.status(HttpStatus.CREATED).body(atividadeSalva);
     }

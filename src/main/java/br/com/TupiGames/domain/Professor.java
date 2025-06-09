@@ -17,6 +17,7 @@ public class Professor {
     private String dataNascimento;
     private String email;
     private String senha;
+    private Long ultimaVezAtivo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "escola_id", nullable = false)
@@ -41,6 +42,14 @@ public class Professor {
     }
 
     public Professor() {
+    }
+
+    public Long getUltimaVezAtivo() {
+        return ultimaVezAtivo;
+    }
+
+    public void setUltimaVezAtivo(Long ultimaVezAtivo) {
+        this.ultimaVezAtivo = ultimaVezAtivo;
     }
 
     public String getNomeProfessor() {

@@ -18,6 +18,7 @@ public class Atividade {
     private long atividadeCode;
     private Boolean global;
     private String criador;
+    private Long dataCriacao;
 
     @OneToMany(mappedBy = "atividade", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("pergunta-atividade")
@@ -43,6 +44,22 @@ public class Atividade {
     }
 
     public Atividade() {
+    }
+
+    public Long getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(Long dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public String getCriador() {
+        return criador;
+    }
+
+    public void setCriador(String criador) {
+        this.criador = criador;
     }
 
     public String getNomeAtividade() {
