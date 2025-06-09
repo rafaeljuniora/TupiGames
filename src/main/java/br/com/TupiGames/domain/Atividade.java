@@ -17,6 +17,7 @@ public class Atividade {
     private String nomeAtividade;
     private long atividadeCode;
     private Boolean global;
+    private String criador;
 
     @OneToMany(mappedBy = "atividade", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("pergunta-atividade")
@@ -33,11 +34,12 @@ public class Atividade {
     @OneToMany(mappedBy = "atividade")
     private Set<Resposta> respostas = new HashSet<>();
 
-    public Atividade(String nomeAtividade, Long atividadeCode, List<Pergunta> perguntas, Boolean global) {
+    public Atividade(String nomeAtividade, Long atividadeCode, List<Pergunta> perguntas, Boolean global, String criador) {
         this.nomeAtividade = nomeAtividade;
         this.atividadeCode = atividadeCode;
         this.perguntas = perguntas;
         this.global = global;
+        this.criador = criador;
     }
 
     public Atividade() {
