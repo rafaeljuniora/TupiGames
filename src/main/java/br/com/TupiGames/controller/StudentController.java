@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/aluno")
 public class StudentController {
+
     @GetMapping("/home")
-    public String studentsHome(){
+    public String homeStudent(){
         return "HomePages/StudentHome";
     }
 }
