@@ -5,6 +5,7 @@ import br.com.TupiGames.domain.Escola;
 import br.com.TupiGames.domain.Professor;
 import br.com.TupiGames.domain.Turma;
 import br.com.TupiGames.dto.ProfessorDTO;
+import br.com.TupiGames.dto.ProfessorConfigDTO;
 import br.com.TupiGames.dto.TurmaDTO;
 import br.com.TupiGames.service.SchoolService;
 import br.com.TupiGames.service.TeacherService;
@@ -96,5 +97,45 @@ public class TeacherRestController {
 
         Professor professorAtualizadoSalvo = teacherService.save(professor);
         return ResponseEntity.ok(professorAtualizadoSalvo);
+    }
+
+    @PostMapping("/getProfessorByEmail")
+    public ResponseEntity<ProfessorConfigDTO> getProfessorByEmail(@RequestBody String email) {
+        try {
+            Professor professor = teacherService.getTeacherByEmail(email);
+            if (professor != null) {
+                ProfessorConfigDTO professorDTO = new ProfessorConfigDTO();
+                professorDTO.setNomeProfessor(professor.getNomeProfessor());
+                professorDTO.setDataNascimento(professor.getDataNascimento());
+                professorDTO.setSenha(professor.getSenha());
+                return ResponseEntity.ok(professorDTO);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/configuracoes")
+    public ResponseEntity<?> updateTeacherConfiguration(@RequestBody ProfessorConfigDTO professorConfigDTO) {
+        try {
+            Professor professor = teacherService.getTeacherByEmail(professorConfigDTO.getEmail());
+            if (professor != null) {
+
+                if (professorConfigDTO.getSenha() != null && !professorConfigDTO.getSenha().trim().isEmpty()) {
+                    professor.setSenha(professorConfigDTO.getSenha());
+                }
+                if (professorConfigDTO.getDataNascimento() != null && !professorConfigDTO.getDataNascimento().trim().isEmpty()) {
+                    professor.setDataNascimento(professorConfigDTO.getDataNascimento());
+                }
+                teacherService.save(professor);
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
