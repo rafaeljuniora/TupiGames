@@ -1,6 +1,7 @@
 package br.com.TupiGames.service;
 
 import br.com.TupiGames.domain.Escola;
+import br.com.TupiGames.domain.Professor;
 import br.com.TupiGames.domain.Turma;
 import br.com.TupiGames.repository.ClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,9 @@ public class ClassService {
 
     public void removeTurmaById(Long turma_id){
         classRepository.deleteById(turma_id);
+    }
+
+    public List<Turma> findAllByTeacher(Professor professor){
+        return classRepository.findAllByProfessores(professor);
     }
 }

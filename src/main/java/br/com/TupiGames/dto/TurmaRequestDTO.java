@@ -14,17 +14,21 @@ public class TurmaRequestDTO {
     private Integer quantidadeAlunosAtual;
     private Set<String> professores;
 
-    public TurmaRequestDTO(Turma turma) {
+    public TurmaRequestDTO(Turma turma, boolean isProfessorView) {
         this.turma_id = turma.getTurma_id();
         this.nomeTurma = turma.getNomeTurma();
         this.periodo = turma.getPeriodo();
         this.qntAlunos = turma.getQntAlunos();
         this.quantidadeAlunosAtual = turma.getAlunos() != null ? turma.getAlunos().size() : 0;
-        this.professores = turma.getProfessores() != null ?
-                turma.getProfessores().stream()
-                        .map(Professor::getNomeProfessor)
-                        .collect(Collectors.toSet()) :
-                Set.of();
+        if (!isProfessorView) {
+            this.professores = turma.getProfessores() != null ?
+                    turma.getProfessores().stream()
+                            .map(Professor::getNomeProfessor)
+                            .collect(Collectors.toSet()) :
+                    Set.of();
+        } else {
+            this.professores = null;
+        }
     }
 
     public Long getTurma_id() {
