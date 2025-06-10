@@ -3,6 +3,7 @@ package br.com.TupiGames.dto;
 public class AtividadeRequestDTO {
     private Long id;
     private String nomeAtividade;
+    private long atividadeCode;
     private String professor;
     private Integer quantidadeQuestoes;
     private String dataAtribuicao;
@@ -10,10 +11,11 @@ public class AtividadeRequestDTO {
     public AtividadeRequestDTO() {
     }
 
-    public AtividadeRequestDTO(Long id, String nomeAtividade, String professor,
+    public AtividadeRequestDTO(Long id, String nomeAtividade,long atividadeCode, String professor,
                                Integer quantidadeQuestoes, String dataAtribuicao) {
         this.id = id;
         this.nomeAtividade = nomeAtividade;
+        this.atividadeCode = atividadeCode;
         this.professor = professor;
         this.quantidadeQuestoes = quantidadeQuestoes;
         this.dataAtribuicao = dataAtribuicao;
@@ -59,4 +61,11 @@ public class AtividadeRequestDTO {
         this.dataAtribuicao = dataAtribuicao;
     }
 
+    public long getAtividadeCode() {
+        return atividadeCode;
+    }
+
+    public void setAtividadeCode(long atividadeCode) {
+        this.atividadeCode = atividadeCode;
+    }
 }

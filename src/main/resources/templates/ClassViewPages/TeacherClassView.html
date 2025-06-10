@@ -164,6 +164,31 @@
                 ${atividade.nomeAtividade}
               </h4>
               
+              <p class="jersey-10 text-lg mb-2 flex items-center">
+                <span class="text-[#66AD70]">Código: </span>&nbsp
+                <span id="codigo-${atividade.id}">${atividade.atividadeCode}</span>
+                <button 
+                  onclick="event.stopPropagation(); copiarCodigo('${atividade.atividadeCode}', ${atividade.id})"
+                  class="ml-2 bg-[#66AD70] text-[#7C4A24] rounded-full w-6 h-6 flex items-center justify-center hover:bg-[#5a9a63] transition-colors"
+                  title="Copiar código"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    class="w-4 h-4"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                    />
+                  </svg>
+                </button>
+              </p>
+              
               <p class="jersey-10 text-lg mb-2">
                 <span class="text-[#66AD70]">Professor:</span> ${atividade.professor}
               </p>
@@ -178,6 +203,73 @@
             </div>
           </div>
         `;
+      }
+
+      function copiarCodigo(codigo, atividadeId) {
+        navigator.clipboard
+          .writeText(codigo)
+          .then(() => {
+            const botao = document.querySelector(
+              `button[onclick="event.stopPropagation(); copiarCodigo('${codigo}', ${atividadeId})"]`
+            );
+            botao.innerHTML = `
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                class="w-4 h-4"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                />
+            </svg>
+        `;
+            botao.classList.remove("bg-[#66AD70]", "hover:bg-[#5a9a63]");
+            botao.classList.add("bg-green-500", "hover:bg-green-600");
+
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Código copiado!",
+              text: `Código ${codigo} copiado para a área de transferência`,
+              showConfirmButton: false,
+              timer: 2000,
+              toast: true,
+            });
+
+            setTimeout(() => {
+              botao.innerHTML = `
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    class="w-4 h-4"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                    />
+                </svg>
+            `;
+              botao.classList.remove("bg-green-500", "hover:bg-green-600");
+              botao.classList.add("bg-[#66AD70]", "hover:bg-[#5a9a63]");
+            }, 2000);
+          })
+          .catch((err) => {
+            console.error("Falha ao copiar código: ", err);
+            Swal.fire({
+              icon: "error",
+              title: "Erro ao copiar",
+              text: "Não foi possível copiar o código para a área de transferência",
+            });
+          });
       }
 
       function visualizarAtividade(atividadeId) {

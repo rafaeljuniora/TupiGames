@@ -83,6 +83,7 @@ public class ActivityRestController {
         AtividadeRequestDTO dto = new AtividadeRequestDTO();
         dto.setId(atividade.getAtividade_id());
         dto.setNomeAtividade(atividade.getNomeAtividade());
+        dto.setAtividadeCode(atividade.getAtividadeCode());
         dto.setProfessor(atividade.getCriador());
         dto.setQuantidadeQuestoes(atividade.getPerguntas() != null ? atividade.getPerguntas().size() : 0);
 
