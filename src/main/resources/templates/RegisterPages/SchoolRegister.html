@@ -9,13 +9,12 @@
       rel="stylesheet"
     />
     <link href="/css/output.css" rel="stylesheet" />
-    <link href="/css/login.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
       body {
         position: relative;
         min-height: 100vh;
-        background: linear-gradient(135deg, #8F33A5 0%, #432671 100%), url('/images/back_emy.png');
+        background: linear-gradient(135deg, #8F33A5 25%, #1E1E1E 100%), url('/images/back_emy.png');
         background-blend-mode: multiply;
         background-size: cover;
         background-position: center;
@@ -48,9 +47,23 @@
       .jersey-10-regular {
         font-family: 'Jersey 10', cursive;
       }
+
+        .fundo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/images/back_emy.png');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
     </style>
 
   </head>
+
+  <div class="fundo"></div>
   <body class="min-h-screen flex items-center justify-center">
     <div class="absolute top-16 left-4">
       <a
