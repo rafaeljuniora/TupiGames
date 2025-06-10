@@ -55,60 +55,6 @@
     </main>
 
     <script>
-      const dadosMockados = {
-        turma: {
-          id: 1,
-          nomeTurma: "7º Ano A",
-          periodo: "Manhã",
-          quantidadeAlunosAtual: 28,
-          qntAlunos: 30,
-        },
-        atividades: [
-          {
-            id: 1,
-            nomeAtividade: "Equações do 1º Grau",
-            professor: "Prof. Maria Silva",
-            quantidadeQuestoes: 15,
-            dataAtribuicao: "15/03/2024",
-          },
-          {
-            id: 2,
-            nomeAtividade: "Frações e Decimais",
-            professor: "Prof. Maria Silva",
-            quantidadeQuestoes: 20,
-            dataAtribuicao: "10/03/2024",
-          },
-          {
-            id: 3,
-            nomeAtividade: "Geometria Básica",
-            professor: "Prof. Maria Silva",
-            quantidadeQuestoes: 12,
-            dataAtribuicao: "08/03/2024",
-          },
-          {
-            id: 4,
-            nomeAtividade: "Porcentagem",
-            professor: "Prof. Maria Silva",
-            quantidadeQuestoes: 18,
-            dataAtribuicao: "05/03/2024",
-          },
-          {
-            id: 5,
-            nomeAtividade: "Regra de Três",
-            professor: "Prof. Maria Silva",
-            quantidadeQuestoes: 10,
-            dataAtribuicao: "01/03/2024",
-          },
-          {
-            id: 6,
-            nomeAtividade: "Área e Perímetro",
-            professor: "Prof. Maria Silva",
-            quantidadeQuestoes: 14,
-            dataAtribuicao: "28/02/2024",
-          },
-        ],
-      };
-
       document.addEventListener("DOMContentLoaded", function () {
         const urlParams = new URLSearchParams(window.location.search);
         const turmaId = urlParams.get("codigo") || "1";
