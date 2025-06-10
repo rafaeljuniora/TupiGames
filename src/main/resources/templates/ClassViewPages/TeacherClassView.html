@@ -110,31 +110,79 @@
       };
 
       document.addEventListener("DOMContentLoaded", function () {
-        const turmaId = obterTurmaIdDaUrl();
+        const urlParams = new URLSearchParams(window.location.search);
+        const turmaId = urlParams.get("codigo") || "1";
+
         carregarDadosTurma(turmaId);
         carregarAtividades(turmaId);
       });
 
-      function obterTurmaIdDaUrl() {
-        const pathParts = window.location.pathname.split("/");
-        return pathParts[pathParts.length - 1] || "1";
+      async function carregarDadosTurma(turmaId) {
+        try {
+          const response = await fetch("/api/v1/turma/getClassById", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: turmaId,
+          });
+          const turma = await response.json();
+
+          document.getElementById("nomeTurma").textContent = turma.nomeTurma;
+        } catch (error) {
+          console.error("Erro ao carregar dados da turma:", error);
+        }
       }
 
-      function carregarDadosTurma(turmaId) {
-        const turma = dadosMockados.turma;
-        document.getElementById("nomeTurma").textContent = turma.nomeTurma;
+      async function carregarAtividades(turmaId) {
+        try {
+          const response = await fetch("/api/v1/atividade/getActivityByTurma", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: turmaId,
+          });
+
+          if (!response.ok) {
+            throw new Error("Erro ao carregar atividades");
+          }
+
+          const atividades = await response.json();
+          exibirAtividades(atividades);
+        } catch (error) {
+          console.error("Erro ao carregar atividades:", error);
+          exibirAtividades([
+            {
+              id: 1,
+              nomeAtividade: "Equações do 1º Grau",
+              professor: "Prof. Maria Silva",
+              quantidadeQuestoes: 15,
+              dataAtribuicao: "15/03/2024",
+            },
+            {
+              id: 2,
+              nomeAtividade: "Frações e Decimais",
+              professor: "Prof. Maria Silva",
+              quantidadeQuestoes: 20,
+              dataAtribuicao: "10/03/2024",
+            },
+          ]);
+        }
       }
 
-      function carregarAtividades(turmaId) {
-        const atividades = dadosMockados.atividades;
-
+      function exibirAtividades(atividades) {
         const container = document.getElementById("atividadesContainer");
         const mensagemVazia = document.getElementById("mensagemVazia");
+
+        container.innerHTML = "";
 
         if (atividades.length === 0) {
           mensagemVazia.classList.remove("hidden");
           return;
         }
+
+        mensagemVazia.classList.add("hidden");
 
         container.innerHTML = atividades
           .map((atividade) => criarCardAtividade(atividade))
@@ -175,10 +223,6 @@
               </p>
               
               <p class="jersey-10 text-lg mb-2">
-
-              </p>
-              
-              <p class="jersey-10 text-lg mb-2">
                 <span class="text-[#66AD70]">Qnt de questões:</span> ${atividade.quantidadeQuestoes}
               </p>
               
@@ -206,22 +250,6 @@
           cancelButtonText: "Cancelar",
         }).then((result) => {
           if (result.isConfirmed) {
-            const cards = document.querySelectorAll(
-              '[onclick*="visualizarAtividade"]'
-            );
-            cards.forEach((card) => {
-              if (card.getAttribute("onclick").includes(atividadeId)) {
-                card.remove();
-              }
-            });
-
-            const container = document.getElementById("atividadesContainer");
-            if (container.children.length === 0) {
-              document
-                .getElementById("mensagemVazia")
-                .classList.remove("hidden");
-            }
-
             Swal.fire(
               "Removido!",
               "A atividade foi removida com sucesso.",

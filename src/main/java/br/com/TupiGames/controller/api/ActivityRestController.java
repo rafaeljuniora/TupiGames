@@ -70,7 +70,7 @@ public class ActivityRestController {
     }
 
     @PostMapping("/getActivityByTurma")
-    public List<AtividadeRequestDTO> getActivityByTurma(Long id){
+    public List<AtividadeRequestDTO> getActivityByTurma(@RequestBody Long id){
         Turma turma = classService.findById(id);
         List<Atividade> atividades = activityService.findByTurma(turma);
 
