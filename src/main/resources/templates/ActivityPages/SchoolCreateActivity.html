@@ -139,20 +139,20 @@
       }
     </style>
     <style
-      th:replace="~{components/TeacherHeaderDark :: sidebar-style}"
+      th:replace="~{components/SchoolHeaderDark :: sidebar-style}"
     ></style>
     <script
-      th:replace="~{components/TeacherHeaderDark :: sidebar-script}"
+      th:replace="~{components/SchoolHeaderDark :: sidebar-script}"
     ></script>
   </head>
   <body
     class="min-h-screen bg-[url('/images/back_emy.png')] bg-[#331D55] bg-cover bg-fixed"
   >
     <header
-      th:replace="~{components/TeacherHeaderDark :: header('inicio')}"
+      th:replace="~{components/SchoolHeaderDark :: header('inicio')}"
     ></header>
     <aside
-      th:replace="~{components/TeacherHeaderDark :: sidebar('inicio')}"
+      th:replace="~{components/SchoolHeaderDark :: sidebar('inicio')}"
     ></aside>
     <div class="relative z-10 p-6 pt-24">
       <div class="max-w-7xl mx-auto mb-8">
@@ -176,6 +176,7 @@
                     class="w-full px-6 py-4 rounded-full text-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-400 appearance-none"
                   >
                     <option value="">Selecione uma Turma</option>
+                    <option value="GLOBAL">Atividade Global</option>
                   </select>
                   <div
                     class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none"
@@ -724,7 +725,7 @@
 
           const usuario = JSON.parse(usuarioSalvo);
           const response = await fetch(
-            "/api/v1/professor/getTurmasByProfessor",
+            "/api/v1/turma/getAllBySchool",
             {
               method: "POST",
               headers: {
@@ -747,7 +748,7 @@
 
       function preencherSelectTurmas(turmasDTO) {
         const select = document.getElementById("turmaSelect");
-        select.innerHTML = '<option value="">Selecione uma Turma</option>';
+        select.innerHTML = '<option value="">Selecione uma Turma</option><option value="GLOBAL">Atividade Global</option>';
 
         turmasDTO.forEach((turma) => {
           const option = document.createElement("option");
@@ -767,13 +768,15 @@
           const usuarioSalvo = sessionStorage.getItem("usuario");
           const usuario = JSON.parse(usuarioSalvo);
           const email= usuario.email;
-          const atividadeDTO = {
-            nomeAtividade: document.getElementById("nomeAtividade").value,
-            global: false,
-            perguntas: [],
-            nomeTurma: document.getElementById("turmaSelecionada").textContent,
-            criador: email,
-          };
+           const isGlobal = selectedTurmas.some(turma => turma.id === "GLOBAL");
+    
+    const atividadeDTO = {
+        nomeAtividade: document.getElementById("nomeAtividade").value,
+        global: isGlobal,
+        perguntas: [],
+        nomeTurma: isGlobal ? "GLOBAL" : document.getElementById("turmaSelecionada")?.textContent || "",
+        criador: email,
+    };
 
           document
             .querySelectorAll('[id^="question-"]')

@@ -28,7 +28,7 @@
       <div class="flex flex-col items-center gap-6 mb-16">
         <a
           href="#"
-          th:href="@{/atividades/nova}"
+          th:href="@{/atividades/escola/criar}"
           class="bg-[#FFD700] hover:bg-[#FFC107] transition-colors duration-200 rounded-full px-12 py-4 text-2xl jersey-10 w-80 text-center text-black shadow-lg hover:shadow-xl transform hover:-translate-y-1"
         >
           Criar nova atividade
@@ -151,7 +151,7 @@
               <h4 class="text-xl jersey-10">${turma.nomeTurma}</h4>
               <a
                 href="/turmas/${turma.turma_id}"
-                class="bg-[#66AD70] rounded-full w-8 h-8 flex items-center justify-center"
+                class="bg-[#66AD70] rounded-full w-8 h-8 flex items-center justify-center hover:opacity-80 transition-opacity"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
