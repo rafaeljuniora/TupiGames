@@ -11,8 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/atividades")
 public class ActivityController {
     @GetMapping("/professores/criar")
-    public String createActivity(@ModelAttribute("atividade") AtividadeDTO atividadeDTO){
+    public String teacherCreateActivity(@ModelAttribute("atividade") AtividadeDTO atividadeDTO){
         return "ActivityPages/TeacherCreateActivity";
+    }
+
+    @GetMapping("/escola/criar")
+    public String schoolCreateActivity(@ModelAttribute("atividade") AtividadeDTO atividadeDTO){
+        return "ActivityPages/SchoolCreateActivity";
     }
 
     @GetMapping("/aluno/realizar")

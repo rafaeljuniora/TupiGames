@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Criar Atividade - TupiGames</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      .jersey-10 {
+        font-family: "Jersey 10", cursive;
+      }
+      .question-card {
+        background: #331d55;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+      }
+      .option-card-1 {
+        background: #432671;
+      }
+      .option-card-2 {
+        background: #532f8b;
+      }
+      .option-card-3 {
+        background: #6139a0;
+      }
+      .option-card-4 {
+        background: #7244b8;
+      }
+      .option-card {
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+      }
+      .option-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .add-option {
+        background: rgba(255, 255, 255, 0.9);
+        transition: all 0.3s ease;
+      }
+      .add-option:hover {
+        background: rgba(255, 255, 255, 1);
+        transform: scale(1.05);
+      }
+      .custom-select {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .turma-tag {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      body {
+        background-attachment: fixed;
+      }
+
+      .correct-answer-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #9f7aea;
+        border-radius: 4px;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        margin-right: 8px;
+      }
+
+      .correct-answer-checkbox:checked {
+        background-color: #6b46c1;
+        border-color: #6b46c1;
+      }
+
+      .correct-answer-checkbox:checked::after {
+        content: "✓";
+        position: absolute;
+        color: white;
+        font-size: 14px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .option-header {
+        display: flex;
+        align-items: center;
+      }
+
+      .custom-file-input {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+      }
+
+      .custom-file-input input[type="file"] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      .custom-file-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px;
+        background-color: #6b46c1;
+        color: white;
+        border-radius: 8px;
+        border: 2px solid #9f7aea;
+        transition: all 0.3s ease;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .custom-file-button:hover {
+        background-color: #553c9a;
+        transform: translateY(-2px);
+      }
+
+      .custom-file-button svg {
+        margin-right: 8px;
+      }
+
+      .image-upload-container {
+        margin-top: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    </style>
+    <style
+      th:replace="~{components/SchoolHeaderDark :: sidebar-style}"
+    ></style>
+    <script
+      th:replace="~{components/SchoolHeaderDark :: sidebar-script}"
+    ></script>
+  </head>
+  <body
+    class="min-h-screen bg-[url('/images/back_emy.png')] bg-[#331D55] bg-cover bg-fixed"
+  >
+    <header
+      th:replace="~{components/SchoolHeaderDark :: header('inicio')}"
+    ></header>
+    <aside
+      th:replace="~{components/SchoolHeaderDark :: sidebar('inicio')}"
+    ></aside>
+    <div class="relative z-10 p-6 pt-24">
+      <div class="max-w-7xl mx-auto mb-8">
+        <div class="flex justify-between items-start mb-6">
+          <div class="flex-1 max-w-2xl">
+            <div class="mb-4">
+              <input
+                type="text"
+                id="nomeAtividade"
+                name="nomeAtividade"
+                placeholder="Nome da Atividade"
+                class="w-full px-6 py-4 rounded-full text-lg bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                required
+              />
+            </div>
+            <div>
+              <div class="flex items-center space-x-4">
+                <div class="flex-1 relative">
+                  <select
+                    id="turmaSelect"
+                    class="w-full px-6 py-4 rounded-full text-lg bg-white focus:outline-none focus:ring-2 focus:ring-purple-400 appearance-none"
+                  >
+                    <option value="">Selecione uma Turma</option>
+                    <option value="GLOBAL">Atividade Global</option>
+                  </select>
+                  <div
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none"
+                  >
+                    <svg
+                      class="w-5 h-5 text-gray-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  id="addTurmaBtn"
+                  class="w-12 h-12 rounded-full bg-white bg-opacity-90 flex items-center justify-center hover:bg-opacity-100 transition-all"
+                >
+                  <svg
+                    class="w-6 h-6 text-gray-700"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                  </svg>
+                </button>
+              </div>
+              <div id="selectedTurmas" class="flex flex-wrap gap-2 mt-4"></div>
+            </div>
+          </div>
+
+          <div class="ml-8">
+            <button
+              type="button"
+              id="criarBtn"
+              class="px-8 py-3 bg-white rounded-full text-2xl jersey-10 text-purple-800 hover:bg-opacity-90 transition-all"
+            >
+              Criar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto">
+        <div id="questionsContainer" class="space-y-6 mb-8"></div>
+
+        <div class="flex justify-center">
+          <button
+            id="addQuestionBtn"
+            class="add-option w-16 h-16 rounded-full flex items-center justify-center shadow-lg"
+          >
+            <svg
+              class="w-8 h-8 text-gray-700"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let questionCount = 0;
+      let selectedTurmas = [];
+
+      document
+        .getElementById("addTurmaBtn")
+        .addEventListener("click", function () {
+          const select = document.getElementById("turmaSelect");
+          const selectedValue = select.value;
+          const selectedText = select.options[select.selectedIndex].text;
+
+          if (
+            selectedValue &&
+            !selectedTurmas.find((t) => t.id === selectedValue)
+          ) {
+            selectedTurmas.push({ id: selectedValue, nome: selectedText });
+            updateSelectedTurmas();
+            select.value = "";
+          }
+        });
+
+      function updateSelectedTurmas() {
+        const container = document.getElementById("selectedTurmas");
+        container.innerHTML = "";
+
+        selectedTurmas.forEach((turma, index) => {
+          const tag = document.createElement("div");
+          tag.className =
+            "turma-tag rounded-full px-4 py-2 flex items-center space-x-2";
+          tag.innerHTML = `
+                <span id="turmaSelecionada" class="text-white text-sm">${turma.nome}</span>
+                <button type="button" onclick="removeTurma(${index})" class="text-white hover:text-red-300">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            `;
+          container.appendChild(tag);
+        });
+      }
+
+      function removeTurma(index) {
+        selectedTurmas.splice(index, 1);
+        updateSelectedTurmas();
+      }
+
+      document
+        .getElementById("addQuestionBtn")
+        .addEventListener("click", function () {
+          addQuestion();
+        });
+
+      function addQuestion() {
+        questionCount++;
+        const container = document.getElementById("questionsContainer");
+
+        const questionDiv = document.createElement("div");
+        questionDiv.className = `question-card rounded-3xl p-6 relative`;
+        questionDiv.id = `question-${questionCount}`;
+
+        questionDiv.innerHTML = `
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl jersey-10 text-white">Pergunta - Nº${questionCount}</h3>
+            <div class="flex items-center space-x-2">
+              <select class="custom-select text-white rounded-lg px-4 py-2 focus:outline-none" onchange="updateQuestionType(${questionCount})">
+                <option value="texto" class="text-black">Enunciado</option>
+                <option value="imagem" class="text-black">Imagem</option>
+                <option value="imagem-texto" class="text-black">Imagem e Enunciado</option>
+              </select>
+              <button type="button" onclick="removeQuestion(${questionCount})" class="text-white hover:text-red-300">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <div class="mb-8">
+            <div class="bg-[#532F8B] rounded-2xl p-6 min-h-32 relative">
+              <div class="image-upload-container hidden" id="question-image-upload-${questionCount}">
+                <label class="custom-file-input">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    class="question-image"
+                    onchange="previewQuestionImage(${questionCount}, this)"
+                  />
+                  <span class="custom-file-button">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                      <path d="M22 16v4c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h8l2 2h8c1.1 0 2 .9 2 2v8z"/>
+                    </svg>
+                    Escolher Imagem
+                  </span>
+                </label>
+              </div>
+              <div class="question-image-preview hidden mt-4 flex justify-center max-h-64 overflow-hidden">
+                <img class="max-w-full max-h-64 object-contain rounded-lg" />
+              </div>
+              <textarea
+                placeholder="Digite sua pergunta aqui..."
+                class="w-full h-full bg-transparent text-white placeholder-gray-300 resize-none focus:outline-none text-lg"
+                rows="4"
+              ></textarea>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-4 gap-4 mb-6" id="options-grid-${questionCount}">
+            <div class="option-card option-card-1 rounded-2xl p-4 relative min-h-48 overflow-hidden">
+              <div class="flex justify-between items-start mb-2">
+                <div class="option-header">
+                  <input type="checkbox" class="correct-answer-checkbox" name="correct-answer-${questionCount}" onchange="updateCorrectAnswer(this, ${questionCount}, 0)">
+                  <span class="text-white text-sm">Opção 1</span>
+                </div>
+                <div class="flex space-x-2">
+                  <select class="option-type-select text-xs bg-white bg-opacity-20 text-white rounded px-2 py-1 focus:outline-none" onchange="updateOptionType(${questionCount}, 0)">
+                    <option value="texto" class="text-black">Texto</option>
+                    <option value="imagem" class="text-black">Imagem</option>
+                  </select>
+                  <button type="button" onclick="removeOption(this, ${questionCount})" class="text-white hover:text-red-300">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="option-content">
+                <textarea
+                  placeholder="Digite a opção..."
+                  class="w-full bg-transparent text-white placeholder-gray-300 resize-none focus:outline-none text-sm min-h-28"
+                  rows="3"
+                ></textarea>
+                <div class="image-upload-container hidden" id="option-image-upload-${questionCount}-0">
+                  <label class="custom-file-input">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      class="option-image"
+                      onchange="previewOptionImage(${questionCount}, 0, this)"
+                    />
+                    <span class="custom-file-button">
+                      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        <path d="M22 16v4c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h8l2 2h8c1.1 0 2 .9 2 2v8z"/>
+                      </svg>
+                      Escolher Imagem
+                    </span>
+                  </label>
+                </div>
+                <div class="option-image-preview hidden">
+                  <img class="max-w-full h-auto rounded">
+                </div>
+              </div>
+            </div>
+            
+            <div class="option-card option-card-2 rounded-2xl p-4 relative min-h-48 overflow-hidden">
+              <div class="flex justify-between items-start mb-2">
+                <div class="option-header">
+                  <input type="checkbox" class="correct-answer-checkbox" name="correct-answer-${questionCount}" onchange="updateCorrectAnswer(this, ${questionCount}, 1)">
+                  <span class="text-white text-sm">Opção 2</span>
+                </div>
+                <div class="flex space-x-2">
+                  <select class="option-type-select text-xs bg-white bg-opacity-20 text-white rounded px-2 py-1 focus:outline-none" onchange="updateOptionType(${questionCount}, 1)">
+                    <option value="texto" class="text-black">Texto</option>
+                    <option value="imagem" class="text-black">Imagem</option>
+                  </select>
+                  <button type="button" onclick="removeOption(this, ${questionCount})" class="text-white hover:text-red-300">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="option-content">
+                <textarea
+                  placeholder="Digite a opção..."
+                  class="w-full bg-transparent text-white placeholder-gray-300 resize-none focus:outline-none text-sm min-h-28"
+                  rows="3"
+                ></textarea>
+                <div class="image-upload-container hidden" id="option-image-upload-${questionCount}-1">
+                  <label class="custom-file-input">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      class="option-image"
+                      onchange="previewOptionImage(${questionCount}, 1, this)"
+                    />
+                    <span class="custom-file-button">
+                      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        <path d="M22 16v4c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h8l2 2h8c1.1 0 2 .9 2 2v8z"/>
+                      </svg>
+                      Escolher Imagem
+                    </span>
+                  </label>
+                </div>
+                <div class="option-image-preview hidden">
+                  <img class="max-w-full h-auto rounded">
+                </div>
+              </div>
+            </div>
+            
+            <div class="add-option w-full h-48 rounded-2xl flex items-center justify-center cursor-pointer" onclick="addOption(${questionCount})">
+              <svg class="w-8 h-8 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(questionDiv);
+      }
+
+      function updateCorrectAnswer(checkbox, questionId, optionIndex) {
+        if (checkbox.checked) {
+          const questionElement = document.getElementById(
+            `question-${questionId}`
+          );
+          const checkboxes = questionElement.querySelectorAll(
+            `input[name="correct-answer-${questionId}"]`
+          );
+
+          checkboxes.forEach((cb) => {
+            if (cb !== checkbox) {
+              cb.checked = false;
+            }
+          });
+        }
+      }
+
+      function removeQuestion(questionId) {
+        const questionElement = document.getElementById(
+          `question-${questionId}`
+        );
+        if (questionElement) {
+          questionElement.remove();
+          questionCount--;
+        }
+      }
+
+      function updateQuestionType(questionId) {
+        const questionElement = document.getElementById(
+          `question-${questionId}`
+        );
+        const select = questionElement.querySelector("select");
+        const textarea = questionElement.querySelector("textarea");
+        const imageUpload = questionElement.querySelector(
+          `#question-image-upload-${questionId}`
+        );
+        const imagePreview = questionElement.querySelector(
+          ".question-image-preview"
+        );
+
+        switch (select.value) {
+          case "texto":
+            textarea.style.display = "block";
+            imageUpload.classList.add("hidden");
+            imagePreview.classList.add("hidden");
+            break;
+          case "imagem":
+            textarea.style.display = "none";
+            imageUpload.classList.remove("hidden");
+            break;
+          case "imagem-texto":
+            textarea.style.display = "block";
+            imageUpload.classList.remove("hidden");
+            break;
+        }
+      }
+
+      function updateOptionType(questionId, optionIndex) {
+        const questionElement = document.getElementById(
+          `question-${questionId}`
+        );
+        const optionCards = questionElement.querySelectorAll(".option-card");
+        const card = optionCards[optionIndex];
+        const select = card.querySelector(".option-type-select");
+        const textarea = card.querySelector("textarea");
+        const imageUpload = card.querySelector(
+          `#option-image-upload-${questionId}-${optionIndex}`
+        );
+        const imagePreview = card.querySelector(".option-image-preview");
+
+        if (select.value === "texto") {
+          textarea.style.display = "block";
+          imageUpload.classList.add("hidden");
+          imagePreview.classList.add("hidden");
+        } else {
+          textarea.style.display = "none";
+          imageUpload.classList.remove("hidden");
+        }
+      }
+
+      function addOption(questionId) {
+        const questionElement = document.getElementById(
+          `question-${questionId}`
+        );
+        const optionsGrid = questionElement.querySelector(
+          `#options-grid-${questionId}`
+        );
+        const currentOptions =
+          optionsGrid.querySelectorAll(".option-card").length;
+
+        const addButton = optionsGrid.querySelector(".add-option");
+        if (addButton) {
+          addButton.remove();
+        }
+
+        if (currentOptions < 4) {
+          const newOption = document.createElement("div");
+          newOption.className = `option-card option-card-${
+            currentOptions + 1
+          } rounded-2xl p-4 relative min-h-48 overflow-hidden`;
+          newOption.innerHTML = `
+            <div class="flex justify-between items-start mb-2">
+              <div class="option-header">
+                <input type="checkbox" class="correct-answer-checkbox" name="correct-answer-${questionId}" onchange="updateCorrectAnswer(this, ${questionId}, ${currentOptions})">
+                <span class="text-white text-sm">Opção ${
+                  currentOptions + 1
+                }</span>
+              </div>
+              <div class="flex space-x-2">
+                <select class="option-type-select text-xs bg-white bg-opacity-20 text-white rounded px-2 py-1 focus:outline-none" onchange="updateOptionType(${questionId}, ${currentOptions})">
+                  <option value="texto" class="text-black">Texto</option>
+                  <option value="imagem" class="text-black">Imagem</option>
+                </select>
+                <button type="button" onclick="removeOption(this, ${questionId})" class="text-white hover:text-red-300">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="option-content">
+              <textarea
+                placeholder="Digite a opção..."
+                class="w-full bg-transparent text-white placeholder-gray-300 resize-none focus:outline-none text-sm min-h-28"
+                rows="3"
+              ></textarea>
+              <div class="image-upload-container hidden" id="option-image-upload-${questionId}-${currentOptions}">
+                <label class="custom-file-input">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    class="option-image"
+                    onchange="previewOptionImage(${questionId}, ${currentOptions}, this)"
+                  />
+                  <span class="custom-file-button">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                      <path d="M22 16v4c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h8l2 2h8c1.1 0 2 .9 2 2v8z"/>
+                    </svg>
+                    Escolher Imagem
+                  </span>
+                </label>
+              </div>
+              <div class="option-image-preview hidden">
+                <img class="max-w-full h-auto rounded">
+              </div>
+            </div>
+          `;
+
+          optionsGrid.appendChild(newOption);
+
+          if (currentOptions + 1 < 4) {
+            const newAddButton = document.createElement("div");
+            newAddButton.className =
+              "add-option w-full h-48 rounded-2xl flex items-center justify-center cursor-pointer";
+            newAddButton.setAttribute("onclick", `addOption(${questionId})`);
+            newAddButton.innerHTML = `
+              <svg class="w-8 h-8 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+            `;
+            optionsGrid.appendChild(newAddButton);
+          }
+        }
+      }
+
+      function removeOption(button, questionId) {
+        const optionCard = button.closest(".option-card");
+        const optionsGrid = document.getElementById(
+          `options-grid-${questionId}`
+        );
+        const remainingOptions =
+          optionsGrid.querySelectorAll(".option-card").length;
+
+        if (remainingOptions > 2) {
+          optionCard.remove();
+
+          const options = optionsGrid.querySelectorAll(".option-card");
+          options.forEach((option, index) => {
+            option.querySelector("span").textContent = `Opção ${index + 1}`;
+            option.className = option.className.replace(
+              /\boption-card-\d+\b/g,
+              ""
+            );
+            option.classList.add(`option-card-${index + 1}`);
+          });
+
+          const currentOptions =
+            optionsGrid.querySelectorAll(".option-card").length;
+          const hasAddButton = optionsGrid.querySelector(".add-option");
+
+          if (currentOptions < 4 && !hasAddButton) {
+            const newAddButton = document.createElement("div");
+            newAddButton.className =
+              "add-option w-full h-48 rounded-2xl flex items-center justify-center cursor-pointer";
+            newAddButton.setAttribute("onclick", `addOption(${questionId})`);
+            newAddButton.innerHTML = `
+              <svg class="w-8 h-8 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+            `;
+            optionsGrid.appendChild(newAddButton);
+          }
+        }
+      }
+
+      function previewQuestionImage(questionId, input) {
+        const file = input.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const questionElement = document.getElementById(
+              `question-${questionId}`
+            );
+            const preview = questionElement.querySelector(
+              ".question-image-preview"
+            );
+            const img = preview.querySelector("img");
+            img.src = e.target.result;
+            preview.classList.remove("hidden");
+
+            input.setAttribute("data-base64", e.target.result);
+
+            img.onload = function () {
+              const ratio = img.naturalWidth / img.naturalHeight;
+              if (ratio > 1) {
+                img.className = "max-w-full max-h-64 object-contain rounded-lg";
+              } else {
+                img.className = "max-h-64 w-auto object-contain rounded-lg";
+              }
+            };
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function previewOptionImage(questionId, optionIndex, input) {
+        const file = input.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const questionElement = document.getElementById(
+              `question-${questionId}`
+            );
+            const optionCards =
+              questionElement.querySelectorAll(".option-card");
+            const card = optionCards[optionIndex];
+            const preview = card.querySelector(".option-image-preview");
+            const img = preview.querySelector("img");
+            img.src = e.target.result;
+            preview.classList.remove("hidden");
+
+            input.setAttribute("data-base64", e.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      async function carregarTurmas() {
+        try {
+          const usuarioSalvo = sessionStorage.getItem("usuario");
+          if (!usuarioSalvo) {
+            console.error("Usuário não encontrado na sessionStorage");
+            return;
+          }
+
+          const usuario = JSON.parse(usuarioSalvo);
+          const response = await fetch(
+            "/api/v1/turma/getAllBySchool",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: usuario.email,
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Erro ao carregar turmas");
+          }
+
+          const turmas = await response.json();
+          preencherSelectTurmas(turmas);
+        } catch (error) {
+          console.error("Erro ao carregar turmas:", error);
+        }
+      }
+
+      function preencherSelectTurmas(turmasDTO) {
+        const select = document.getElementById("turmaSelect");
+        select.innerHTML = '<option value="">Selecione uma Turma</option><option value="GLOBAL">Atividade Global</option>';
+
+        turmasDTO.forEach((turma) => {
+          const option = document.createElement("option");
+          option.value = turma.id;
+          option.textContent = turma.nomeTurma;
+          select.appendChild(option);
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        carregarTurmas();
+      });
+
+      document
+        .getElementById("criarBtn")
+        .addEventListener("click", function () {
+          const usuarioSalvo = sessionStorage.getItem("usuario");
+          const usuario = JSON.parse(usuarioSalvo);
+          const email= usuario.email;
+           const isGlobal = selectedTurmas.some(turma => turma.id === "GLOBAL");
+    
+    const atividadeDTO = {
+        nomeAtividade: document.getElementById("nomeAtividade").value,
+        global: isGlobal,
+        perguntas: [],
+        nomeTurma: isGlobal ? "GLOBAL" : document.getElementById("turmaSelecionada")?.textContent || "",
+        criador: email,
+    };
+
+          document
+            .querySelectorAll('[id^="question-"]')
+            .forEach((questionElement) => {
+              const selectElement = questionElement.querySelector("select");
+              if (!selectElement) {
+                console.error("Select não encontrado em:", questionElement.id);
+                return;
+              }
+
+              const tipo = selectElement.value;
+              const textarea = questionElement.querySelector("textarea");
+              const imageInput =
+                questionElement.querySelector(".question-image");
+
+              let valorPergunta = "";
+              if (tipo === "texto") {
+                valorPergunta = textarea ? textarea.value : "";
+              } else if (tipo === "imagem" && imageInput) {
+                valorPergunta = imageInput.getAttribute("data-base64") || "";
+              } else if (tipo === "imagem-texto") {
+                valorPergunta =
+                  (textarea ? textarea.value : "") +
+                  (imageInput
+                    ? "\nIMAGE:" +
+                      (imageInput.getAttribute("data-base64") || "")
+                    : "");
+              }
+
+              const pergunta = {
+                questionario: {
+                  imagem: tipo === "imagem",
+                  enunciado: tipo === "texto",
+                  imagemEnunciado: tipo === "imagem-texto",
+                  valor: valorPergunta,
+                },
+                alternativas: [],
+              };
+
+              questionElement
+                .querySelectorAll(".option-card")
+                .forEach((optionElement) => {
+                  const optionSelect = optionElement.querySelector(
+                    ".option-type-select"
+                  );
+                  const optionTextarea =
+                    optionElement.querySelector("textarea");
+                  const checkbox = optionElement.querySelector(
+                    ".correct-answer-checkbox"
+                  );
+                  const optionImageInput =
+                    optionElement.querySelector(".option-image");
+
+                  if (!optionSelect || !checkbox) {
+                    console.error(
+                      "Elementos da opção não encontrados em:",
+                      optionElement
+                    );
+                    return;
+                  }
+
+                  let valorAlternativa = "";
+                  if (optionSelect.value === "texto") {
+                    valorAlternativa = optionTextarea?.value || "";
+                  } else if (
+                    optionSelect.value === "imagem" &&
+                    optionImageInput
+                  ) {
+                    valorAlternativa =
+                      optionImageInput.getAttribute("data-base64") || "";
+                  }
+
+                  const alternativa = {
+                    imagem: optionSelect.value === "imagem",
+                    enunciado: optionSelect.value === "texto",
+                    valor: valorAlternativa,
+                    acerto: checkbox.checked,
+                  };
+                  pergunta.alternativas.push(alternativa);
+                });
+
+              atividadeDTO.perguntas.push(pergunta);
+            });
+
+          fetch("/api/v1/atividade/save", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(atividadeDTO),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Erro ao salvar atividade");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              Swal.fire({
+                icon: "success",
+                title: "Atividade criada!",
+                text: "Sua atividade foi salva com sucesso.",
+                confirmButtonColor: "#6b46c1",
+                timer: 2000,
+                timerProgressBar: true,
+              });
+            })
+            .catch((error) => {
+              console.error("Erro:", error);
+              Swal.fire({
+                icon: "error",
+                title: "Erro ao criar atividade",
+                text: "Ocorreu um erro ao tentar salvar a atividade. Tente novamente.",
+                confirmButtonColor: "#6b46c1",
+              });
+            });
+        });
+    </script>
+  </body>
+</html>
