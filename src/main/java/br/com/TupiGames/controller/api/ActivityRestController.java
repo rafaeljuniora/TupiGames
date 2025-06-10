@@ -39,9 +39,9 @@ public class ActivityRestController {
     @PostMapping("/getByCode")
     public ResponseEntity<Atividade> getByCode(@RequestBody Long atividadeCode) {
         Atividade atividade = activityService.findByatividadeCode(atividadeCode);
-        if(atividade==null){
+        if (atividade == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.CREATED).body(atividade);
         }
     }
