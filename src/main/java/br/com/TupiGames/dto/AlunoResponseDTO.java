@@ -6,7 +6,7 @@ public class AlunoResponseDTO {
     private Long aluno_id;
     private String nomeAluno;
     private String senha;
-    private List<String> turmas; 
+    private List<String> turmas;
 
     public AlunoResponseDTO() {
     }
