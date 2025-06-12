@@ -16,7 +16,7 @@ public class Professor {
     private Long professor_id;
 
     private String nomeProfessor;
-    // Todo - Modificar para DATE ou Epoch
+    // Todo - Modificar para DATE ou Epoc
     private String dataNascimento;
     private String email;
     private String senha;
@@ -102,7 +102,7 @@ public class Professor {
         List<String> turmasNomes = this.turmas.stream()
                 .map(Turma::getNomeTurma)
                 .collect(Collectors.toList());
-        return new ProfessorResponseDTO(this.professor_id, this.nomeProfessor, turmasNomes);
+        return new ProfessorResponseDTO(this.professor_id, this.nomeProfessor,
+                this.dataNascimento, this.email, this.senha, turmasNomes);
     }
-
 }

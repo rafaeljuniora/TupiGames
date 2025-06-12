@@ -48,8 +48,8 @@ public class TeacherRestController {
     @PostMapping("/getAllBySchool")
     public List<ProfessorResponseDTO> getAllTeachersBySchool(@RequestBody String email){
         Escola escola = schoolService.getSchoolByEmail(email);
-        return teacherService.getAllBySchool(escola)
-                .stream()
+        List<Professor> professores = teacherService.getAllBySchool(escola);
+        return professores.stream()
                 .map(Professor::toDTO)
                 .collect(Collectors.toList());
     }
