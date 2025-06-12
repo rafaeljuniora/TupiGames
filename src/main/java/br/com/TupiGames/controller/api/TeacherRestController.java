@@ -7,6 +7,7 @@ import br.com.TupiGames.domain.Turma;
 import br.com.TupiGames.dto.ProfessorDTO;
 import br.com.TupiGames.dto.ProfessorConfigDTO;
 import br.com.TupiGames.dto.TurmaDTO;
+import br.com.TupiGames.dto.ProfessorResponseDTO;
 import br.com.TupiGames.service.SchoolService;
 import br.com.TupiGames.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +46,12 @@ public class TeacherRestController {
     }
 
     @PostMapping("/getAllBySchool")
-    public List<Professor> getAllTeachersBySchool(@RequestBody String email){
+    public List<ProfessorResponseDTO> getAllTeachersBySchool(@RequestBody String email){
         Escola escola = schoolService.getSchoolByEmail(email);
-        return teacherService.getAllBySchool(escola);
+        return teacherService.getAllBySchool(escola)
+                .stream()
+                .map(Professor::toDTO)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/getTurmasByProfessor")

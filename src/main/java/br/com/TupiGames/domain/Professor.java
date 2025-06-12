@@ -3,6 +3,9 @@ package br.com.TupiGames.domain;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import br.com.TupiGames.dto.ProfessorResponseDTO;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "professor")
@@ -93,6 +96,13 @@ public class Professor {
 
     public void removerTurma(Turma turma) {
         this.turmas.remove(turma);
+    }
+
+    public ProfessorResponseDTO toDTO() {
+        List<String> turmasNomes = this.turmas.stream()
+                .map(Turma::getNomeTurma)
+                .collect(Collectors.toList());
+        return new ProfessorResponseDTO(this.professor_id, this.nomeProfessor, turmasNomes);
     }
 
 }
