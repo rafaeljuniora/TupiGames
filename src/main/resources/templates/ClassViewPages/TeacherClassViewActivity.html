@@ -71,23 +71,23 @@
       }
 
       .dropdown-content.show::-webkit-scrollbar {
-  width: 8px;
-}
+        width: 8px;
+      }
 
-.dropdown-content.show::-webkit-scrollbar-track {
-  background: rgba(139, 69, 19, 0.2);
-  border-radius: 10px;
-}
+      .dropdown-content.show::-webkit-scrollbar-track {
+        background: rgba(139, 69, 19, 0.2);
+        border-radius: 10px;
+      }
 
-.dropdown-content.show::-webkit-scrollbar-thumb {
-  background-color: rgba(160, 82, 45, 0.8);
-  border-radius: 10px;
-  border: 1px solid rgba(210, 105, 30, 0.5);
-}
+      .dropdown-content.show::-webkit-scrollbar-thumb {
+        background-color: rgba(160, 82, 45, 0.8);
+        border-radius: 10px;
+        border: 1px solid rgba(210, 105, 30, 0.5);
+      }
 
-.dropdown-content.show::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(139, 69, 19, 0.9);
-}
+      .dropdown-content.show::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(139, 69, 19, 0.9);
+      }
 
       .chevron {
         transition: transform 0.3s ease;
@@ -151,35 +151,36 @@
       }
 
       .correct-answer-checkbox {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    border: 2px solid #9f7aea;
-    border-radius: 4px;
-    outline: none;
-    cursor: pointer;
-    position: relative;
-    margin-right: 8px;
-  }
+        appearance: none;
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #9f7aea;
+        border-radius: 4px;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        margin-right: 8px;
+      }
 
-  .correct-answer-checkbox:checked {
-    background-color: #6b46c1;
-    border-color: #6b46c1;
-  }
+      .correct-answer-checkbox:checked {
+        background-color: #6b46c1;
+        border-color: #6b46c1;
+      }
 
-  .correct-answer-checkbox:checked::after {
-    content: "✓";
-    position: absolute;
-    color: white;
-    font-size: 14px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
+      .correct-answer-checkbox:checked::after {
+        content: "✓";
+        position: absolute;
+        color: white;
+        font-size: 14px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
     </style>
-    <style th:replace="~{components/TeacherHeaderDark :: sidebar-style}"></style>
+    <style
+      th:replace="~{components/TeacherHeaderDark :: sidebar-style}"
+    ></style>
     <script
       th:replace="~{components/TeacherHeaderDark :: sidebar-script}"
     ></script>
@@ -328,8 +329,7 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-6" id="optionsGrid">
-          </div>
+          <div class="grid grid-cols-2 gap-6" id="optionsGrid"></div>
         </div>
 
         <div class="flex justify-center mt-8">
@@ -574,30 +574,30 @@
       }
 
       function displayOptions(alternativas) {
-  const optionsGrid = document.getElementById("optionsGrid");
-  optionsGrid.innerHTML = "";
+        const optionsGrid = document.getElementById("optionsGrid");
+        optionsGrid.innerHTML = "";
 
-  alternativas.forEach((alternativa, index) => {
-    const optionDiv = document.createElement("div");
-    optionDiv.className = `option-card option-card-${
-      index + 1
-    } rounded-2xl p-6 relative min-h-32 ${
-      alternativa.acerto ? "correct-answer" : ""
-    }`;
+        alternativas.forEach((alternativa, index) => {
+          const optionDiv = document.createElement("div");
+          optionDiv.className = `option-card option-card-${
+            index + 1
+          } rounded-2xl p-6 relative min-h-32 ${
+            alternativa.acerto ? "correct-answer" : ""
+          }`;
 
-    let optionContent = "";
-    if (alternativa.imagem) {
-      optionContent = `
+          let optionContent = "";
+          if (alternativa.imagem) {
+            optionContent = `
         <div class="flex justify-center items-center h-full">
           <img src="${
             alternativa.valor
           }" class="max-w-full max-h-24 object-contain rounded" alt="Opção ${
-        index + 1
-      }">
+              index + 1
+            }">
         </div>
       `;
-    } else {
-      optionContent = `
+          } else {
+            optionContent = `
         <div class="flex items-center h-full">
           <textarea 
             class="w-full bg-transparent text-white placeholder-gray-300 resize-none focus:outline-none text-lg border-none"
@@ -606,9 +606,9 @@
           >${alternativa.valor}</textarea>
         </div>
       `;
-    }
+          }
 
-    optionDiv.innerHTML = `
+          optionDiv.innerHTML = `
       <div class="flex justify-between items-start mb-2">
         <div class="flex items-center">
           <input 
@@ -617,9 +617,7 @@
             ${alternativa.acerto ? "checked" : ""}
             onchange="updateCorrectAnswer(${currentQuestionIndex}, ${index}, this.checked)"
           >
-          <span class="text-white text-sm font-bold">Opção ${
-            index + 1
-          }</span>
+          <span class="text-white text-sm font-bold">Opção ${index + 1}</span>
         </div>
         ${
           alternativa.acerto
@@ -630,9 +628,9 @@
       ${optionContent}
     `;
 
-    optionsGrid.appendChild(optionDiv);
-  });
-}
+          optionsGrid.appendChild(optionDiv);
+        });
+      }
 
       function updateCorrectAnswer(questionIndex, optionIndex, isCorrect) {
         activityData.perguntas[questionIndex].alternativas.forEach(
