@@ -140,9 +140,9 @@
         </svg>
       </button>
 
-      <div class="mt-24 flex items-center px-6 py-4">
+      <div class="mt-24 flex flex-col items-center px-6 py-4">
         <div
-          class="w-12 h-12 rounded-full border border-black flex items-center justify-center"
+          class="w-12 h-12 rounded-full border border-black flex items-center justify-center mb-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -161,7 +161,7 @@
         </div>
         <span
           id="alunoEmailDisplay"
-          class="ml-4 text-xl text-black overflow-hidden text-ellipsis"
+          class="text-xl text-black overflow-hidden text-ellipsis text-center"
           th:text="${nomeAluno ?: 'Nome do Aluno'}"
           >Nome do Aluno</span
         >
