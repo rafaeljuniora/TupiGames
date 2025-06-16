@@ -492,320 +492,310 @@
         },
       ];
 
-      document.addEventListener("DOMContentLoaded", async function() {
-    try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const atividadeId = urlParams.get('codigo');
-        const nomeTurma = urlParams.get('nome');
-        
-        if (!atividadeId) {
-            throw new Error("Código da atividade não fornecido");
-        }
+      document.addEventListener("DOMContentLoaded", async function () {
+        try {
+          const urlParams = new URLSearchParams(window.location.search);
+          const atividadeId = urlParams.get("codigo");
+          const nomeTurma = urlParams.get("nome");
 
-        Swal.fire({
-            title: 'Carregando atividade...',
+          if (!atividadeId) {
+            throw new Error("Código da atividade não fornecido");
+          }
+
+          Swal.fire({
+            title: "Carregando atividade...",
             allowOutsideClick: false,
             didOpen: () => {
-                Swal.showLoading();
+              Swal.showLoading();
+            },
+          });
+
+          const atividadeResponse = await fetch(
+            "/api/v1/atividade/getActivityByCode",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(parseInt(atividadeId)),
             }
-        });
+          );
 
-        const atividadeResponse = await fetch("/api/v1/atividade/getActivityByCode", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(parseInt(atividadeId))
-        });
-
-        if (!atividadeResponse.ok) {
+          if (!atividadeResponse.ok) {
             throw new Error("Erro ao carregar atividade");
-        }
+          }
 
-        const atividade = await atividadeResponse.json();
+          const atividade = await atividadeResponse.json();
 
-        const respostasResponse = await fetch("/api/v1/resposta/getAllAnswersByActivity", {
-            method: "POST",
-            headers: {
+          const respostasResponse = await fetch(
+            "/api/v1/resposta/getAllAnswersByActivity",
+            {
+              method: "POST",
+              headers: {
                 "Content-Type": "application/json",
-            },
-            body: JSON.stringify(parseInt(atividadeId))
-        });
+              },
+              body: JSON.stringify(parseInt(atividadeId)),
+            }
+          );
 
-        if (!respostasResponse.ok) {
+          if (!respostasResponse.ok) {
             throw new Error("Erro ao carregar respostas");
-        }
+          }
 
-        const respostas = await respostasResponse.json();
+          const respostas = await respostasResponse.json();
 
-        window.activityData = {
+          window.activityData = {
             ...atividade,
             respostas: respostas,
-            originalData: JSON.parse(JSON.stringify(atividade))
-        };
+            originalData: JSON.parse(JSON.stringify(atividade)),
+          };
 
-        populateHeader(atividade, nomeTurma);
-        populateStudentPerformance(respostas);
-        displayQuestion(0);
+          populateHeader(atividade, nomeTurma);
+          populateStudentPerformance(respostas);
+          displayQuestion(0);
 
-        Swal.close();
-    } catch (error) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Erro',
-            text: error.message || 'Ocorreu um erro ao carregar a atividade',
-            confirmButtonColor: '#6b46c1'
-        }).then(() => {
+          Swal.close();
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Erro",
+            text: error.message || "Ocorreu um erro ao carregar a atividade",
+            confirmButtonColor: "#6b46c1",
+          }).then(() => {
             window.location.href = "/professor/inicio";
-        });
-    }
-});
+          });
+        }
+      });
 
-let currentQuestionIndex = 0;
+      let currentQuestionIndex = 0;
 
-function populateHeader(atividade, nomeTurma) {
-    document.getElementById("activityTitle").textContent = atividade.nomeAtividade;
-    document.getElementById("className").textContent = nomeTurma || "Turma não especificada";
-    document.getElementById("questionCount").textContent = atividade.perguntas.length;
-}
+      function populateHeader(atividade, nomeTurma) {
+        document.getElementById("activityTitle").textContent =
+          atividade.nomeAtividade;
+        document.getElementById("className").textContent =
+          nomeTurma || "Turma não especificada";
+        document.getElementById("questionCount").textContent =
+          atividade.perguntas.length;
+      }
 
-function populateStudentPerformance(respostas) {
-    const studentRowsContainer = document.getElementById("studentRows");
-    studentRowsContainer.innerHTML = "";
+      function populateStudentPerformance(respostas) {
+        const studentRowsContainer = document.getElementById("studentRows");
+        studentRowsContainer.innerHTML = "";
 
-    if (!respostas || respostas.length === 0) {
-        studentRowsContainer.innerHTML = `
+        if (!respostas || respostas.length === 0) {
+          studentRowsContainer.innerHTML = `
             <div class="text-center py-4 text-green-400">
                 Nenhum aluno completou esta atividade ainda
             </div>
         `;
-        document.getElementById("studentCount").textContent = "0 alunos";
-        return;
-    }
+          document.getElementById("studentCount").textContent = "0 alunos";
+          return;
+        }
 
-    respostas.forEach(resposta => {
-        const row = document.createElement("div");
-        row.className = "student-row grid grid-cols-3 gap-4 p-4";
-        row.innerHTML = `
+        respostas.forEach((resposta) => {
+          const row = document.createElement("div");
+          row.className = "student-row grid grid-cols-3 gap-4 p-4";
+          row.innerHTML = `
             <div class="text-green-400">${resposta.nomeAluno}</div>
-            <div class="text-green-400 text-center">${formatDate(resposta.enviado)}</div>
-            <div class="text-green-400 text-center">${resposta.acertos}/${resposta.total}</div>
+            <div class="text-green-400 text-center">${formatDate(
+              resposta.enviado
+            )}</div>
+            <div class="text-green-400 text-center">${resposta.acertos}/${
+            resposta.total
+          }</div>
         `;
-        studentRowsContainer.appendChild(row);
-    });
+          studentRowsContainer.appendChild(row);
+        });
 
-    document.getElementById("studentCount").textContent = `${respostas.length} aluno${respostas.length !== 1 ? 's' : ''}`;
-}
+        document.getElementById("studentCount").textContent = `${
+          respostas.length
+        } aluno${respostas.length !== 1 ? "s" : ""}`;
+      }
 
-function displayQuestion(index) {
-    const questions = window.activityData.perguntas;
-    if (index < 0 || index >= questions.length) return;
-    
-    currentQuestionIndex = index;
-    const pergunta = questions[index];
+      function displayQuestion(index) {
+        const questions = window.activityData.perguntas;
+        if (index < 0 || index >= questions.length) return;
 
-    document.getElementById("currentQuestionNumber").textContent = index + 1;
-    
-    updateNavigationButtons();
+        currentQuestionIndex = index;
+        const pergunta = questions[index];
 
-    const questionText = document.getElementById("questionText");
-    const questionImageContainer = document.getElementById("questionImageContainer");
-    const questionImage = document.getElementById("questionImage");
+        document.getElementById("currentQuestionNumber").textContent =
+          index + 1;
 
-    const questionarioValue = pergunta.questionario.valor || "";
-    const hasImage = questionarioValue.includes("IMAGE:");
-    let [textoEnunciado, imagemEnunciado] = hasImage ? 
-        questionarioValue.split("IMAGE:") : 
-        [questionarioValue, null];
+        updateNavigationButtons();
 
-    textoEnunciado = textoEnunciado?.trim() || "";
-    questionText.textContent = textoEnunciado || (pergunta.questionario.imagem ? "[Pergunta com imagem]" : "[Pergunta sem enunciado]");
-    questionText.style.display = "block";
+        const questionText = document.getElementById("questionText");
+        const questionImageContainer = document.getElementById(
+          "questionImageContainer"
+        );
+        const questionImage = document.getElementById("questionImage");
 
-    if (imagemEnunciado) {
-        questionImage.src = imagemEnunciado;
-        questionImageContainer.classList.remove("hidden");
-    } else {
-        questionImageContainer.classList.add("hidden");
-    }
+        const questionarioValue = pergunta.questionario.valor || "";
+        const hasImage = questionarioValue.includes("IMAGE:");
+        let [textoEnunciado, imagemEnunciado] = hasImage
+          ? questionarioValue.split("IMAGE:")
+          : [questionarioValue, null];
 
-    const optionsGrid = document.getElementById("optionsGrid");
-    optionsGrid.innerHTML = "";
+        textoEnunciado = textoEnunciado?.trim() || "";
+        questionText.textContent =
+          textoEnunciado ||
+          (pergunta.questionario.imagem
+            ? "[Pergunta com imagem]"
+            : "[Pergunta sem enunciado]");
+        questionText.style.display = "block";
 
-    pergunta.alternativas.forEach((alternativa, altIndex) => {
-        const optionDiv = document.createElement("div");
-        optionDiv.className = `option-card option-card-${altIndex + 1} rounded-2xl p-6 relative min-h-32 ${alternativa.acerto ? 'correct-answer' : ''}`;
+        if (imagemEnunciado) {
+          questionImage.src = imagemEnunciado;
+          questionImageContainer.classList.remove("hidden");
+        } else {
+          questionImageContainer.classList.add("hidden");
+        }
 
-        optionDiv.innerHTML = `
+        const optionsGrid = document.getElementById("optionsGrid");
+        optionsGrid.innerHTML = "";
+
+        pergunta.alternativas.forEach((alternativa, altIndex) => {
+          const optionDiv = document.createElement("div");
+          optionDiv.className = `option-card option-card-${
+            altIndex + 1
+          } rounded-2xl p-6 relative min-h-32 ${
+            alternativa.acerto ? "correct-answer" : ""
+          }`;
+
+          optionDiv.innerHTML = `
             <div class="flex justify-between items-start mb-2">
                 <div class="flex items-center">
                     <input 
                         type="checkbox" 
                         class="correct-answer-checkbox" 
-                        ${alternativa.acerto ? 'checked' : ''}
+                        ${alternativa.acerto ? "checked" : ""}
                         onchange="updateCorrectAnswer(${index}, ${altIndex}, this.checked)"
                     >
-                    <span class="text-white text-sm font-bold ml-2">Opção ${altIndex + 1}</span>
+                    <span class="text-white text-sm font-bold ml-2">Opção ${
+                      altIndex + 1
+                    }</span>
                 </div>
-                ${alternativa.acerto ? '<div class="text-green-400 text-sm font-bold">✓ CORRETA</div>' : ''}
+                ${
+                  alternativa.acerto
+                    ? '<div class="text-green-400 text-sm font-bold">✓ CORRETA</div>'
+                    : ""
+                }
             </div>
             <div class="option-content">
-                ${alternativa.imagem ? `
+                ${
+                  alternativa.imagem
+                    ? `
                     <div class="flex justify-center items-center h-full">
-                        <img src="${alternativa.valor}" class="max-w-full max-h-24 object-contain rounded" alt="Opção ${altIndex + 1}">
+                        <img src="${
+                          alternativa.valor
+                        }" class="max-w-full max-h-24 object-contain rounded" alt="Opção ${
+                        altIndex + 1
+                      }">
                     </div>
-                ` : `
+                `
+                    : `
                     <textarea 
                         class="w-full bg-transparent text-white placeholder-gray-300 resize-none focus:outline-none text-sm min-h-28"
                         rows="3"
                         readonly
                     >${alternativa.valor}</textarea>
-                `}
+                `
+                }
             </div>
         `;
 
-        optionsGrid.appendChild(optionDiv);
-    });
-}
-
-function updateCorrectAnswer(questionIndex, optionIndex, isCorrect) {
-    window.activityData.perguntas[questionIndex].alternativas[optionIndex].acerto = isCorrect;
-    
-    displayQuestion(currentQuestionIndex);
-}
-
-function previousQuestion() {
-    if (currentQuestionIndex > 0) {
-        displayQuestion(currentQuestionIndex - 1);
-    }
-}
-
-function nextQuestion() {
-    if (currentQuestionIndex < window.activityData.perguntas.length - 1) {
-        displayQuestion(currentQuestionIndex + 1);
-    }
-}
-
-function updateNavigationButtons() {
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-
-    prevBtn.disabled = currentQuestionIndex === 0;
-    nextBtn.disabled = currentQuestionIndex === window.activityData.perguntas.length - 1;
-}
-
-async function saveChanges() {
-    try {
-        const hasChanges = JSON.stringify(window.activityData.originalData) !== 
-                         JSON.stringify(window.activityData);
-
-        if (!hasChanges) {
-            Swal.fire({
-                icon: 'info',
-                title: 'Nenhuma alteração',
-                text: 'Não foram detectadas alterações para salvar',
-                confirmButtonColor: '#6b46c1'
-            });
-            return;
-        }
-
-        Swal.fire({
-            title: 'Salvando alterações...',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
+          optionsGrid.appendChild(optionDiv);
         });
-
-        const updateData = {
-            atividadeCode: window.activityData.atividadeCode,
-            perguntas: window.activityData.perguntas.map(pergunta => ({
-                id: pergunta.id,
-                alternativas: pergunta.alternativas.map(alt => ({
-                    id: alt.id,
-                    acerto: alt.acerto
-                }))
-            }))
-        };
-
-        const response = await fetch("/api/v1/atividade/updateAnswers", {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updateData)
-        });
-
-        if (!response.ok) {
-            throw new Error("Erro ao salvar alterações");
-        }
-
-        window.activityData.originalData = JSON.parse(JSON.stringify(window.activityData));
-
-        Swal.fire({
-            icon: 'success',
-            title: 'Alterações salvas!',
-            text: 'As respostas corretas foram atualizadas com sucesso',
-            confirmButtonColor: '#6b46c1',
-            timer: 2000
-        });
-    } catch (error) {
-        console.error("Erro ao salvar:", error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Erro ao salvar',
-            text: error.message || 'Ocorreu um erro ao tentar salvar as alterações',
-            confirmButtonColor: '#6b46c1'
-        });
-    }
-}
-
-function formatDate(timestamp) {
-    if (!timestamp) return "N/A";
-    
-    const date = new Date(timestamp);
-    return date.toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-    });
-}
-
-function toggleDropdown() {
-    const dropdown = document.getElementById("dropdownContent");
-    const chevron = document.getElementById("chevronIcon");
-
-    dropdown.classList.toggle("show");
-    chevron.classList.toggle("rotate");
-}
-
-      function loadActivityData() {
-        document.getElementById("activityTitle").textContent =
-          activityData.nomeAtividade;
-        document.getElementById("className").textContent =
-          activityData.nomeTurma;
-        document.getElementById("questionCount").textContent =
-          activityData.perguntas.length;
       }
 
-      function loadStudentData() {
-        const studentRowsContainer = document.getElementById("studentRows");
-        studentRowsContainer.innerHTML = "";
+      function updateNavigationButtons() {
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
 
-        mockStudents.forEach((student) => {
-          const row = document.createElement("div");
-          row.className = "student-row grid grid-cols-3 gap-4 p-4";
-          row.innerHTML = `
-            <div class="text-green-400">${student.nome}</div>
-            <div class="text-green-400 text-center">${student.dataRealizacao}</div>
-            <div class="text-green-400 text-center">${student.acertos}/${student.total}</div>
-          `;
-          studentRowsContainer.appendChild(row);
+        prevBtn.disabled = currentQuestionIndex === 0;
+        nextBtn.disabled =
+          currentQuestionIndex === window.activityData.perguntas.length - 1;
+      }
+
+      async function saveChanges() {
+        try {
+          const hasChanges =
+            JSON.stringify(window.activityData.originalData) !==
+            JSON.stringify(window.activityData);
+
+          if (!hasChanges) {
+            Swal.fire({
+              icon: "info",
+              title: "Nenhuma alteração",
+              text: "Não foram detectadas alterações para salvar",
+              confirmButtonColor: "#6b46c1",
+            });
+            return;
+          }
+
+          Swal.fire({
+            title: "Salvando alterações...",
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+
+          const updateData = {
+            atividadeCode: window.activityData.atividadeCode,
+            perguntas: window.activityData.perguntas.map((pergunta) => ({
+              id: pergunta.id,
+              alternativas: pergunta.alternativas.map((alt) => ({
+                id: alt.id,
+                acerto: alt.acerto,
+              })),
+            })),
+          };
+
+          const response = await fetch("/api/v1/atividade/updateAnswers", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updateData),
+          });
+
+          if (!response.ok) {
+            throw new Error("Erro ao salvar alterações");
+          }
+
+          window.activityData.originalData = JSON.parse(
+            JSON.stringify(window.activityData)
+          );
+
+          Swal.fire({
+            icon: "success",
+            title: "Alterações salvas!",
+            text: "As respostas corretas foram atualizadas com sucesso",
+            confirmButtonColor: "#6b46c1",
+            timer: 2000,
+          });
+        } catch (error) {
+          console.error("Erro ao salvar:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Erro ao salvar",
+            text:
+              error.message || "Ocorreu um erro ao tentar salvar as alterações",
+            confirmButtonColor: "#6b46c1",
+          });
+        }
+      }
+
+      function formatDate(timestamp) {
+        if (!timestamp) return "N/A";
+
+        const date = new Date(timestamp);
+        return date.toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
         });
-
-        document.getElementById(
-          "studentCount"
-        ).textContent = `${mockStudents.length} alunos`;
       }
 
       function toggleDropdown() {
@@ -814,99 +804,6 @@ function toggleDropdown() {
 
         dropdown.classList.toggle("show");
         chevron.classList.toggle("rotate");
-      }
-
-      function displayQuestion(index) {
-        const question = activityData.perguntas[index];
-
-        document.getElementById("currentQuestionNumber").textContent =
-          index + 1;
-
-        const questionText = document.getElementById("questionText");
-        const questionImageContainer = document.getElementById(
-          "questionImageContainer"
-        );
-        const questionImage = document.getElementById("questionImage");
-
-        if (
-          question.questionario.imagem ||
-          question.questionario.imagemEnunciado
-        ) {
-          if (question.questionario.valor.includes("IMAGE:")) {
-            const parts = question.questionario.valor.split("IMAGE:");
-            if (question.questionario.imagemEnunciado) {
-              questionText.textContent = parts[0];
-            } else {
-              questionText.style.display = "none";
-            }
-            questionImage.src = parts[1];
-            questionImageContainer.classList.remove("hidden");
-          }
-        } else {
-          questionText.textContent = question.questionario.valor;
-          questionText.style.display = "block";
-          questionImageContainer.classList.add("hidden");
-        }
-        displayOptions(question.alternativas);
-      }
-
-      function displayOptions(alternativas) {
-        const optionsGrid = document.getElementById("optionsGrid");
-        optionsGrid.innerHTML = "";
-
-        alternativas.forEach((alternativa, index) => {
-          const optionDiv = document.createElement("div");
-          optionDiv.className = `option-card option-card-${
-            index + 1
-          } rounded-2xl p-6 relative min-h-32 ${
-            alternativa.acerto ? "correct-answer" : ""
-          }`;
-
-          let optionContent = "";
-          if (alternativa.imagem) {
-            optionContent = `
-        <div class="flex justify-center items-center h-full">
-          <img src="${
-            alternativa.valor
-          }" class="max-w-full max-h-24 object-contain rounded" alt="Opção ${
-              index + 1
-            }">
-        </div>
-      `;
-          } else {
-            optionContent = `
-        <div class="flex items-center h-full">
-          <textarea 
-            class="w-full bg-transparent text-white placeholder-gray-300 resize-none focus:outline-none text-lg border-none"
-            rows="3"
-            readonly
-          >${alternativa.valor}</textarea>
-        </div>
-      `;
-          }
-
-          optionDiv.innerHTML = `
-      <div class="flex justify-between items-start mb-2">
-        <div class="flex items-center">
-          <input 
-            type="checkbox" 
-            class="correct-answer-checkbox" 
-            ${alternativa.acerto ? "checked" : ""}
-            onchange="updateCorrectAnswer(${currentQuestionIndex}, ${index}, this.checked)"
-          >
-          <span class="text-white text-sm font-bold">Opção ${index + 1}</span>
-        </div>
-        ${
-          alternativa.acerto
-            ? '<div class="text-green-400 text-sm font-bold">✓ CORRETA</div>'
-            : ""
-        }
-      </div>
-      ${optionContent}
-    `;
-
-          optionsGrid.appendChild(optionDiv);
-        });
       }
 
       function updateCorrectAnswer(questionIndex, optionIndex, isCorrect) {
@@ -931,36 +828,6 @@ function toggleDropdown() {
           currentQuestionIndex++;
           displayQuestion(currentQuestionIndex);
           updateNavigationButtons();
-        }
-      }
-
-      function updateNavigationButtons() {
-        const prevBtn = document.getElementById("prevBtn");
-        const nextBtn = document.getElementById("nextBtn");
-
-        prevBtn.disabled = currentQuestionIndex === 0;
-        nextBtn.disabled =
-          currentQuestionIndex === activityData.perguntas.length - 1;
-      }
-
-      async function saveChanges() {
-        try {
-          Swal.fire({
-            icon: "success",
-            title: "Alterações salvas!",
-            text: "As modificações na atividade foram salvas com sucesso.",
-            confirmButtonColor: "#6b46c1",
-            timer: 2000,
-            timerProgressBar: true,
-          });
-        } catch (error) {
-          console.error("Erro ao salvar alterações:", error);
-          Swal.fire({
-            icon: "error",
-            title: "Erro ao salvar",
-            text: "Ocorreu um erro ao tentar salvar as alterações. Tente novamente.",
-            confirmButtonColor: "#6b46c1",
-          });
         }
       }
     </script>
