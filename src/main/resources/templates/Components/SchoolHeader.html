@@ -161,7 +161,7 @@
         </div>
         <span
           id="escolaEmailDisplay"
-          class="ml-4 text-xl text-black"
+          class="ml-4 text-xl text-black overflow-hidden text-ellipsis"
           th:text="${nomeEscola ?: 'Nome da Escola'}"
           >Nome da Escola</span
         >
@@ -243,23 +243,21 @@
 
         sidebar.classList.toggle("translate-x-0");
         sidebar.classList.toggle("-translate-x-full");
-
-        document.addEventListener("DOMContentLoaded", function () {
-          const usuarioSalvo = sessionStorage.getItem("usuario");
-          if (usuarioSalvo) {
-            try {
-              const usuario = JSON.parse(usuarioSalvo);
-              const emailDisplay =
-                document.getElementById("escolaEmailDisplay");
-              if (emailDisplay && usuario.email) {
-                emailDisplay.textContent = usuario.email;
-              }
-            } catch (e) {
-              console.error("Erro ao analisar dados do usuário:", e);
-            }
-          }
-        });
       }
+      document.addEventListener("DOMContentLoaded", function () {
+        const usuarioSalvo = sessionStorage.getItem("usuario");
+        if (usuarioSalvo) {
+          try {
+            const usuario = JSON.parse(usuarioSalvo);
+            const emailDisplay = document.getElementById("escolaEmailDisplay");
+            if (emailDisplay && usuario.email) {
+              emailDisplay.textContent = usuario.email;
+            }
+          } catch (e) {
+            console.error("Erro ao analisar dados do usuário:", e);
+          }
+        }
+      });
     </script>
   </body>
 </html>

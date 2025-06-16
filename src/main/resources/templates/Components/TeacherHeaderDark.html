@@ -160,7 +160,8 @@
           </svg>
         </div>
         <span
-          class="ml-4 text-xl text-white"
+          id="professorEmailDisplay"
+          class="ml-4 text-xl text-white overflow-hidden text-ellipsis"
           th:text="${nomeProfessor ?: 'Nome do Professor'}"
           >Nome do Professor</span
         >
@@ -253,6 +254,20 @@
         sidebar.classList.toggle("translate-x-0");
         sidebar.classList.toggle("-translate-x-full");
       }
+      document.addEventListener("DOMContentLoaded", function () {
+        const usuarioSalvo = sessionStorage.getItem("usuario");
+        if (usuarioSalvo) {
+          try {
+            const usuario = JSON.parse(usuarioSalvo);
+            const emailDisplay = document.getElementById("professorEmailDisplay");
+            if (emailDisplay && usuario.email) {
+              emailDisplay.textContent = usuario.email;
+            }
+          } catch (e) {
+            console.error("Erro ao analisar dados do usuário:", e);
+          }
+        }
+      });
     </script>
   </body>
 </html>
