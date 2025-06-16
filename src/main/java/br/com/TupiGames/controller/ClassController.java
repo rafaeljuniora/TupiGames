@@ -24,4 +24,7 @@ public class ClassController {
 
     @GetMapping("/professor/details/activity")
     public String atividadesAtribuidasDaTurmaProfessor(){return "ClassViewPages/TeacherClassViewActivity";}
+
+    @GetMapping("/escola/details/activity")
+    public String atividadesAtribuidasDaTurmaEscola(){return "ClassViewPages/SchoolClassViewActivity";}
 }
