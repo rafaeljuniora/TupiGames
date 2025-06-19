@@ -1,5 +1,6 @@
 package br.com.TupiGames.domain;
 
+import br.com.TupiGames.dto.TurmaRequestDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
@@ -97,5 +98,9 @@ public class Turma {
 
     public Long getTurma_id() {
         return turma_id;
+    }
+
+    public TurmaRequestDTO toTurmaRequestDTO(Turma turma){
+        return new TurmaRequestDTO(this.turma_id,this.nomeTurma,this.periodo,this.qntAlunos);
     }
 }

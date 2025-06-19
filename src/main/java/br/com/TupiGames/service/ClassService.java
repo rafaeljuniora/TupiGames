@@ -33,4 +33,9 @@ public class ClassService {
     public List<Turma> findAllByTeacher(Professor professor){
         return classRepository.findAllByProfessores(professor);
     }
+
+    public Turma findById(Long id){
+        return classRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
+    }
 }
