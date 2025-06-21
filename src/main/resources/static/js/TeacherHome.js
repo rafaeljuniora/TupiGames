@@ -32,11 +32,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const atividadesLimitadas = atividades.slice(0, 3);
 
         containerAtividades.innerHTML = atividadesLimitadas.map(atividade => `
-            <div class="bg-[#7C4A24] p-4 rounded-lg text-[#66AD70] shadow hover:shadow-lg transition-shadow">
-                <h3 class="text-xl jersey-10 text-[#66AD70] mb-2">${atividade.nomeAtividade}</h3>
-                <p class="text-xl jersey-10 text-[#F5E5C7] mb-2">Código: ${atividade.atividadeCode}</p>
-            </div>
-        `).join('');
+            <div class="bg-[#7C4A24] rounded-lg p-4 text-[#66AD70] shadow-md">
+                           <div class="flex justify-between items-center mb-2">
+                               <span class="text-lg font-bold jersey-10">${atividade.nomeAtividade}</span>
+                               <span class="text-sm jersey-10">${atividade.dataAtribuicao || ''}</span>
+                           </div>
+                           <div class="text-sm mb-2 jersey-10">Código: ${atividade.atividadeCode || ''}</div>
+                           <div class="flex justify-between items-center">
+                               <div class="text-sm jersey-10">
+                                   ${atividade.professor ? `<span>Prof: ${atividade.professor}</span>` : ''}
+                               </div>
+                               <div class="text-sm">
+                                   <span class="bg-[#66AD70] text-[#000000] px-2 py-1 rounded-full text-xs jersey-10">
+                                       ${atividade.quantidadeQuestoes || 0} questões
+                                   </span>
+                               </div>
+                           </div>
+                       </div>
+                   `).join('');
     }
 
     async function buscarAtividades() {
@@ -45,6 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!professorEmail) {
                 throw new Error('Professor não está logado');
             }
+
+            console.log("Email do professor logado:", professorEmail);
 
             const response = await fetch('/api/v1/atividade/getAllActivities', {
                 method: 'GET',
@@ -58,12 +73,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const atividades = await response.json();
+
             console.log("Atividades recebidas:", atividades);
 
-            // Ordenar as atividades pelo ID em ordem decrescente (do maior para o menor)
-            atividades.sort((a, b) => b.id - a.id);
+            const atividadesDoProfessor = atividades.filter(atividade => {
+                            return atividade.professor === professorEmail;
+                        });
 
-            renderizarAtividades(atividades);
+                        console.log("Atividades da escola:", atividadesDoProfessor);
+
+            atividadesDoProfessor.sort((a, b) => b.id - a.id);
+
+            renderizarAtividades(atividadesDoProfessor);
         } catch (error) {
             console.error('Erro:', error);
             containerAtividades.innerHTML = `

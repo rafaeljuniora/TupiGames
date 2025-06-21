@@ -246,11 +246,12 @@
               </svg>
             </div>
 
-            <input
-              type="text"
-              placeholder="Pesquisar por Nome de Aluno e Turma"
-              class="w-full h-12 pl-10 pr-4 border border-[#E5E7EB] rounded-l-lg focus:outline-none bg-white"
-            />
+           <input
+            id="searchStudents"
+            type="text"
+            placeholder="Pesquisar por Nome de Aluno "
+            class="w-full h-12 pl-10 pr-4 border border-[#E5E7EB] rounded-l-lg focus:outline-none bg-white"
+          />
           </div>
 
           <button
@@ -321,8 +322,9 @@
             </div>
 
             <input
+              id="searchTeachers"
               type="text"
-              placeholder="Pesquisar por Nome de Professor e Turma referente"
+              placeholder="Pesquisar por Nome de Professor"
               class="w-full h-12 pl-10 pr-4 border border-[#E5E7EB] rounded-l-lg focus:outline-none bg-white"
             />
           </div>
@@ -395,8 +397,9 @@
             </div>
 
             <input
+              id="searchClasses"
               type="text"
-              placeholder="Pesquisar por Turma ou Periodo"
+              placeholder="Pesquisar por Turma"
               class="w-full h-12 pl-10 pr-4 border border-[#E5E7EB] rounded-l-lg focus:outline-none bg-white"
             />
           </div>
@@ -989,7 +992,7 @@
             if (selectedCard === cardAlunos) {
               sectionAlunos.classList.remove("hidden");
               sectionAlunos.classList.add("active");
-              getStudentsBySchool();
+              getStudentsBySchoolWithCache();
             } else if (selectedCard === cardProfessores) {
               sectionProfessores.classList.remove("hidden");
               sectionProfessores.classList.add("active");
@@ -1034,5 +1037,8 @@
         }
       });
     </script>
+
+    <script src="/js/SchoolManagement.js"></script>
+
   </body>
 </html>
