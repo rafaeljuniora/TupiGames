@@ -1,6 +1,16 @@
-
 .jersey-10-regular {
   font-family: "Jersey 10", sans-serif;
   font-weight: 400;
   font-style: normal;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #6CCBFE 25%, #05A2F7 100%), url('../images/back_azul.png');
+  background-blend-mode: multiply;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }

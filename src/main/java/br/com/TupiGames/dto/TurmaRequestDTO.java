@@ -31,6 +31,13 @@ public class TurmaRequestDTO {
         }
     }
 
+    public TurmaRequestDTO(Long turma_id, String nomeTurma, String periodo, Integer qntAlunos) {
+        this.turma_id = turma_id;
+        this.nomeTurma = nomeTurma;
+        this.periodo = periodo;
+        this.qntAlunos = qntAlunos;
+    }
+
     public Long getTurma_id() {
         return turma_id;
     }
