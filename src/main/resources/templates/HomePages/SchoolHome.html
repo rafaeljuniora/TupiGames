@@ -12,6 +12,7 @@
     <link href="/css/output.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script th:replace="~{components/SchoolHeader :: sidebar-script}"></script>
+    <script src="/js/SchoolHome.js" defer></script>
   </head>
   <body class="bg-[#F5E5C7] min-h-screen">
     <header
@@ -47,23 +48,7 @@
           Últimas Atividades
         </h2>
         <div class="bg-white rounded-3xl p-8 shadow-lg max-w-4xl mx-auto">
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <div th:if="${#lists.isEmpty(ultimasAtividades)}" class="col-span-full text-center py-8">
-              <p class="text-gray-500 jersey-10 text-xl">
-                Nenhuma atividade recente
-              </p>
-            </div>
-            <div th:each="atividade : ${ultimasAtividades}" class="bg-[#FFD700] rounded-lg p-4 text-black shadow-md">
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-lg font-bold" th:text="${atividade.nome}"></span>
-                <span class="text-sm" th:text="${#temporals.format(atividade.dataCriacao, 'dd/MM/yyyy')}"></span>
-              </div>
-              <div class="text-sm mb-2" th:text="${atividade.descricao}"></div>
-              <div class="text-sm text-gray-700">
-                <span th:text="${atividade.professor.nome}"></span> -
-                <span th:text="${atividade.turma.nome}"></span>
-              </div>
-            </div>
+          <div id="atividades-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           </div>
         </div>
       </div>
@@ -73,18 +58,6 @@
           Visualização de Turmas
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div th:if="${#lists.isEmpty(turmas)}" class="col-span-full text-center py-8">
-            <p class="text-gray-500 jersey-10 text-xl">
-              Nenhuma turma cadastrada
-            </p>
-          </div>
-          <div th:each="turma : ${turmas}" class="bg-[#FFD700] rounded-lg p-4 text-black shadow-md">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-lg font-bold" th:text="${turma.nome}"></span>
-              <span class="text-sm" th:text="${turma.ano}"></span>
-            </div>
-            <div class="text-sm" th:text="${turma.descricao}"></div>
-          </div>
         </div>
       </div>
 
@@ -110,101 +83,5 @@
         </div>
       </div>
     </main>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const usuarioString = sessionStorage.getItem("usuario");
-        if (!usuarioString) {
-          console.error("Usuário não encontrado no sessionStorage");
-          return;
-        }
-
-        try {
-          const usuario = JSON.parse(usuarioString);
-          const email = usuario.email;
-
-          fetch("/api/v1/turma/getAllBySchool", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: email,
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error("Erro na requisição");
-              }
-              return response.json();
-            })
-            .then((turmas) => {
-              const turmasContainer = document.querySelector(
-                ".grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.gap-4"
-              );
-
-              turmasContainer.innerHTML = "";
-
-              turmas.forEach((turma) => {
-                const turmaElement = document.createElement("div");
-                turmaElement.className =
-                  "bg-[#7C4A24] rounded-lg p-4 text-[#66AD70]";
-                turmaElement.innerHTML = `
-            <div class="flex justify-between items-center mb-2">
-              <h4 class="text-xl jersey-10">${turma.nomeTurma}</h4>
-              <a
-                href="/turmas/${turma.turma_id}"
-                class="bg-[#66AD70] rounded-full w-8 h-8 flex items-center justify-center hover:opacity-80 transition-opacity"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="#000000"
-                  class="w-5 h-5"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
-              </a>
-            </div>
-            <p class="text-lg jersey-10">
-              Qnt de Alunos: ${turma.quantidadeAlunosAtual || 0}/${turma.qntAlunos || 0}
-            </p>
-            <p class="text-lg jersey-10">
-              Periodo: ${turma.periodo || ""}
-            </p>
-            <div class="mt-2">
-              ${
-                turma.professores && turma.professores.length > 0
-                  ? Array.from(turma.professores)
-                      .map(
-                        (nomeProfessor) =>
-                          `<p class="text-lg jersey-10">${nomeProfessor}</p>`
-                      )
-                      .join("")
-                  : "<p class='text-lg jersey-10'>Nenhum professor atribuído</p>"
-              }
-            </div>
-          `;
-            console.log(turmas)
-                turmasContainer.appendChild(turmaElement);
-              });
-            })
-            .catch((error) => {
-              console.error("Erro ao carregar turmas:", error);
-            });
-        } catch (e) {
-          console.error("Erro ao parsear usuário do sessionStorage:", e);
-        }
-      });
-    </script>
   </body>
 </html>
