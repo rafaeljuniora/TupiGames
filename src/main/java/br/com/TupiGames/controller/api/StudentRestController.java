@@ -86,11 +86,6 @@ public class StudentRestController {
         }
     }
 
-    @PostMapping("/remove")
-    public void removeStudent(@RequestBody Long aluno_id) {
-        studentService.removeAlunoById(aluno_id);
-    }
-
     @PutMapping("/update")
     public ResponseEntity<Aluno> atualizarAluno(@RequestBody AlunoDTO alunoAtualizado) {
         Aluno aluno = studentService.findById(alunoAtualizado.getAluno_id());
@@ -100,5 +95,24 @@ public class StudentRestController {
 
         Aluno alunoAtualizadoSalvo = studentService.save(aluno);
         return ResponseEntity.ok(alunoAtualizadoSalvo);
+    }
+
+    @PostMapping("/remove")
+    public void removeAluno(@RequestBody Object id){
+        try {
+            Long alunoId;
+            if (id instanceof Number) {
+                alunoId = ((Number) id).longValue();
+            } else if (id instanceof String) {
+                alunoId = Long.parseLong((String) id);
+            } else {
+                throw new IllegalArgumentException("Formato de ID inválido: " + id);
+            }
+            System.out.println("Removendo aluno com ID: " + alunoId);
+            studentService.removeAlunoById(alunoId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }

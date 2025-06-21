@@ -87,7 +87,28 @@ function adicionarEventosAlunos(divAcoes, aluno) {
   const removeBtn = divAcoes.querySelector(".remove-student-btn");
   if (removeBtn) {
     removeBtn.addEventListener("click", async function () {
-      const alunoId = aluno.id;
+
+      console.log("==== DEPURAÇÃO REMOÇÃO DE ALUNO ====");
+      console.log("Aluno objeto completo:", aluno);
+
+
+      const alunoId = aluno.id || aluno.aluno_id || (typeof aluno.getId === "function" ? aluno.getId() : null);
+
+
+      const idParaEnviar = Number(alunoId);
+
+      console.log("ID que será usado para remoção:", idParaEnviar);
+      console.log("===================================");
+
+      if (!idParaEnviar) {
+        console.error("Não foi possível obter o ID do aluno!");
+        Swal.fire({
+          title: "Erro",
+          text: "Não foi possível identificar o aluno para remoção",
+          icon: "error",
+        });
+        return;
+      }
 
       const result = await Swal.fire({
         title: "Você tem certeza?",
@@ -102,18 +123,42 @@ function adicionarEventosAlunos(divAcoes, aluno) {
 
       if (result.isConfirmed) {
         try {
-          await axios.post("/api/v1/aluno/remove", alunoId, {
+          console.log("Enviando requisição para remover aluno com ID:", idParaEnviar);
+
+          await axios.post("/api/v1/aluno/remove", idParaEnviar, {
             headers: {
               "Content-Type": "application/json",
             },
           });
 
-          await Swal.fire({
-            title: "Usuário Removido",
-            text: "Usuário foi removido do sistema",
-            icon: "success",
-          });
-          getStudentsBySchoolWithCache();
+          // Forçar atualização da lista depois de um pequeno atraso
+          setTimeout(async () => {
+            console.log("Atualizando lista de alunos...");
+            await getStudentsBySchoolWithCache();
+
+            // Verificar se o aluno ainda existe na lista atualizada
+            const alunoAindaExiste = alunosCache.some(a => {
+              const aId = Number(a.id || a.aluno_id);
+              const comparaId = Number(idParaEnviar);
+              return aId === comparaId;
+            });
+
+            if (alunoAindaExiste) {
+              console.error("Aluno ainda existe após tentativa de remoção!");
+              Swal.fire({
+                title: "Erro",
+                text: "O aluno parece ter sido removido, mas ainda aparece na lista. Tente recarregar a página.",
+                icon: "warning",
+              });
+            } else {
+              await Swal.fire({
+                title: "Aluno Removido",
+                text: "Aluno foi removido do sistema",
+                icon: "success",
+              });
+            }
+          }, 1000);
+
         } catch (error) {
           console.error("Erro ao remover aluno:", error);
           Swal.fire({
@@ -148,7 +193,29 @@ function adicionarEventosProfessores(divAcoes, professor) {
   const removeBtn = divAcoes.querySelector(".remove-teacher-btn");
   if (removeBtn) {
     removeBtn.addEventListener("click", async function () {
-      const professorId = professor.id;
+      // Log detalhado para depuração
+      console.log("==== DEPURAÇÃO REMOÇÃO DE PROFESSOR ====");
+      console.log("Professor objeto completo:", professor);
+
+      // Tenta obter o ID do professor de todas as propriedades possíveis
+      // A ordem de verificação é importante para priorizar propriedades
+      const professorId = professor.id || professor.professor_id || (typeof professor.getId === "function" ? professor.getId() : null);
+
+      // Certifique-se de que o ID seja um número e não um objeto
+      const idParaEnviar = Number(professorId);
+
+      console.log("ID que será usado para remoção:", idParaEnviar);
+      console.log("===================================");
+
+      if (!idParaEnviar) {
+        console.error("Não foi possível obter o ID do professor!");
+        Swal.fire({
+          title: "Erro",
+          text: "Não foi possível identificar o professor para remoção",
+          icon: "error",
+        });
+        return;
+      }
 
       const result = await Swal.fire({
         title: "Você tem certeza?",
@@ -163,18 +230,44 @@ function adicionarEventosProfessores(divAcoes, professor) {
 
       if (result.isConfirmed) {
         try {
-          await axios.post("/api/v1/professor/remove", professorId, {
+          console.log("Enviando requisição para remover professor com ID:", idParaEnviar);
+
+          const response = await axios.post("/api/v1/professor/remove", idParaEnviar, {
             headers: {
               "Content-Type": "application/json",
             },
           });
 
-          await Swal.fire({
-            title: "Professor Removido",
-            text: "Professor foi removido do sistema",
-            icon: "success",
-          });
-          getTeachersBySchoolWithCache();
+          console.log("Resposta do servidor:", response);
+
+          // Forçar atualização da lista depois de um pequeno atraso
+          setTimeout(async () => {
+            console.log("Atualizando lista de professores...");
+            await getTeachersBySchoolWithCache();
+
+            // Verificar se o professor ainda existe na lista atualizada
+            const professorAindaExiste = professoresCache.some(p => {
+              const pId = Number(p.id || p.professor_id);
+              const comparaId = Number(idParaEnviar);
+              return pId === comparaId;
+            });
+
+            if (professorAindaExiste) {
+              console.error("Professor ainda existe após tentativa de remoção!");
+              Swal.fire({
+                title: "Erro",
+                text: "O professor parece ter sido removido, mas ainda aparece na lista. Tente recarregar a página.",
+                icon: "warning",
+              });
+            } else {
+              await Swal.fire({
+                title: "Professor Removido",
+                text: "Professor foi removido do sistema",
+                icon: "success",
+              });
+            }
+          }, 1000);
+
         } catch (error) {
           console.error("Erro ao remover professor:", error);
           Swal.fire({
@@ -440,7 +533,6 @@ async function getStudentsBySchoolWithCache(searchQuery = "") {
   }
 }
 
-// Função para buscar professores e armazenar no cache
 async function getTeachersBySchoolWithCache(searchQuery = "") {
   try {
     const usuarioSalvo = sessionStorage.getItem("usuario");
@@ -451,61 +543,36 @@ async function getTeachersBySchoolWithCache(searchQuery = "") {
 
     const usuario = JSON.parse(usuarioSalvo);
 
-    // Objeto de dados para enviar ao backend
-    const searchData = {
-      email: usuario.email,
-      searchQuery: searchQuery
-    };
-
-    // Usando POST com objeto que contém email da escola e query de busca
+    // Usando diretamente o endpoint que sabemos que funciona
     const response = await axios.post(
-      "/api/v1/professor/searchBySchool",
-      searchData,
-      { headers: { "Content-Type": "application/json" } }
+      "/api/v1/professor/getAllBySchool",
+      usuario.email,
+      { headers: { "Content-Type": "text/plain" } }
     );
 
     professoresCache = response.data;
-    renderProfessores(professoresCache);
 
-  } catch (error) {
-    console.error("Erro ao buscar professores:", error);
-    // Se a API de busca não existir ainda, faz um fallback para o método original
-    // e filtra no cliente
-    try {
-      const usuarioSalvo = sessionStorage.getItem("usuario");
-      const usuario = JSON.parse(usuarioSalvo);
-
-      const response = await axios.post(
-        "/api/v1/professor/getAllBySchool",
-        usuario.email,
-        { headers: { "Content-Type": "text/plain" } }
-      );
-
-      professoresCache = response.data;
-
-      // Se tem termo de busca, filtra no cliente
-      if (searchQuery) {
-        const searchLower = searchQuery.toLowerCase();
-        professoresCache = professoresCache.filter(professor => {
-          const nome = (professor.nomeProfessor || "").toLowerCase();
-          const turma = (professor.turma || "").toLowerCase();
-          return nome.includes(searchLower) || turma.includes(searchLower);
-        });
-      }
-
-      renderProfessores(professoresCache);
-    } catch (fallbackError) {
-      console.error("Erro no fallback da busca de professores:", fallbackError);
-      Swal.fire({
-        title: "Erro",
-        text: "Ocorreu um erro ao buscar os professores",
-        icon: "error",
+    // Se tem termo de busca, filtra no cliente
+    if (searchQuery) {
+      const searchLower = searchQuery.toLowerCase();
+      professoresCache = professoresCache.filter(professor => {
+        const nome = (professor.nomeProfessor || "").toLowerCase();
+        const turma = (professor.turma || "").toLowerCase();
+        return nome.includes(searchLower) || turma.includes(searchLower);
       });
     }
+
+    renderProfessores(professoresCache);
+  } catch (error) {
+    console.error("Erro ao buscar professores:", error);
+    Swal.fire({
+      title: "Erro",
+      text: "Não foi possível atualizar a lista de professores. Tente recarregar a página.",
+      icon: "error"
+    });
   }
 }
 
-// Função para buscar turmas e armazenar no cache
 async function getClassesBySchoolWithCache(searchQuery = "") {
   try {
     const usuarioSalvo = sessionStorage.getItem("usuario");
@@ -687,7 +754,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
-// Exporta funções para uso global
+// Exporta fun��ões para uso global
 window.getStudentsBySchoolWithCache = getStudentsBySchoolWithCache;
 window.getTeachersBySchoolWithCache = getTeachersBySchoolWithCache;
 window.getClassesBySchoolWithCache = getClassesBySchoolWithCache;
