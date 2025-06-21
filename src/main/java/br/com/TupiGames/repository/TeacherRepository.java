@@ -15,4 +15,5 @@ public interface TeacherRepository extends JpaRepository<Professor,Long> {
     List<Professor> findAllByescola (Escola escola);
     @Query("SELECT DISTINCT t FROM Professor p JOIN p.turmas t WHERE p.id = :professorId")
     List<Turma> findTurmasByProfessorId(@Param("professorId") Long professorId);
+    List<Professor> findAllByturmas(Turma turma);
 }

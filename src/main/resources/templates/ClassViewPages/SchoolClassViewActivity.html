@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nome da Atividade - TupiGames</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      .jersey-10 {
+        font-family: "Jersey 10", cursive;
+      }
+
+      .student-table {
+        background: rgba(139, 69, 19, 0.8);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .student-row {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .student-row:hover {
+        background: rgba(160, 82, 45, 0.3);
+      }
+
+      .question-container {
+        background: #331d55;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .option-card {
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .option-card-1 {
+        background: #432671;
+      }
+      .option-card-2 {
+        background: #532f8b;
+      }
+      .option-card-3 {
+        background: #6139a0;
+      }
+      .option-card-4 {
+        background: #7244b8;
+      }
+
+      .correct-answer {
+        border: 3px solid #10b981 !important;
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+      }
+
+      .dropdown-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+      }
+
+      .dropdown-content.show {
+        max-height: 300px;
+        transition: max-height 0.3s ease-in;
+        overflow-y: auto;
+      }
+
+      .dropdown-content.show::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .dropdown-content.show::-webkit-scrollbar-track {
+        background: rgba(139, 69, 19, 0.2);
+        border-radius: 10px;
+      }
+
+      .dropdown-content.show::-webkit-scrollbar-thumb {
+        background-color: rgba(160, 82, 45, 0.8);
+        border-radius: 10px;
+        border: 1px solid rgba(210, 105, 30, 0.5);
+      }
+
+      .dropdown-content.show::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(139, 69, 19, 0.9);
+      }
+
+      .chevron {
+        transition: transform 0.3s ease;
+      }
+
+      .chevron.rotate {
+        transform: rotate(180deg);
+      }
+
+      body {
+        background-attachment: fixed;
+      }
+
+      .question-navigation {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+      }
+
+      .nav-button {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .nav-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+      }
+
+      .nav-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .question-indicator {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .students-scrollable {
+        max-height: 300px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #8b5d33 rgba(0, 0, 0, 0.2);
+      }
+
+      .students-scrollable::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .students-scrollable::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      .students-scrollable::-webkit-scrollbar-thumb {
+        background-color: #8b5d33;
+        border-radius: 20px;
+      }
+
+      .correct-answer-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #9f7aea;
+        border-radius: 4px;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        margin-right: 8px;
+      }
+
+      .correct-answer-checkbox:checked {
+        background-color: #6b46c1;
+        border-color: #6b46c1;
+      }
+
+      .correct-answer-checkbox:checked::after {
+        content: "✓";
+        position: absolute;
+        color: white;
+        font-size: 14px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+    <style
+      th:replace="~{components/SchoolHeaderDark :: sidebar-style}"
+    ></style>
+    <script
+      th:replace="~{components/SchoolHeaderDark :: sidebar-script}"
+    ></script>
+  </head>
+  <body
+    class="min-h-screen bg-[url('/images/back_emy.png')] bg-[#331D55] bg-cover bg-fixed"
+  >
+    <header
+      th:replace="~{components/SchoolHeaderDark :: header('inicio')}"
+    ></header>
+    <aside
+      th:replace="~{components/SchoolHeaderDark :: sidebar('inicio')}"
+    ></aside>
+
+    <div class="relative z-10 p-6 pt-24">
+      <div class="max-w-7xl mx-auto mb-8">
+        <h1
+          class="text-5xl jersey-10 text-white text-center mb-2"
+          id="activityTitle"
+        >
+          Nome da Atividade
+        </h1>
+        <p
+          class="text-white text-center text-lg opacity-80"
+          id="activitySubtitle"
+        >
+          Turma: <span id="className">Nome da Turma</span> |
+          <span id="questionCount">0</span> Perguntas
+        </p>
+      </div>
+
+      <div class="max-w-7xl mx-auto mb-8">
+        <div class="student-table rounded-3xl overflow-hidden">
+          <div class="p-6">
+            <div
+              class="flex justify-between items-center cursor-pointer"
+              onclick="toggleDropdown()"
+            >
+              <h2 class="text-2xl jersey-10 text-green-400">
+                Desempenho dos Alunos
+              </h2>
+              <div class="flex items-center">
+                <span class="text-white mr-2" id="studentCount">4 alunos</span>
+                <svg
+                  class="w-6 h-6 text-white chevron"
+                  id="chevronIcon"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M7 10l5 5 5-5z" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="dropdown-content mt-4" id="dropdownContent">
+              <div class="grid grid-cols-1 gap-0">
+                <div
+                  class="grid grid-cols-3 gap-4 p-4 bg-rgba(0,0,0,0.2) border-b border-white/10"
+                >
+                  <div class="text-green-400 font-bold">
+                    Nome do Aluno Completo
+                  </div>
+                  <div class="text-green-400 font-bold text-center">
+                    Data de Realização
+                  </div>
+                  <div class="text-green-400 font-bold text-center">
+                    Acertos
+                  </div>
+                </div>
+
+                <div id="studentRows" class="students-scrollable">
+                  <div class="student-row grid grid-cols-3 gap-4 p-4">
+                    <div class="text-green-400">João Silva Santos</div>
+                    <div class="text-green-400 text-center">15/06/2025</div>
+                    <div class="text-green-400 text-center">8/10</div>
+                  </div>
+                  <div class="student-row grid grid-cols-3 gap-4 p-4">
+                    <div class="text-green-400">Maria Oliveira Costa</div>
+                    <div class="text-green-400 text-center">14/06/2025</div>
+                    <div class="text-green-400 text-center">9/10</div>
+                  </div>
+                  <div class="student-row grid grid-cols-3 gap-4 p-4">
+                    <div class="text-green-400">Pedro Henrique Lima</div>
+                    <div class="text-green-400 text-center">13/06/2025</div>
+                    <div class="text-green-400 text-center">7/10</div>
+                  </div>
+                  <div class="student-row grid grid-cols-3 gap-4 p-4">
+                    <div class="text-green-400">Ana Carolina Souza</div>
+                    <div class="text-green-400 text-center">12/06/2025</div>
+                    <div class="text-green-400 text-center">10/10</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto">
+        <div class="question-navigation mb-6">
+          <button
+            class="nav-button w-12 h-12 rounded-full flex items-center justify-center text-white"
+            onclick="previousQuestion()"
+            id="prevBtn"
+          >
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+          </button>
+
+          <div
+            class="question-indicator px-6 py-3 rounded-full text-white text-lg"
+          >
+            <span class="jersey-10">Pergunta - Nº</span>
+            <span id="currentQuestionNumber">1</span>
+          </div>
+
+          <button
+            class="nav-button w-12 h-12 rounded-full flex items-center justify-center text-white"
+            onclick="nextQuestion()"
+            id="nextBtn"
+          >
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="question-container rounded-3xl p-8" id="questionContainer">
+          <div class="mb-8">
+            <div class="bg-[#532F8B] rounded-2xl p-6 min-h-32">
+              <div
+                class="question-image-container mb-4 hidden"
+                id="questionImageContainer"
+              >
+                <img
+                  class="max-w-full max-h-64 object-contain rounded-lg mx-auto"
+                  id="questionImage"
+                  alt="Imagem da pergunta"
+                />
+              </div>
+
+              <div class="text-white text-lg leading-relaxed" id="questionText">
+                Carregando pergunta...
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-6" id="optionsGrid"></div>
+        </div>
+
+        <div class="flex justify-center mt-8">
+          <button
+            type="button"
+            id="saveChangesBtn"
+            class="px-12 py-4 bg-white rounded-full text-2xl jersey-10 text-purple-800 hover:bg-opacity-90 transition-all shadow-lg"
+            onclick="saveChanges()"
+          >
+            Salvar Alterações
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const mockActivity = {
+        id: 1,
+        nomeAtividade: "Atividade de História do Brasil",
+        nomeTurma: "3º Ano A",
+        global: false,
+        perguntas: [
+          {
+            id: 1,
+            questionario: {
+              imagem: false,
+              enunciado: true,
+              imagemEnunciado: false,
+              valor: "Qual foi o primeiro presidente do Brasil?",
+            },
+            alternativas: [
+              {
+                id: 1,
+                imagem: false,
+                enunciado: true,
+                valor: "Getúlio Vargas",
+                acerto: false,
+              },
+              {
+                id: 2,
+                imagem: false,
+                enunciado: true,
+                valor: "Deodoro da Fonseca",
+                acerto: true,
+              },
+              {
+                id: 3,
+                imagem: false,
+                enunciado: true,
+                valor: "Floriano Peixoto",
+                acerto: false,
+              },
+              {
+                id: 4,
+                imagem: false,
+                enunciado: true,
+                valor: "Prudente de Moraes",
+                acerto: false,
+              },
+            ],
+          },
+          {
+            id: 2,
+            questionario: {
+              imagem: false,
+              enunciado: true,
+              imagemEnunciado: false,
+              valor: "Em que ano foi proclamada a Independência do Brasil?",
+            },
+            alternativas: [
+              {
+                id: 5,
+                imagem: false,
+                enunciado: true,
+                valor: "1821",
+                acerto: false,
+              },
+              {
+                id: 6,
+                imagem: false,
+                enunciado: true,
+                valor: "1822",
+                acerto: true,
+              },
+              {
+                id: 7,
+                imagem: false,
+                enunciado: true,
+                valor: "1823",
+                acerto: false,
+              },
+            ],
+          },
+          {
+            id: 3,
+            questionario: {
+              imagem: false,
+              enunciado: true,
+              imagemEnunciado: false,
+              valor: "Qual foi a capital do Brasil antes de Brasília?",
+            },
+            alternativas: [
+              {
+                id: 8,
+                imagem: false,
+                enunciado: true,
+                valor: "São Paulo",
+                acerto: false,
+              },
+              {
+                id: 9,
+                imagem: false,
+                enunciado: true,
+                valor: "Rio de Janeiro",
+                acerto: true,
+              },
+              {
+                id: 10,
+                imagem: false,
+                enunciado: true,
+                valor: "Salvador",
+                acerto: false,
+              },
+              {
+                id: 11,
+                imagem: false,
+                enunciado: true,
+                valor: "Recife",
+                acerto: false,
+              },
+            ],
+          },
+        ],
+      };
+
+      const mockStudents = [
+        {
+          nome: "João Silva Santos",
+          dataRealizacao: "15/06/2025",
+          acertos: 8,
+          total: 10,
+        },
+        {
+          nome: "Maria Oliveira Costa",
+          dataRealizacao: "14/06/2025",
+          acertos: 9,
+          total: 10,
+        },
+        {
+          nome: "Pedro Henrique Lima",
+          dataRealizacao: "13/06/2025",
+          acertos: 7,
+          total: 10,
+        },
+        {
+          nome: "Ana Carolina Souza",
+          dataRealizacao: "12/06/2025",
+          acertos: 10,
+          total: 10,
+        },
+      ];
+
+      let currentQuestionIndex = 0;
+      let activityData = mockActivity;
+
+      document.addEventListener("DOMContentLoaded", function () {
+        loadActivityData();
+        loadStudentData();
+        displayQuestion(0);
+        updateNavigationButtons();
+      });
+
+      function loadActivityData() {
+        document.getElementById("activityTitle").textContent =
+          activityData.nomeAtividade;
+        document.getElementById("className").textContent =
+          activityData.nomeTurma;
+        document.getElementById("questionCount").textContent =
+          activityData.perguntas.length;
+      }
+
+      function loadStudentData() {
+        const studentRowsContainer = document.getElementById("studentRows");
+        studentRowsContainer.innerHTML = "";
+
+        mockStudents.forEach((student) => {
+          const row = document.createElement("div");
+          row.className = "student-row grid grid-cols-3 gap-4 p-4";
+          row.innerHTML = `
+            <div class="text-green-400">${student.nome}</div>
+            <div class="text-green-400 text-center">${student.dataRealizacao}</div>
+            <div class="text-green-400 text-center">${student.acertos}/${student.total}</div>
+          `;
+          studentRowsContainer.appendChild(row);
+        });
+
+        document.getElementById(
+          "studentCount"
+        ).textContent = `${mockStudents.length} alunos`;
+      }
+
+      function toggleDropdown() {
+        const dropdown = document.getElementById("dropdownContent");
+        const chevron = document.getElementById("chevronIcon");
+
+        dropdown.classList.toggle("show");
+        chevron.classList.toggle("rotate");
+      }
+
+      function displayQuestion(index) {
+        const question = activityData.perguntas[index];
+
+        document.getElementById("currentQuestionNumber").textContent =
+          index + 1;
+
+        const questionText = document.getElementById("questionText");
+        const questionImageContainer = document.getElementById(
+          "questionImageContainer"
+        );
+        const questionImage = document.getElementById("questionImage");
+
+        if (
+          question.questionario.imagem ||
+          question.questionario.imagemEnunciado
+        ) {
+          if (question.questionario.valor.includes("IMAGE:")) {
+            const parts = question.questionario.valor.split("IMAGE:");
+            if (question.questionario.imagemEnunciado) {
+              questionText.textContent = parts[0];
+            } else {
+              questionText.style.display = "none";
+            }
+            questionImage.src = parts[1];
+            questionImageContainer.classList.remove("hidden");
+          }
+        } else {
+          questionText.textContent = question.questionario.valor;
+          questionText.style.display = "block";
+          questionImageContainer.classList.add("hidden");
+        }
+        displayOptions(question.alternativas);
+      }
+
+      function displayOptions(alternativas) {
+        const optionsGrid = document.getElementById("optionsGrid");
+        optionsGrid.innerHTML = "";
+
+        alternativas.forEach((alternativa, index) => {
+          const optionDiv = document.createElement("div");
+          optionDiv.className = `option-card option-card-${
+            index + 1
+          } rounded-2xl p-6 relative min-h-32 ${
+            alternativa.acerto ? "correct-answer" : ""
+          }`;
+
+          let optionContent = "";
+          if (alternativa.imagem) {
+            optionContent = `
+        <div class="flex justify-center items-center h-full">
+          <img src="${
+            alternativa.valor
+          }" class="max-w-full max-h-24 object-contain rounded" alt="Opção ${
+              index + 1
+            }">
+        </div>
+      `;
+          } else {
+            optionContent = `
+        <div class="flex items-center h-full">
+          <textarea 
+            class="w-full bg-transparent text-white placeholder-gray-300 resize-none focus:outline-none text-lg border-none"
+            rows="3"
+            readonly
+          >${alternativa.valor}</textarea>
+        </div>
+      `;
+          }
+
+          optionDiv.innerHTML = `
+      <div class="flex justify-between items-start mb-2">
+        <div class="flex items-center">
+          <input 
+            type="checkbox" 
+            class="correct-answer-checkbox" 
+            ${alternativa.acerto ? "checked" : ""}
+            onchange="updateCorrectAnswer(${currentQuestionIndex}, ${index}, this.checked)"
+          >
+          <span class="text-white text-sm font-bold">Opção ${index + 1}</span>
+        </div>
+        ${
+          alternativa.acerto
+            ? '<div class="text-green-400 text-sm font-bold">✓ CORRETA</div>'
+            : ""
+        }
+      </div>
+      ${optionContent}
+    `;
+
+          optionsGrid.appendChild(optionDiv);
+        });
+      }
+
+      function updateCorrectAnswer(questionIndex, optionIndex, isCorrect) {
+        activityData.perguntas[questionIndex].alternativas.forEach(
+          (alt, idx) => {
+            alt.acerto = idx === optionIndex ? isCorrect : false;
+          }
+        );
+        displayQuestion(questionIndex);
+      }
+
+      function previousQuestion() {
+        if (currentQuestionIndex > 0) {
+          currentQuestionIndex--;
+          displayQuestion(currentQuestionIndex);
+          updateNavigationButtons();
+        }
+      }
+
+      function nextQuestion() {
+        if (currentQuestionIndex < activityData.perguntas.length - 1) {
+          currentQuestionIndex++;
+          displayQuestion(currentQuestionIndex);
+          updateNavigationButtons();
+        }
+      }
+
+      function updateNavigationButtons() {
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        prevBtn.disabled = currentQuestionIndex === 0;
+        nextBtn.disabled =
+          currentQuestionIndex === activityData.perguntas.length - 1;
+      }
+
+      async function saveChanges() {
+        try {
+          Swal.fire({
+            icon: "success",
+            title: "Alterações salvas!",
+            text: "As modificações na atividade foram salvas com sucesso.",
+            confirmButtonColor: "#6b46c1",
+            timer: 2000,
+            timerProgressBar: true,
+          });
+        } catch (error) {
+          console.error("Erro ao salvar alterações:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Erro ao salvar",
+            text: "Ocorreu um erro ao tentar salvar as alterações. Tente novamente.",
+            confirmButtonColor: "#6b46c1",
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

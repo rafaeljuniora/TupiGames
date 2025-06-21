@@ -75,4 +75,13 @@ public class AnswerRestController {
                 resposta.getEnviado(),
                 aluno.getNomeAluno());
     }
+
+    @PostMapping("getAllAnswersByActivity")
+    public List<RespostaDTO> getAllAnswersByActivity(@RequestBody Long atividadeCode){
+        Atividade atividade = activityService.findByatividadeCode(atividadeCode);
+        List<Resposta> respostas = answerService.findAllByAtividade(atividade);
+        return respostas.stream()
+                .map(RespostaDTO::new)
+                .collect(Collectors.toList());
+    }
 }
