@@ -541,8 +541,10 @@ alunos.forEach((aluno) => {
   const tdTurma = document.createElement("td");
   tdTurma.className = "py-4 px-6 text-left";
 
-  if (aluno.turmas && aluno.turmas.length > 0) {
+  if (aluno.turmas && Array.isArray(aluno.turmas) && aluno.turmas.length > 0) {
     tdTurma.textContent = aluno.turmas.join(", ");
+  } else if (aluno.turma) {
+    tdTurma.textContent = aluno.turma;
   } else {
     tdTurma.textContent = "-";
   }
@@ -594,15 +596,18 @@ alunos.forEach((aluno) => {
     .querySelector(".view-student-btn")
     .addEventListener("click", function () {
       const alunoData = JSON.parse(this.getAttribute("data-aluno"));
-      window.openStudentViewModal(alunoData);
+      if (window.openStudentViewModal) {
+        window.openStudentViewModal(alunoData);
+      }
     });
 
   divAcoes
     .querySelector(".edit-student-btn")
     .addEventListener("click", function () {
       const alunoData = JSON.parse(this.getAttribute("data-aluno"));
-      console.log(alunoData);
-      window.openStudentUpdateModal(alunoData);
+      if (window.openStudentUpdateModal) {
+        window.openStudentUpdateModal(alunoData);
+      }
     });
 
   divAcoes
@@ -684,11 +689,15 @@ console.error("Erro ao buscar alunos:", error);
 
         const tdTurma = document.createElement("td");
         tdTurma.className = "py-4 px-6 text-left";
-        if (professor.turmas && professor.turmas.length > 0) {
+
+        if (professor.turmas && Array.isArray(professor.turmas) && professor.turmas.length > 0) {
           tdTurma.textContent = professor.turmas.join(", ");
+        } else if (professor.turma) {
+          tdTurma.textContent = professor.turma;
         } else {
           tdTurma.textContent = "-";
         }
+
         tr.appendChild(tdTurma);
 
         const tdAcoes = document.createElement("td");
@@ -738,7 +747,9 @@ console.error("Erro ao buscar alunos:", error);
             const professorData = JSON.parse(
               this.getAttribute("data-professor")
             );
-            window.openTeacherViewModal(professorData);
+            if (window.openTeacherViewModal) {
+              window.openTeacherViewModal(professorData);
+            }
           });
 
         divAcoes
@@ -747,7 +758,9 @@ console.error("Erro ao buscar alunos:", error);
             const professorData = JSON.parse(
               this.getAttribute("data-professor")
             );
-            window.openTeacherUpdateModal(professorData);
+            if (window.openTeacherUpdateModal) {
+              window.openTeacherUpdateModal(professorData);
+            }
           });
 
         divAcoes
@@ -781,10 +794,10 @@ console.error("Erro ao buscar alunos:", error);
                 });
                 getTeachersBySchool();
               } catch (error) {
-                console.error("Erro ao remover aluno:", error);
+                console.error("Erro ao remover professor:", error);
                 Swal.fire({
                   title: "Erro",
-                  text: "Ocorreu um erro ao remover o aluno",
+                  text: "Ocorreu um erro ao remover o professor",
                   icon: "error",
                 });
               }
@@ -875,14 +888,18 @@ console.error("Erro ao buscar alunos:", error);
           .querySelector(".view-class-btn")
           .addEventListener("click", function () {
             const turmaData = JSON.parse(this.getAttribute("data-turma"));
-            window.openClassViewModal(turmaData);
+            if (window.openClassViewModal) {
+              window.openClassViewModal(turmaData);
+            }
           });
 
         divAcoes
           .querySelector(".edit-class-btn")
           .addEventListener("click", function () {
             const turmaData = JSON.parse(this.getAttribute("data-turma"));
-            window.openUpdateClassModal(turmaData);
+            if (window.openUpdateClassModal) {
+              window.openUpdateClassModal(turmaData);
+            }
           });
 
         divAcoes
@@ -916,10 +933,10 @@ console.error("Erro ao buscar alunos:", error);
                 });
                 getClassBySchool();
               } catch (error) {
-                console.error("Erro ao remover aluno:", error);
+                console.error("Erro ao remover turma:", error);
                 Swal.fire({
                   title: "Erro",
-                  text: "Ocorreu um erro ao remover o aluno",
+                  text: "Ocorreu um erro ao remover a turma",
                   icon: "error",
                 });
               }
@@ -1037,8 +1054,10 @@ console.error("Erro ao buscar alunos:", error);
 
     if (usuarioSalvo) {
       const usuario = JSON.parse(usuarioSalvo);
-      //console.log("Usuário logado:", usuario.email);
-      document.getElementById("user-email").textContent = usuario.email;
+      const userEmailElement = document.getElementById("user-email");
+      if (userEmailElement) {
+        userEmailElement.textContent = usuario.email;
+      }
     } else {
       window.location.href = "/";
     }
