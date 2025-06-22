@@ -79,15 +79,6 @@ public class ActivityRestController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/getAllActivities")
-    public List<AtividadeRequestDTO> getAllActivities() {
-        List<Atividade> atividades = activityService.findAll();
-
-        return atividades.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
-
     private AtividadeRequestDTO convertToDto(Atividade atividade) {
         AtividadeRequestDTO dto = new AtividadeRequestDTO();
         dto.setId(atividade.getAtividade_id());

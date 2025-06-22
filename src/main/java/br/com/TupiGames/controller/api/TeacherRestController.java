@@ -90,20 +90,8 @@ public class TeacherRestController {
     }
 
     @PostMapping("/remove")
-    public void removeTeacher(@RequestBody Object id){
-        try {
-            Long professorId;
-            if (id instanceof Number) {
-                professorId = ((Number) id).longValue();
-            } else if (id instanceof String) {
-                professorId = Long.parseLong((String) id);
-            } else {
-                throw new IllegalArgumentException("Formato de ID inválido: " + id);
-            }
-            teacherService.removeProfessorById(professorId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void removeTeacher(@RequestBody Long professor_id){
+        teacherService.removeProfessorById(professor_id);
     }
 
     @PutMapping("/update")
