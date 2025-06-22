@@ -23,4 +23,18 @@ public class SchoolService {
     public Escola updateSchool(Escola escola){
         return schoolRepository.save(escola);
     }
+
+    public void removeEscolaById(Long escola_id) {
+        schoolRepository.deleteById(escola_id);
+    }
+
+
+    public Escola findById(Long id) {
+        return schoolRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Escola não encontrada com ID: " + id));
+    }
+
+    public Escola save(Escola escola) {
+        return schoolRepository.save(escola);
+    }
 }
