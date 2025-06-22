@@ -1,4 +1,4 @@
-package br.com.TupiGames.faker;
+package br.com.TupiGames.mock;
 
 import br.com.TupiGames.domain.*;
 import org.junit.jupiter.api.Test;

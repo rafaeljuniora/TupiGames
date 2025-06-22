@@ -1,4 +1,4 @@
-package br.com.TupiGames.faker;
+package br.com.TupiGames.mock;
 
 import com.github.javafaker.Faker;
 import br.com.TupiGames.domain.*;
