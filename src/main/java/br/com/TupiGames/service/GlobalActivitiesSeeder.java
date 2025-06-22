@@ -24,11 +24,11 @@ public class GlobalActivitiesSeeder implements CommandLineRunner {
                 List<Alternativa> alternativas = new ArrayList<>();
                 for (int k = 1; k <= 4; k++) {
                     String valor = "Alternativa " + k;
-                    boolean acerto = (k == 1); // Primeira alternativa é correta
+                    boolean acerto = (k == 1);
                     alternativas.add(new Alternativa(false, true, valor, acerto, null));
                 }
                 Pergunta pergunta = new Pergunta(questionario, alternativas, null);
-                // Set referência reversa
+
                 for (Alternativa alt : alternativas) {
                     alt.setPergunta(pergunta);
                 }
