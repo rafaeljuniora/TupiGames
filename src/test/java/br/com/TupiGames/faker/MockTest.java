@@ -1,12 +1,11 @@
-package br.com.TupiGames;
+package br.com.TupiGames.faker;
 
 import br.com.TupiGames.domain.*;
-import br.com.TupiGames.faker.TestDataFactory;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.lang.reflect.Field;
 
-class FakerTest {
+class MockTest {
 
     @Test
     void deveCriarAlunoComTurmaEProfessor() throws Exception {
@@ -47,8 +46,7 @@ class FakerTest {
         assertNotNull(getField(resposta, "atividade"));
     }
 
-    // Método utilitário para acessar campos privados via reflexão
-    private Object getField(Object obj, String fieldName) throws Exception {
+   private Object getField(Object obj, String fieldName) throws Exception {
         Field field = obj.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
         return field.get(obj);
