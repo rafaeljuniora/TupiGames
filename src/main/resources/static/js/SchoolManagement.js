@@ -1,4 +1,3 @@
-// Variáveis globais para armazenar os alunos, professores e turmas carregados
 let alunosCache = [];
 let professoresCache = [];
 let turmasCache = [];
@@ -127,7 +126,7 @@ function adicionarEventosAlunos(divAcoes, aluno) {
   }
 }
 
-// Função para adicionar eventos aos botões de ação dos professores
+
 function adicionarEventosProfessores(divAcoes, professor) {
   const viewBtn = divAcoes.querySelector(".view-teacher-btn");
   if (viewBtn) {
@@ -188,10 +187,10 @@ function adicionarEventosProfessores(divAcoes, professor) {
   }
 }
 
-// Função para renderizar professores na tabela
+
 function renderProfessores(professores) {
   const tbody = document.querySelector("#sectionProfessores table tbody");
-  if (!tbody) return; // Sai da função se o tbody não for encontrado
+  if (!tbody) return;
 
   tbody.innerHTML = "";
 
@@ -249,12 +248,12 @@ function renderProfessores(professores) {
     tr.appendChild(tdAcoes);
     tbody.appendChild(tr);
 
-    // Adiciona eventos para os botões
+
     adicionarEventosProfessores(divAcoes, professor);
   });
 }
 
-// Função para renderizar turmas na tabela
+
 function renderTurmas(turmas) {
   const tbody = document.querySelector("#sectionTurmas table tbody");
   if (!tbody) return;
@@ -319,7 +318,7 @@ function renderTurmas(turmas) {
   });
 }
 
-// Função para adicionar eventos aos botões de ação das turmas
+
 function adicionarEventosTurmas(divAcoes, turma) {
   const viewBtn = divAcoes.querySelector(".view-class-btn");
   if (viewBtn) {
@@ -440,7 +439,7 @@ async function getStudentsBySchoolWithCache(searchQuery = "") {
   }
 }
 
-// Função para buscar professores e armazenar no cache
+
 async function getTeachersBySchoolWithCache(searchQuery = "") {
   try {
     const usuarioSalvo = sessionStorage.getItem("usuario");
@@ -451,13 +450,13 @@ async function getTeachersBySchoolWithCache(searchQuery = "") {
 
     const usuario = JSON.parse(usuarioSalvo);
 
-    // Objeto de dados para enviar ao backend
+
     const searchData = {
       email: usuario.email,
       searchQuery: searchQuery
     };
 
-    // Usando POST com objeto que contém email da escola e query de busca
+
     const response = await axios.post(
       "/api/v1/professor/searchBySchool",
       searchData,
@@ -469,8 +468,7 @@ async function getTeachersBySchoolWithCache(searchQuery = "") {
 
   } catch (error) {
     console.error("Erro ao buscar professores:", error);
-    // Se a API de busca não existir ainda, faz um fallback para o método original
-    // e filtra no cliente
+
     try {
       const usuarioSalvo = sessionStorage.getItem("usuario");
       const usuario = JSON.parse(usuarioSalvo);
@@ -483,7 +481,7 @@ async function getTeachersBySchoolWithCache(searchQuery = "") {
 
       professoresCache = response.data;
 
-      // Se tem termo de busca, filtra no cliente
+
       if (searchQuery) {
         const searchLower = searchQuery.toLowerCase();
         professoresCache = professoresCache.filter(professor => {
@@ -505,7 +503,7 @@ async function getTeachersBySchoolWithCache(searchQuery = "") {
   }
 }
 
-// Função para buscar turmas e armazenar no cache
+
 async function getClassesBySchoolWithCache(searchQuery = "") {
   try {
     const usuarioSalvo = sessionStorage.getItem("usuario");
@@ -516,13 +514,13 @@ async function getClassesBySchoolWithCache(searchQuery = "") {
 
     const usuario = JSON.parse(usuarioSalvo);
 
-    // Objeto de dados para enviar ao backend
+
     const searchData = {
       email: usuario.email,
       searchQuery: searchQuery
     };
 
-    // Usando POST com objeto que contém email da escola e query de busca
+
     const response = await axios.post(
       "/api/v1/turma/searchBySchool",
       searchData,
@@ -534,8 +532,7 @@ async function getClassesBySchoolWithCache(searchQuery = "") {
 
   } catch (error) {
     console.error("Erro ao buscar turmas:", error);
-    // Se a API de busca não existir ainda, faz um fallback para o método original
-    // e filtra no cliente
+
     try {
       const usuarioSalvo = sessionStorage.getItem("usuario");
       const usuario = JSON.parse(usuarioSalvo);
@@ -548,7 +545,7 @@ async function getClassesBySchoolWithCache(searchQuery = "") {
 
       turmasCache = response.data;
 
-      // Se tem termo de busca, filtra no cliente
+
       if (searchQuery) {
         const searchLower = searchQuery.toLowerCase();
         turmasCache = turmasCache.filter(turma => {
@@ -578,15 +575,6 @@ function configurarBarraPesquisa() {
     const novoSearchInput = searchInput.cloneNode(true);
     searchInput.parentNode.replaceChild(novoSearchInput, searchInput);
 
-    let debounceTimer;
-
-    novoSearchInput.addEventListener("input", function () {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
-        const value = this.value.trim();
-        getStudentsBySchoolWithCache(value);
-      }, 300);
-    });
 
     if (searchButton) {
       searchButton.addEventListener("click", function() {
@@ -594,70 +582,73 @@ function configurarBarraPesquisa() {
         getStudentsBySchoolWithCache(value);
       });
     }
+
+
+    novoSearchInput.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        const value = this.value.trim();
+        getStudentsBySchoolWithCache(value);
+      }
+    });
   }
 }
 
-// Configurar a barra de pesquisa de professores
+
 function configurarBarraPesquisaProfessores() {
   const searchInput = document.getElementById("searchTeachers");
   const searchButton = searchInput?.parentElement?.nextElementSibling;
 
   if (searchInput) {
-    // Remove eventos anteriores para evitar duplicações
+
     const novoSearchInput = searchInput.cloneNode(true);
     searchInput.parentNode.replaceChild(novoSearchInput, searchInput);
 
-    // Timer de debounce para evitar muitas requisições
-    let debounceTimer;
 
-    // Adiciona o evento de input com debounce
-    novoSearchInput.addEventListener("input", function () {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
-        const value = this.value.trim();
-        getTeachersBySchoolWithCache(value);
-      }, 300); // 300ms de delay
-    });
-
-    // Adiciona evento ao botão de pesquisa, se existir
     if (searchButton) {
       searchButton.addEventListener("click", function() {
         const value = novoSearchInput.value.trim();
         getTeachersBySchoolWithCache(value);
       });
     }
+
+
+    novoSearchInput.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        const value = this.value.trim();
+        getTeachersBySchoolWithCache(value);
+      }
+    });
   }
 }
 
-// Configurar a barra de pesquisa de turmas
+
 function configurarBarraPesquisaTurmas() {
   const searchInput = document.getElementById("searchClasses");
   const searchButton = searchInput?.parentElement?.nextElementSibling;
 
   if (searchInput) {
-    // Remove eventos anteriores para evitar duplicações
+
     const novoSearchInput = searchInput.cloneNode(true);
     searchInput.parentNode.replaceChild(novoSearchInput, searchInput);
 
-    // Timer de debounce para evitar muitas requisições
-    let debounceTimer;
 
-    // Adiciona o evento de input com debounce
-    novoSearchInput.addEventListener("input", function () {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
-        const value = this.value.trim();
-        getClassesBySchoolWithCache(value);
-      }, 300); // 300ms de delay
-    });
-
-    // Adiciona evento ao botão de pesquisa, se existir
     if (searchButton) {
       searchButton.addEventListener("click", function() {
         const value = novoSearchInput.value.trim();
         getClassesBySchoolWithCache(value);
       });
     }
+
+
+    novoSearchInput.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        const value = this.value.trim();
+        getClassesBySchoolWithCache(value);
+      }
+    });
   }
 }
 
@@ -687,7 +678,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
-// Exporta funções para uso global
+
 window.getStudentsBySchoolWithCache = getStudentsBySchoolWithCache;
 window.getTeachersBySchoolWithCache = getTeachersBySchoolWithCache;
 window.getClassesBySchoolWithCache = getClassesBySchoolWithCache;
