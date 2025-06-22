@@ -3,6 +3,9 @@ package br.com.TupiGames.domain;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import br.com.TupiGames.dto.ProfessorResponseDTO;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "professor")
@@ -13,7 +16,7 @@ public class Professor {
     private Long professor_id;
 
     private String nomeProfessor;
-    // Todo - Modificar para DATE ou Epoch
+    // Todo - Modificar para DATE ou Epoc
     private String dataNascimento;
     private String email;
     private String senha;
@@ -103,5 +106,13 @@ public class Professor {
 
     public void adicionarTurma(Turma turma) {
         this.turmas.add(turma);
+=======
+    public ProfessorResponseDTO toDTO() {
+        List<String> turmasNomes = this.turmas.stream()
+                .map(Turma::getNomeTurma)
+                .collect(Collectors.toList());
+        return new ProfessorResponseDTO(this.professor_id, this.nomeProfessor,
+                this.dataNascimento, this.email, this.senha, turmasNomes);
+
     }
 }
