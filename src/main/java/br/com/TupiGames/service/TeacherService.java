@@ -39,7 +39,13 @@ public class TeacherService {
     }
 
     public void removeProfessorById(Long professor_id){
-        teacherRepository.deleteById(professor_id);
+        try {
+            teacherRepository.deleteById(professor_id);
+            System.out.println("Professor com ID " + professor_id + " removido com sucesso");
+        } catch (Exception e) {
+            System.out.println("Erro ao remover professor com ID " + professor_id + ": " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public List<Professor> FindAllByTurma(Turma turma){

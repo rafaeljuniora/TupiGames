@@ -46,4 +46,8 @@ public class ActivityService {
     public List<Atividade> findByTurma(Turma turma){
         return actvityRepository.findByturmas(turma);
     }
+
+    public List<Atividade> findAll(){
+        return actvityRepository.findAll();
+    }
 }

@@ -265,6 +265,41 @@
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
+
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </div>
+
+           <input
+            id="searchStudents"
+            type="text"
+            placeholder="Pesquisar por Nome de Aluno "
+            class="w-full h-12 pl-10 pr-4 border border-[#E5E7EB] rounded-l-lg focus:outline-none bg-white"
+          />
+          </div>
+
+          <button
+            class="h-12 w-[105px] bg-yellow-400 text-black font-medium rounded-r-lg border border-black flex items-center gap-2 hover:bg-yellow-500 transition"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            Pesquisar
+          </button>
+        </div>
+=======
         >
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -281,6 +316,7 @@
         <span>Adicionar</span>
       </button>
     </div>
+
 
     <div
             class="bg-[#FFF8E8] rounded-xl shadow-sm overflow-hidden w-full mb-12"
@@ -339,6 +375,41 @@
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
+
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </div>
+
+            <input
+              id="searchTeachers"
+              type="text"
+              placeholder="Pesquisar por Nome de Professor"
+              class="w-full h-12 pl-10 pr-4 border border-[#E5E7EB] rounded-l-lg focus:outline-none bg-white"
+            />
+          </div>
+
+          <button
+            class="h-12 w-[105px] bg-yellow-400 text-black font-medium rounded-r-lg border border-black flex items-center gap-2 hover:bg-yellow-500 transition"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            Pesquisar
+          </button>
+        </div>
+=======
         >
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -355,6 +426,7 @@
         <span>Adicionar</span>
       </button>
     </div>
+
 
     <div
             class="bg-[#FFF8E8] rounded-xl shadow-sm overflow-hidden w-full mb-12"
@@ -413,6 +485,53 @@
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
+
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </div>
+
+            <input
+              id="searchClasses"
+              type="text"
+              placeholder="Pesquisar por Turma"
+              class="w-full h-12 pl-10 pr-4 border border-[#E5E7EB] rounded-l-lg focus:outline-none bg-white"
+            />
+          </div>
+
+          <button
+            class="h-12 w-[105px] bg-yellow-400 text-black font-medium rounded-r-lg border border-black flex items-center gap-2 hover:bg-yellow-500 transition"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            Pesquisar
+          </button>
+        </div>
+
+        <div class="flex justify-end mb-6 mt-12">
+          <button
+            class="bg-[#FFD735] text-black px-6 py-3 rounded-[15px] flex items-center jersey-10 text-2xl hover:bg-[#FFE889] transition-colors"
+            onclick="window.openClassModal && window.openClassModal()"
+          >
+            <span>Adicionar</span>
+          </button>
+        </div>
+
+        <div
+          class="bg-[#FFF8E8] rounded-xl shadow-sm overflow-hidden w-full mb-12"
+
         >
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -903,6 +1022,19 @@ async function getTeachersBySchool() {
               cancelButtonText: "Não, Cancelar!",
             });
 
+            if (selectedCard === cardAlunos) {
+              sectionAlunos.classList.remove("hidden");
+              sectionAlunos.classList.add("active");
+              getStudentsBySchoolWithCache();
+            } else if (selectedCard === cardProfessores) {
+              sectionProfessores.classList.remove("hidden");
+              sectionProfessores.classList.add("active");
+              getTeachersBySchool();
+            } else if (selectedCard === cardTurmas) {
+              sectionTurmas.classList.remove("hidden");
+              sectionTurmas.classList.add("active");
+              getClassBySchool();
+=======
             if (result.isConfirmed) {
               try {
                 await axios.post("/api/v1/turma/remove", nomeTurma, {
@@ -925,6 +1057,7 @@ async function getTeachersBySchool() {
                   icon: "error",
                 });
               }
+
             }
           });
       });
@@ -1011,6 +1144,14 @@ async function getTeachersBySchool() {
           sectionTurmas.classList.add("active");
           getClassBySchool();
         }
+
+      });
+    </script>
+
+    <script src="/js/SchoolManagement.js"></script>
+
+  </body>
+=======
 
         activeCard = selectedCard;
         isAnimating = false;
