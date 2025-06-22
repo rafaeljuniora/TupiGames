@@ -1,5 +1,6 @@
 package br.com.TupiGames.service;
 
+import br.com.TupiGames.domain.Atividade;
 import br.com.TupiGames.domain.Resposta;
 import br.com.TupiGames.repository.AnswerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,9 @@ public class AnswerService {
 
     public Resposta findByAlunoIdAndAtividadeId(Long aluno_id, Long atividade_id){
         return answerRepository.findByAlunoAndAtividade(aluno_id,atividade_id);
+    }
+
+    public List<Resposta> findAllByAtividade(Atividade atividade){
+        return answerRepository.findAllByAtividade(atividade);
     }
 }

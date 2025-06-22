@@ -95,7 +95,7 @@
           }
 
           const atividades = await response.json();
-          exibirAtividades(atividades);
+          exibirAtividades(atividades, turmaId);
         } catch (error) {
           console.error("Erro ao carregar atividades:", error);
           exibirAtividades([
@@ -117,7 +117,7 @@
         }
       }
 
-      function exibirAtividades(atividades) {
+      function exibirAtividades(atividades, turmaId) {
         const container = document.getElementById("atividadesContainer");
         const mensagemVazia = document.getElementById("mensagemVazia");
 
@@ -131,14 +131,14 @@
         mensagemVazia.classList.add("hidden");
 
         container.innerHTML = atividades
-          .map((atividade) => criarCardAtividade(atividade))
+          .map((atividade) => criarCardAtividade(atividade, turmaId))
           .join("");
       }
 
-      function criarCardAtividade(atividade) {
+      function criarCardAtividade(atividade, turmaId) {
         return `
           <div class="bg-[#7C4A24] rounded-lg p-6 text-[#66AD70] relative hover:shadow-lg transition-shadow cursor-pointer"
-              onclick="visualizarAtividade(${atividade.id})">
+              onclick="visualizarAtividade(${atividade.atividadeCode},${turmaId})">
             <button 
               onclick="event.stopPropagation(); removerAtividade(${atividade.id})"
               class="absolute top-2 right-2 bg-red-500 rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition-colors"
@@ -272,8 +272,17 @@
           });
       }
 
-      function visualizarAtividade(atividadeId) {
-        window.location.href = `/atividades/${atividadeId}`;
+      async function visualizarAtividade(atividadeId, turmaId) {
+        const response = await fetch("/api/v1/turma/getClassById", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: turmaId,
+        });
+        const turma = await response.json();
+
+        window.location.href = `/turmas/professor/details/activity?codigo=${atividadeId}&nome=${turma.nomeTurma}`;
       }
 
       function removerAtividade(atividadeId) {
