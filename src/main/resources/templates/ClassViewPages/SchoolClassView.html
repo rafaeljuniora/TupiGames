@@ -75,26 +75,6 @@
           quantidadeAlunosAtual: 28,
           qntAlunos: 30,
         },
-        professores: [
-          {
-            id: 1,
-            nome: "Prof. Maria Silva",
-            email: "maria.silva@escola.com",
-            ultimaVezAtivo: "15/03/2024",
-          },
-          {
-            id: 2,
-            nome: "Prof. João Santos",
-            email: "joao.santos@escola.com",
-            ultimaVezAtivo: "14/03/2024",
-          },
-          {
-            id: 3,
-            nome: "Prof. Ana Costa",
-            email: "ana.costa@escola.com",
-            ultimaVezAtivo: "13/03/2024",
-          },
-        ],
         atividades: [
           {
             id: 1,
@@ -112,116 +92,185 @@
           },
           {
             id: 3,
-            nomeAtividade: "Brasil Império",
-            professor: "Prof. João Santos",
+            nomeAtividade: "Geometria Básica",
+            professor: "Prof. Maria Silva",
             quantidadeQuestoes: 12,
             dataAtribuicao: "08/03/2024",
           },
           {
             id: 4,
-            nomeAtividade: "Análise Textual",
-            professor: "Prof. Ana Costa",
+            nomeAtividade: "Porcentagem",
+            professor: "Prof. Maria Silva",
             quantidadeQuestoes: 18,
             dataAtribuicao: "05/03/2024",
           },
           {
             id: 5,
-            nomeAtividade: "Regiões do Brasil",
-            professor: "Prof. João Santos",
+            nomeAtividade: "Regra de Três",
+            professor: "Prof. Maria Silva",
             quantidadeQuestoes: 10,
             dataAtribuicao: "01/03/2024",
           },
           {
             id: 6,
-            nomeAtividade: "Geometria Espacial",
+            nomeAtividade: "Área e Perímetro",
             professor: "Prof. Maria Silva",
             quantidadeQuestoes: 14,
             dataAtribuicao: "28/02/2024",
           },
         ],
       };
-
       document.addEventListener("DOMContentLoaded", function () {
-        const turmaId = obterTurmaIdDaUrl();
+        const urlParams = new URLSearchParams(window.location.search);
+        const turmaId = urlParams.get("codigo") || "1";
 
         carregarDadosTurma(turmaId);
-
         carregarProfessores(turmaId);
-
         carregarAtividades(turmaId);
       });
 
-      function obterTurmaIdDaUrl() {
-        const pathParts = window.location.pathname.split("/");
-        return pathParts[pathParts.length - 1] || "1";
+      async function carregarDadosTurma(turmaId) {
+        try {
+          const response = await fetch("/api/v1/turma/getClassById", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: turmaId,
+          });
+          const turma = await response.json();
+
+          document.getElementById("nomeTurma").textContent = turma.nomeTurma;
+        } catch (error) {
+          console.error("Erro ao carregar dados da turma:", error);
+        }
       }
 
-      function carregarDadosTurma(turmaId) {
-        const turma = dadosMockados.turma;
-        document.getElementById("nomeTurma").textContent = turma.nomeTurma;
+      async function carregarProfessores(turmaId) {
+        try {
+          const response = await fetch("/api/v1/professor/getAllByTurmaId", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(turmaId),
+          });
+
+          if (!response.ok) {
+            throw new Error("Erro ao carregar professores");
+          }
+
+          const professores = await response.json();
+          exibirProfessores(professores);
+        } catch (error) {
+          console.error("Erro ao carregar professores:", error);
+          exibirProfessores(dadosMockados.professores);
+        }
       }
 
-      function carregarProfessores(turmaId) {
-        const professores = dadosMockados.professores;
+      async function carregarAtividades(turmaId) {
+        try {
+          const response = await fetch("/api/v1/atividade/getActivityByTurma", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: turmaId,
+          });
 
+          if (!response.ok) {
+            throw new Error("Erro ao carregar atividades");
+          }
+
+          const atividades = await response.json();
+          exibirAtividades(atividades, turmaId);
+        } catch (error) {
+          console.error("Erro ao carregar atividades:", error);
+          exibirAtividades([
+            {
+              id: 1,
+              nomeAtividade: "Equações do 1º Grau",
+              professor: "Prof. Maria Silva",
+              quantidadeQuestoes: 15,
+              dataAtribuicao: "15/03/2024",
+            },
+            {
+              id: 2,
+              nomeAtividade: "Frações e Decimais",
+              professor: "Prof. Maria Silva",
+              quantidadeQuestoes: 20,
+              dataAtribuicao: "10/03/2024",
+            },
+          ]);
+        }
+      }
+
+      function exibirProfessores(professores) {
         const container = document.getElementById("professoresContainer");
         const mensagemVazia = document.getElementById(
           "mensagemVaziaProfessores"
         );
+
+        container.innerHTML = "";
 
         if (professores.length === 0) {
           mensagemVazia.classList.remove("hidden");
           return;
         }
 
+        mensagemVazia.classList.add("hidden");
+
         container.innerHTML = professores
           .map((professor) => criarCardProfessor(professor))
           .join("");
       }
 
-      function carregarAtividades(turmaId) {
-        const atividades = dadosMockados.atividades;
-
+      function exibirAtividades(atividades, turmaId) {
         const container = document.getElementById("atividadesContainer");
         const mensagemVazia = document.getElementById(
           "mensagemVaziaAtividades"
         );
+
+        container.innerHTML = "";
 
         if (atividades.length === 0) {
           mensagemVazia.classList.remove("hidden");
           return;
         }
 
+        mensagemVazia.classList.add("hidden");
+
         container.innerHTML = atividades
-          .map((atividade) => criarCardAtividade(atividade))
+          .map((atividade) => criarCardAtividade(atividade, turmaId))
           .join("");
       }
 
       function criarCardProfessor(professor) {
         return `
-          <div class="bg-[#7C4A24] rounded-lg p-6 text-[#66AD70] hover:shadow-lg transition-shadow">
-
-            <div>
-              <h4 class="jersey-10 text-xl mb-3 text-[#66AD70]">
-                ${professor.nome}
-              </h4>
-              
-              <p class="jersey-10 text-lg mb-2">
-                <span class="text-[#66AD70]">Email:</span> ${professor.email}
-              </p>
-              
-              <p class="jersey-10 text-lg">
-                <span class="text-[#66AD70]">Ultima vez ativo:</span> ${professor.ultimaVezAtivo}
-              </p>
-            </div>
-          </div>
-        `;
+      <div class="bg-[#7C4A24] rounded-lg p-6 text-[#66AD70] hover:shadow-lg transition-shadow">
+        <div>
+          <h4 class="jersey-10 text-xl mb-3 text-[#66AD70]">
+            ${professor.nomeProfessor}
+          </h4>
+          
+          <p class="jersey-10 text-lg mb-2">
+            <span class="text-[#66AD70]">Email:</span> ${professor.email}
+          </p>
+          
+          <p class="jersey-10 text-lg">
+            <span class="text-[#66AD70]">Última vez ativo:</span> ${
+              professor.ultimaVezAtivo || "N/A"
+            }
+          </p>
+        </div>
+      </div>
+    `;
       }
 
-      function criarCardAtividade(atividade) {
+      function criarCardAtividade(atividade, turmaId) {
         return `
-          <div class="bg-[#7C4A24] rounded-lg p-6 text-[#66AD70] relative hover:shadow-lg transition-shadow cursor-pointer"
-              onclick="visualizarAtividade(${atividade.id})">
+            <div class="bg-[#7C4A24] rounded-lg p-6 text-[#66AD70] relative hover:shadow-lg transition-shadow cursor-pointer"
+              onclick="visualizarAtividade(${atividade.atividadeCode},${turmaId})">
             <button 
               onclick="event.stopPropagation(); removerAtividade(${atividade.id})"
               class="absolute top-2 right-2 bg-red-500 rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition-colors"
@@ -247,6 +296,31 @@
                 ${atividade.nomeAtividade}
               </h4>
               
+              <p class="jersey-10 text-lg mb-2 flex items-center">
+                <span class="text-[#66AD70]">Código: </span>&nbsp
+                <span id="codigo-${atividade.id}">${atividade.atividadeCode}</span>
+                <button 
+                  onclick="event.stopPropagation(); copiarCodigo('${atividade.atividadeCode}', ${atividade.id})"
+                  class="ml-2 bg-[#66AD70] text-[#7C4A24] rounded-full w-6 h-6 flex items-center justify-center hover:bg-[#5a9a63] transition-colors"
+                  title="Copiar código"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    class="w-4 h-4"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                    />
+                  </svg>
+                </button>
+              </p>
+              
               <p class="jersey-10 text-lg mb-2">
                 <span class="text-[#66AD70]">Professor:</span> ${atividade.professor}
               </p>
@@ -263,12 +337,88 @@
         `;
       }
 
+      function copiarCodigo(codigo, atividadeId) {
+        navigator.clipboard
+          .writeText(codigo)
+          .then(() => {
+            const botao = document.querySelector(
+              `button[onclick="event.stopPropagation(); copiarCodigo('${codigo}', ${atividadeId})"]`
+            );
+            botao.innerHTML = `
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                class="w-4 h-4"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                />
+            </svg>
+        `;
+            botao.classList.remove("bg-[#66AD70]", "hover:bg-[#5a9a63]");
+            botao.classList.add("bg-green-500", "hover:bg-green-600");
+
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Código copiado!",
+              text: `Código ${codigo} copiado para a área de transferência`,
+              showConfirmButton: false,
+              timer: 2000,
+              toast: true,
+            });
+
+            setTimeout(() => {
+              botao.innerHTML = `
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    class="w-4 h-4"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                    />
+                </svg>
+            `;
+              botao.classList.remove("bg-green-500", "hover:bg-green-600");
+              botao.classList.add("bg-[#66AD70]", "hover:bg-[#5a9a63]");
+            }, 2000);
+          })
+          .catch((err) => {
+            console.error("Falha ao copiar código: ", err);
+            Swal.fire({
+              icon: "error",
+              title: "Erro ao copiar",
+              text: "Não foi possível copiar o código para a área de transferência",
+            });
+          });
+      }
+
       function visualizarProfessor(professorId) {
         window.location.href = `/professores/${professorId}`;
       }
 
-      function visualizarAtividade(atividadeId) {
-        window.location.href = `/atividades/${atividadeId}`;
+      async function visualizarAtividade(atividadeId,turmaId) {
+        const response = await fetch("/api/v1/turma/getClassById", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: turmaId,
+        });
+        const turma = await response.json();
+
+        window.location.href = `/turmas/escola/details/activity?codigo=${atividadeId}&nome=${turma.nomeTurma}`;
       }
 
       function removerAtividade(atividadeId) {

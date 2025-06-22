@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.List;
 
 @Entity
 @Table(name = "aluno")
@@ -96,10 +98,15 @@ public class Aluno {
     }
 
     public AlunoResponseDTO toDTO() {
+        List<String> turmasNomes = this.turmas.stream()
+                .map(Turma::getNomeTurma)
+                .collect(Collectors.toList());
+
         return new AlunoResponseDTO(
                 this.aluno_id,
                 this.nomeAluno,
-                this.senha
+                this.senha,
+                turmasNomes
         );
     }
 }

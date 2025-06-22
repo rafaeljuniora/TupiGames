@@ -2,6 +2,9 @@ package br.com.TupiGames.dto;
 
 import br.com.TupiGames.domain.Professor;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ProfessorDTO {
     private Long professor_id;
     private String nomeProfessor;
@@ -9,6 +12,19 @@ public class ProfessorDTO {
     private String dataNascimento;
     private String email;
     private String senha;
+    private String ultimaVezAtivo;
+
+    public ProfessorDTO(Professor professor){
+        this.nomeProfessor = professor.getNomeProfessor();
+        this.dataNascimento = professor.getDataNascimento();
+        this.email = professor.getEmail();
+        this.ultimaVezAtivo = formatarData(professor.getUltimaVezAtivo());
+    }
+
+    private String formatarData(Long timestamp) {
+        if (timestamp == null) return "N/A";
+        return new SimpleDateFormat("dd/MM/yyyy").format(new Date(timestamp));
+    }
 
     public ProfessorDTO(String nomeProfessor, String dataNascimento, String email, String senha) {
         this.nomeProfessor = nomeProfessor;
@@ -62,6 +78,14 @@ public class ProfessorDTO {
 
     public Long getProfessor_id() {
         return professor_id;
+    }
+
+    public String getUltimaVezAtivo() {
+        return ultimaVezAtivo;
+    }
+
+    public void setUltimaVezAtivo(String  ultimaVezAtivo) {
+        this.ultimaVezAtivo = ultimaVezAtivo;
     }
 
     public Professor toProfessor() {

@@ -27,26 +27,26 @@ public class ClassRestController {
     TeacherService teacherService;
 
     @PostMapping("/getAllBySchool")
-    public List<TurmaRequestDTO> getAllClassBySchool(@RequestBody String email){
+    public List<TurmaRequestDTO> getAllClassBySchool(@RequestBody String email) {
         Escola escola = schoolService.getSchoolByEmail(email);
         List<Turma> turmas = classService.findAllBySchool(escola);
         return turmas.stream()
-                .map(turma -> new TurmaRequestDTO(turma,false))
+                .map(turma -> new TurmaRequestDTO(turma, false))
                 .collect(Collectors.toList());
     }
 
     @PostMapping("getAllByTeacher")
-    public List<TurmaRequestDTO> getAllClassByTeacher(@RequestBody String email){
+    public List<TurmaRequestDTO> getAllClassByTeacher(@RequestBody String email) {
         Professor professor = teacherService.getTeacherByEmail(email);
         List<Turma> turmas = classService.findAllByTeacher(professor);
         return turmas.stream()
-                .map(turma -> new TurmaRequestDTO(turma,true))
+                .map(turma -> new TurmaRequestDTO(turma, true))
                 .collect(Collectors.toList());
     }
 
     @PostMapping("/remove")
-    public void removeTurma(@RequestBody String nomeTurma){
-        Turma turma= classService.findBynomeTurma(nomeTurma);
+    public void removeTurma(@RequestBody String nomeTurma) {
+        Turma turma = classService.findBynomeTurma(nomeTurma);
         classService.removeTurmaById(turma.getTurma_id());
     }
 

@@ -9,6 +9,14 @@ public class RespostaDTO {
     private Long enviado;
     private String nomeAluno;
 
+    public RespostaDTO(Resposta resposta){
+        this.pontos = resposta.getPontos();
+        this.acertos = resposta.getAcertos();
+        this.total = resposta.getTotal();
+        this.enviado = resposta.getEnviado();
+        this.nomeAluno = resposta.getAluno().getNomeAluno();
+    }
+
     public RespostaDTO(Long pontos, Integer acertos, Integer total) {
         this.pontos = pontos;
         this.acertos = acertos;
