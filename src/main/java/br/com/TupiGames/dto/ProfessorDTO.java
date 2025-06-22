@@ -21,6 +21,15 @@ public class ProfessorDTO {
         this.ultimaVezAtivo = formatarData(professor.getUltimaVezAtivo());
     }
 
+    public ProfessorDTO(Long professor_id, String nomeProfessor, String dataNascimento, String email, String senha, String ultimaVezAtivo) {
+        this.professor_id = professor_id;
+        this.nomeProfessor = nomeProfessor;
+        this.dataNascimento = dataNascimento;
+        this.email = email;
+        this.senha = senha;
+        this.ultimaVezAtivo = ultimaVezAtivo;
+    }
+
     private String formatarData(Long timestamp) {
         if (timestamp == null) return "N/A";
         return new SimpleDateFormat("dd/MM/yyyy").format(new Date(timestamp));

@@ -35,4 +35,8 @@ public class StudentService {
         studentRepository.deleteById(aluno_id);
     }
 
+    public void deleteAll(){
+        studentRepository.deleteAll();
+    }
+
 }

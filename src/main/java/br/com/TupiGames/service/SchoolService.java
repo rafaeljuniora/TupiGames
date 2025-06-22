@@ -23,4 +23,8 @@ public class SchoolService {
     public Escola updateSchool(Escola escola){
         return schoolRepository.save(escola);
     }
+
+    public void deleteAll(){
+        schoolRepository.deleteAll();
+    }
 }

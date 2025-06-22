@@ -41,7 +41,20 @@ public class Professor {
         this.senha = senha;
     }
 
+    public Professor(Long professor_id, String nomeProfessor, String dataNascimento, String email, String senha, Long ultimaVezAtivo) {
+        this.professor_id = professor_id;
+        this.nomeProfessor = nomeProfessor;
+        this.dataNascimento = dataNascimento;
+        this.email = email;
+        this.senha = senha;
+        this.ultimaVezAtivo = ultimaVezAtivo;
+    }
+
     public Professor() {
+    }
+
+    public Long getProfessor_id() {
+        return professor_id;
     }
 
     public Long getUltimaVezAtivo() {
