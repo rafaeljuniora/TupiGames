@@ -204,5 +204,13 @@ public class AnswerRestController {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(Collections.emptyList());
         }
+=======
+    @PostMapping("getAllAnswersByActivity")
+    public List<RespostaDTO> getAllAnswersByActivity(@RequestBody Long atividadeCode){
+        Atividade atividade = activityService.findByatividadeCode(atividadeCode);
+        List<Resposta> respostas = answerService.findAllByAtividade(atividade);
+        return respostas.stream()
+                .map(RespostaDTO::new)
+                .collect(Collectors.toList());
     }
 }

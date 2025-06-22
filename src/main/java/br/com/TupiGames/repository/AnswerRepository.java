@@ -1,5 +1,6 @@
 package br.com.TupiGames.repository;
 
+import br.com.TupiGames.domain.Atividade;
 import br.com.TupiGames.domain.Resposta;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,7 @@ public interface AnswerRepository extends JpaRepository <Resposta, Long> {
 
     @Query("SELECT r FROM Resposta r WHERE r.aluno.id = ?1")
     List<Resposta> findAllByAlunoId(Long alunoId);
+=======
+    List<Resposta> findAllByAtividade(Atividade atividade);
+
 }
