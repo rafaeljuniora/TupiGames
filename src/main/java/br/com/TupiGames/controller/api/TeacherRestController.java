@@ -7,6 +7,8 @@ import br.com.TupiGames.domain.Turma;
 import br.com.TupiGames.dto.ProfessorDTO;
 import br.com.TupiGames.dto.ProfessorConfigDTO;
 import br.com.TupiGames.dto.TurmaDTO;
+import br.com.TupiGames.dto.ProfessorResponseDTO;
+import br.com.TupiGames.service.ClassService;
 import br.com.TupiGames.service.SchoolService;
 import br.com.TupiGames.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class TeacherRestController {
 
     @Autowired
     SchoolService schoolService;
+
+    @Autowired
+    ClassService classService;
 
     @PostMapping("/login")
     public ResponseEntity<?> studentLogin(
@@ -45,9 +50,12 @@ public class TeacherRestController {
     }
 
     @PostMapping("/getAllBySchool")
-    public List<Professor> getAllTeachersBySchool(@RequestBody String email){
+    public List<ProfessorResponseDTO> getAllTeachersBySchool(@RequestBody String email){
         Escola escola = schoolService.getSchoolByEmail(email);
-        return teacherService.getAllBySchool(escola);
+        List<Professor> professores = teacherService.getAllBySchool(escola);
+        return professores.stream()
+                .map(Professor::toDTO)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/getTurmasByProfessor")
@@ -137,5 +145,14 @@ public class TeacherRestController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @PostMapping("/getAllByTurmaId")
+    public List<ProfessorDTO> getAllByTurma(@RequestBody Long id){
+        Turma turma = classService.findById(id);
+        List<Professor> professores = teacherService.FindAllByTurma(turma);
+        return professores.stream()
+                .map(ProfessorDTO::new)
+                .collect(Collectors.toList());
     }
 }

@@ -57,9 +57,9 @@ public class ActivityRestController {
     @PostMapping("/getByCode")
     public ResponseEntity<Atividade> getByCode(@RequestBody Long atividadeCode) {
         Atividade atividade = activityService.findByatividadeCode(atividadeCode);
-        if(atividade==null){
+        if (atividade == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.CREATED).body(atividade);
         }
     }
@@ -73,15 +73,6 @@ public class ActivityRestController {
     public List<AtividadeRequestDTO> getActivityByTurma(@RequestBody Long id){
         Turma turma = classService.findById(id);
         List<Atividade> atividades = activityService.findByTurma(turma);
-
-        return atividades.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/getAllActivities")
-    public List<AtividadeRequestDTO> getAllActivities() {
-        List<Atividade> atividades = activityService.findAll();
 
         return atividades.stream()
                 .map(this::convertToDto)
