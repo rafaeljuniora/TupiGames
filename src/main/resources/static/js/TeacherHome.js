@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const usuarioString = sessionStorage.getItem('usuario');
         if (!usuarioString) {
             console.error("Usuário não encontrado no sessionStorage");
+git push origin c105-Ultimas_atividades_criadas_por_escola
+git push origin c105-Ultimas_atividades_criadas_por_escola
             return null;
         }
 
@@ -65,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             renderizarAtividades(atividades);
         } catch (error) {
-            console.error('Erro:', error);
+
             containerAtividades.innerHTML = `
                 <div class="col-span-full text-center py-8">
                     <p class="text-gray-500 jersey-10 text-xl">
