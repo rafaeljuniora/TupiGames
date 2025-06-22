@@ -41,4 +41,8 @@ public class TeacherService {
     public void removeProfessorById(Long professor_id){
         teacherRepository.deleteById(professor_id);
     }
+
+    public List<Professor> FindAllByTurma(Turma turma){
+        return teacherRepository.findAllByturmas(turma);
+    }
 }
