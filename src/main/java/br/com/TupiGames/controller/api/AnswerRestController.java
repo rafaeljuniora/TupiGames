@@ -87,11 +87,11 @@ public class AnswerRestController {
     @GetMapping("/getByAluno")
     public ResponseEntity<List<Resposta>> getRespostasByAluno(@RequestParam String nomeAluno) {
         try {
-            // Logs detalhados para investigar o problema
+
             System.out.println("\n========= INÍCIO DIAGNÓSTICO DE RESPOSTAS DO ALUNO =========");
             System.out.println("Buscando respostas para o aluno: " + nomeAluno);
 
-            // Busca o aluno pelo nome
+
             Aluno aluno = null;
             try {
                 aluno = studentService.getStudentByName(nomeAluno);
@@ -108,7 +108,7 @@ public class AnswerRestController {
 
             System.out.println("Aluno encontrado com ID: " + aluno.getId() + ", Nome: " + aluno.getNomeAluno());
 
-            // Busca diretamente no repositório para diagnóstico
+
             try {
                 System.out.println("Verificando respostas do aluno diretamente via repository...");
                 List<Resposta> respostasDiretas = answerRepository.findByAlunoIdOrderByEnviadoDesc(aluno.getId());
@@ -129,7 +129,7 @@ public class AnswerRestController {
                 e.printStackTrace();
             }
 
-            // Busca todas as respostas deste aluno via service
+
             List<Resposta> respostas = answerService.findAllByAlunoId(aluno.getId());
 
             System.out.println("Respostas encontradas via service: " + (respostas != null ? respostas.size() : 0));
@@ -161,7 +161,7 @@ public class AnswerRestController {
             System.out.println("\n========= BUSCANDO 3 ÚLTIMAS RESPOSTAS DO ALUNO =========");
             System.out.println("Buscando últimas 3 respostas para o aluno: " + nomeAluno);
 
-            // Busca o aluno pelo nome
+
             Aluno aluno = studentService.getStudentByName(nomeAluno);
 
             if (aluno == null) {
@@ -171,10 +171,10 @@ public class AnswerRestController {
 
             System.out.println("Aluno encontrado com ID: " + aluno.getId() + ", Nome: " + aluno.getNomeAluno());
 
-            // Buscar todas as respostas do aluno ordenadas por ID
+
             List<Resposta> todasRespostas = answerRepository.findByAlunoIdOrderByEnviadoDesc(aluno.getId());
 
-            // Pegar apenas as 3 primeiras (que serão as últimas devido à ordenação)
+
             List<Resposta> ultimasRespostas = todasRespostas.stream()
                     .sorted((r1, r2) -> Long.compare(r2.getResposta_id(), r1.getResposta_id())) // ordenar por ID decrescente
                     .limit(3)

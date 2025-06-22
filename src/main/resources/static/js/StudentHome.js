@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Selecionando o container de atividades anteriores de forma mais específica
     const containerAtividadesAnteriores = document.querySelector('.bg-white .grid-cols-1.sm\\:grid-cols-2.md\\:grid-cols-3');
 
     console.log("Container de atividades encontrado:", containerAtividadesAnteriores);
@@ -10,19 +9,16 @@ document.addEventListener('DOMContentLoaded', function() {
             containerAtividadesAnteriores.offsetHeight);
     }
 
-    // Selecionando diretamente pelo texto da mensagem, que é mais confiável
     const mensagemNenhumaAtividade = Array.from(
         document.querySelectorAll('.bg-white .text-gray-500.jersey-10.text-xl')
     ).find(el => el.textContent.trim() === 'Nenhuma atividade anterior encontrada');
 
-    // Pegando o container pai da mensagem para poder ocultá-lo completamente
     const containerMensagem = mensagemNenhumaAtividade ? mensagemNenhumaAtividade.closest('.col-span-full, .text-center, div') : null;
 
     console.log("Mensagem encontrada:", !!mensagemNenhumaAtividade);
     console.log("Container da mensagem:", containerMensagem);
 
     function getAlunoLogado() {
-        // Tentativa 1: Verificar o sessionStorage com a chave 'aluno'
         const alunoString = sessionStorage.getItem('aluno');
         if (alunoString) {
             try {
@@ -34,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Tentativa 2: Verificar o sessionStorage com a chave 'usuario' (fallback)
         const usuarioString = sessionStorage.getItem('usuario');
         if (usuarioString) {
             try {
@@ -56,33 +51,27 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Se não houver respostas, manter a mensagem padrão visível (não fazer nada)
         if (!respostas || respostas.length === 0) {
             console.log("Nenhuma resposta encontrada, mantendo mensagem padrão");
             return;
         }
 
-        // Se houver respostas, esconder a mensagem padrão
         console.log("Respostas encontradas:", respostas.length, "- Ocultando mensagem padrão");
         if (containerMensagem) {
             containerMensagem.style.display = 'none';
         }
 
-        // Se houver respostas, mostrar os cards
         const respostasLimitadas = respostas.slice(0, 3);
         console.log("Mostrando as últimas 3 atividades:", respostasLimitadas);
 
-        // Limpar o conteúdo atual do container
         containerAtividadesAnteriores.innerHTML = '';
 
-        // Aplicar estilos diretamente com !important para garantir
         containerAtividadesAnteriores.setAttribute('style',
             'display: grid !important; ' +
             'grid-template-columns: repeat(3, minmax(0, 1fr)) !important; ' +
             'gap: 1.5rem !important;'
         );
 
-        // Adicionar cada card individualmente
         respostasLimitadas.forEach(resposta => {
             const cardDiv = document.createElement('div');
             cardDiv.className = 'bg-[#7C4A24] p-4 rounded-lg text-[#66AD70] shadow hover:shadow-lg transition-shadow';
@@ -95,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
             containerAtividadesAnteriores.appendChild(cardDiv);
         });
 
-        // Verificando se a renderização foi bem-sucedida
         console.log("Número de cards renderizados:", containerAtividadesAnteriores.children.length);
     }
 
@@ -135,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const respostas = await response.json();
             console.log("Respostas recebidas:", respostas);
 
-            // Ordenar as respostas pelo ID em ordem decrescente (do maior para o menor)
             respostas.sort((a, b) => b.resposta_id - a.resposta_id);
 
             renderizarAtividadesAnteriores(respostas);
@@ -153,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Função global para ver detalhes da resposta
     window.verDetalhesResposta = function(respostaId) {
         window.location.href = `/aluno/respostas/feedback/${respostaId}`;
     };
