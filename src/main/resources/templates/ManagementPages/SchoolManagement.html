@@ -1,237 +1,262 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gerenciamento - Escola</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
-      rel="stylesheet"
-    />
-    <style th:replace="~{components/SchoolHeader :: sidebar-style}"></style>
-    <link href="/css/output.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script
-      th:replace="~{components/TeacherHeaderDark :: sidebar-script}"
-    ></script>
-    <style
-      th:replace="~{components/modal/CreateStudentModal :: student-modal-style}"
-    ></style>
-    <style
-      th:replace="~{components/modal/CreateTeacherModal :: teacher-modal-style}"
-    ></style>
-    <style
-      th:replace="~{components/modal/CreateClassModal :: class-modal-style}"
-    ></style>
-    <style
-      th:replace="~{components/modal/ViewStudentModal :: view-student-modal-style}"
-    ></style>
-    <style
-      th:replace="~{components/modal/ViewTeacherModal :: view-teacher-modal-style}"
-    ></style>
-    <style
-      th:replace="~{components/modal/ViewClassModal :: view-class-modal-style}"
-    ></style>
-    <style
-      th:replace="~{components/modal/UpdateStudentModal :: update-student-modal-style}"
-    ></style>
-    <style
-      th:replace="~{components/modal/UpdateTeacherModal :: update-teacher-modal-style}"
-    ></style>
-    <style
-      th:replace="~{components/modal/UpdateClassModal :: update-class-modal-style}"
-    ></style>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerenciamento - Escola</title>
+  <link
+          href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+          rel="stylesheet"
+  />
+  <style th:replace="~{components/SchoolHeader :: sidebar-style}"></style>
+  <link href="/css/output.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script
+          th:replace="~{components/TeacherHeaderDark :: sidebar-script}"
+  ></script>
+  <style
+          th:replace="~{components/modal/CreateStudentModal :: student-modal-style}"
+  ></style>
+  <style
+          th:replace="~{components/modal/CreateTeacherModal :: teacher-modal-style}"
+  ></style>
+  <style
+          th:replace="~{components/modal/CreateClassModal :: class-modal-style}"
+  ></style>
+  <style
+          th:replace="~{components/modal/ViewStudentModal :: view-student-modal-style}"
+  ></style>
+  <style
+          th:replace="~{components/modal/ViewTeacherModal :: view-teacher-modal-style}"
+  ></style>
+  <style
+          th:replace="~{components/modal/ViewClassModal :: view-class-modal-style}"
+  ></style>
+  <style
+          th:replace="~{components/modal/UpdateStudentModal :: update-student-modal-style}"
+  ></style>
+  <style
+          th:replace="~{components/modal/UpdateTeacherModal :: update-teacher-modal-style}"
+  ></style>
+  <style
+          th:replace="~{components/modal/UpdateClassModal :: update-class-modal-style}"
+  ></style>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <style>
-      .card-container {
-        display: flex;
-        justify-content: center;
-        gap: 2rem;
-        margin-top: 3rem;
-        transition: all 0.5s ease;
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    .card-container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 3rem;
+      transition: all 0.5s ease;
+    }
+
+    .card-gestao {
+      background-color: #ffe889;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .card-gestao:hover {
+      transform: scale(1.05);
+    }
+
+    .card-gestao img {
+      margin-bottom: 2rem;
+    }
+
+    .card-gestao h3 {
+      font-family: "Jersey 10", sans-serif;
+      font-size: 2.5rem;
+      text-align: center;
+    }
+
+    .content-section {
+      width: 100%;
+      max-width: 1200px;
+      display: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .content-section.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
       }
-
-      .card-gestao {
-        background-color: #ffe889;
-        border-radius: 1.5rem;
-        padding: 2rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-        max-width: 300px;
+      to {
+        opacity: 1;
       }
+    }
 
-      .card-gestao:hover {
-        transform: scale(1.05);
+    .table-wrapper {
+      background-color: #fff8e8;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background-color: #f9f9fa;
+    }
+
+    tr {
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    tr:last-child {
+      border-bottom: none;
+    }
+
+    .action-icons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .action-icons svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      transition: color 0.2s ease;
+    }
+
+    .action-icons svg:hover {
+      color: #6b7280;
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+    }
+
+    .search-input {
+      padding-left: 2.5rem;
+      width: 100%;
+      height: 3.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      background-color: white;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
       }
-
-      .card-gestao img {
-        margin-bottom: 2rem;
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
+    }
+  </style>
+</head>
+<body class="bg-[#F5E5C7] flex justify-center">
+<header
+        th:replace="~{components/SchoolHeader :: header('inicio')}"
+></header>
+<aside th:replace="~{components/SchoolHeader :: sidebar('inicio')}"></aside>
 
-      .card-gestao h3 {
-        font-family: "Jersey 10", sans-serif;
-        font-size: 2.5rem;
-        text-align: center;
-      }
+<main class="container px-0">
+  <h1
+          class="text-6xl bg-gradient-to-r from-[#C26A45] to-[#A0522D] pt-[14vh] jersey-10 text-transparent bg-clip-text text-center w-max m-auto"
+  >
+    Gerenciamento
+  </h1>
 
-      .content-section {
-        width: 100%;
-        max-width: 1200px;
-        display: none;
-        transition: opacity 0.3s ease, transform 0.3s ease;
-      }
+  <div id="cardsSection" class="card-container">
+    <div
+            id="cardAlunos"
+            class="bg-[#FFE889] relative rounded-3xl p-8 flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-105 w-full max-w-[300px] pointer-events-auto"
+            style="touch-action: manipulation;"
+    >
+      <div class="mb-8">
+        <img src="/img/aluno-icon.png" alt="Ícone de Alunos" />
+      </div>
+      <h3 class="font-['Jersey_10'] text-[2.5rem] text-center">Aluno</h3>
+    </div>
 
-      .content-section.active {
-        display: block;
-        animation: fadeIn 0.5s ease;
-      }
+    <div
+            id="cardProfessores"
+            class="bg-[#FFE889] rounded-3xl p-8 flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-105 w-full max-w-[300px] pointer-events-auto"
+            style="touch-action: manipulation;"
+    >
+      <div class="mb-8">
+        <img src="/img/professor-icon.png" alt="Ícone de Professores" />
+      </div>
+      <h3 class="font-['Jersey_10'] text-[2.5rem] text-center">
+        Professor
+      </h3>
+    </div>
 
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
+    <div
+            id="cardTurmas"
+            class="bg-[#FFE889] rounded-3xl p-8 flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-105 w-full max-w-[300px] pointer-events-auto"
+            style="touch-action: manipulation;"
+    >
+      <div class="mb-8">
+        <img src="/img/escola-icon.png" alt="Ícone de Turmas" />
+      </div>
+      <h3 class="font-['Jersey_10'] text-[2.5rem] text-center">Turma</h3>
+    </div>
+  </div>
 
-      .table-wrapper {
-        background-color: #fff8e8;
-        border-radius: 0.75rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-
-      th {
-        background-color: #f9f9fa;
-      }
-
-      tr {
-        border-bottom: 1px solid #e5e7eb;
-      }
-
-      tr:last-child {
-        border-bottom: none;
-      }
-
-      .action-icons {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-      }
-
-      .action-icons svg {
-        width: 1.25rem;
-        height: 1.25rem;
-        transition: color 0.2s ease;
-      }
-
-      .action-icons svg:hover {
-        color: #6b7280;
-      }
-
-      .search-container {
-        position: relative;
-        margin-bottom: 1.5rem;
-      }
-
-      .search-icon {
-        position: absolute;
-        left: 0.75rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #9ca3af;
-      }
-
-      .search-input {
-        padding-left: 2.5rem;
-        width: 100%;
-        height: 3.5rem;
-        border: 1px solid #d1d5db;
-        border-radius: 0.5rem;
-        background-color: white;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-    </style>
-  </head>
-  <body class="bg-[#F5E5C7] flex justify-center">
-    <header
-      th:replace="~{components/SchoolHeader :: header('inicio')}"
-    ></header>
-    <aside th:replace="~{components/SchoolHeader :: sidebar('inicio')}"></aside>
-
-    <main class="container px-0">
-      <h1
-        class="text-6xl bg-gradient-to-r from-[#C26A45] to-[#A0522D] pt-[14vh] jersey-10 text-transparent bg-clip-text text-center w-max m-auto"
-      >
-        Gerenciamento
-      </h1>
-
-      <div id="cardsSection" class="card-container">
-        <div
-          id="cardAlunos"
-          class="bg-[#FFE889] relative rounded-3xl p-8 flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-105 w-full max-w-[300px] pointer-events-auto"
-          style="touch-action: manipulation;"
-        >
-          <div class="mb-8">
-            <img src="/img/aluno-icon.png" alt="Ícone de Alunos" />
-          </div>
-          <h3 class="font-['Jersey_10'] text-[2.5rem] text-center">Aluno</h3>
+  <div id="sectionAlunos"
+       class="content-section w-full mx-auto mt-18 hidden"
+  >
+    <div class="flex items-center gap-2 h-[55px]">
+      <div class="relative flex-1">
+        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
         </div>
 
-        <div
-          id="cardProfessores"
-          class="bg-[#FFE889] rounded-3xl p-8 flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-105 w-full max-w-[300px] pointer-events-auto"
-          style="touch-action: manipulation;"
-        >
-          <div class="mb-8">
-            <img src="/img/professor-icon.png" alt="Ícone de Professores" />
-          </div>
-          <h3 class="font-['Jersey_10'] text-[2.5rem] text-center">
-            Professor
-          </h3>
-        </div>
-
-        <div
-          id="cardTurmas"
-          class="bg-[#FFE889] rounded-3xl p-8 flex flex-col items-center cursor-pointer transition-all duration-300 hover:scale-105 w-full max-w-[300px] pointer-events-auto"
-          style="touch-action: manipulation;"
-        >
-          <div class="mb-8">
-            <img src="/img/escola-icon.png" alt="Ícone de Turmas" />
-          </div>
-          <h3 class="font-['Jersey_10'] text-[2.5rem] text-center">Turma</h3>
-        </div>
+        <input
+                type="text"
+                placeholder="Pesquisar por Nome de Aluno e Turma"
+                class="w-full h-12 pl-10 pr-4 border border-[#E5E7EB] rounded-l-lg focus:outline-none bg-white"
+        />
       </div>
 
-      <div id="sectionAlunos"
-        class="content-section w-full mx-auto mt-18 hidden"
+      <button
+              class="h-12 w-[105px] bg-yellow-400 text-black font-medium rounded-r-lg border border-black flex items-center gap-2 hover:bg-yellow-500 transition"
       >
-        <div class="flex items-center gap-2 h-[55px]">
-          <div class="relative flex-1">
-            <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-              <svg
+        <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
                 height="20"
@@ -273,40 +298,74 @@
             Pesquisar
           </button>
         </div>
-
-        <div class="flex justify-end mb-6 mt-12">
-          <button
-            class="bg-[#FFD735] text-black px-6 py-3 rounded-[15px] flex items-center jersey-10 text-2xl hover:bg-[#FFE889] transition-colors"
-            onclick="document.getElementById('studentModal').classList.remove('student-hidden')"
-          >
-            <span>Adicionar</span>
-          </button>
-        </div>
-
-        <div
-          class="bg-[#FFF8E8] rounded-xl shadow-sm overflow-hidden w-full mb-12"
+=======
         >
-          <table class="w-full border-collapse text-[#475467]">
-            <thead class="bg-[#F9F9FA]">
-              <tr>
-                <th class="py-4 px-6 text-left">Nome</th>
-                <th class="py-4 px-6 text-left">Turma</th>
-                <th class="py-4 px-4 text-center">Ações</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white"></tbody>
-          </table>
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        Pesquisar
+      </button>
+    </div>
+
+    <div class="flex justify-end mb-6 mt-12">
+      <button
+              class="bg-[#FFD735] text-black px-6 py-3 rounded-[15px] flex items-center jersey-10 text-2xl hover:bg-[#FFE889] transition-colors"
+              onclick="document.getElementById('studentModal').classList.remove('student-hidden')"
+      >
+        <span>Adicionar</span>
+      </button>
+    </div>
+
+
+    <div
+            class="bg-[#FFF8E8] rounded-xl shadow-sm overflow-hidden w-full mb-12"
+    >
+      <table class="w-full border-collapse text-[#475467]">
+        <thead class="bg-[#F9F9FA]">
+        <tr>
+          <th class="py-4 px-6 text-left">Nome</th>
+          <th class="py-4 px-6 text-left">Turma</th>
+          <th class="py-4 px-4 text-center">Ações</th>
+        </tr>
+        </thead>
+        <tbody class="bg-white"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div
+          id="sectionProfessores"
+          class="content-section w-full max-w-[1200px] mx-auto mt-8 hidden"
+  >
+    <div class="flex items-center gap-2 h-[55px]">
+      <div class="relative flex-1">
+        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
         </div>
+
+        <input
+                type="text"
+                placeholder="Pesquisar por Nome de Professor e Turma referente"
+                class="w-full h-12 pl-10 pr-4 border border-[#E5E7EB] rounded-l-lg focus:outline-none bg-white"
+        />
       </div>
 
-      <div
-        id="sectionProfessores"
-        class="content-section w-full max-w-[1200px] mx-auto mt-8 hidden"
+      <button
+              class="h-12 w-[105px] bg-yellow-400 text-black font-medium rounded-r-lg border border-black flex items-center gap-2 hover:bg-yellow-500 transition"
       >
-        <div class="flex items-center gap-2 h-[55px]">
-          <div class="relative flex-1">
-            <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-              <svg
+        <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
                 height="20"
@@ -315,6 +374,7 @@
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
+
               >
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -348,40 +408,74 @@
             Pesquisar
           </button>
         </div>
-
-        <div class="flex justify-end mb-6 mt-12">
-          <button
-            class="bg-[#FFD735] text-black px-6 py-3 rounded-[15px] flex items-center jersey-10 text-2xl hover:bg-[#FFE889] transition-colors"
-            onclick="document.getElementById('teacherModal').classList.remove('teacher-hidden')"
-          >
-            <span>Adicionar</span>
-          </button>
-        </div>
-
-        <div
-          class="bg-[#FFF8E8] rounded-xl shadow-sm overflow-hidden w-full mb-12"
+=======
         >
-          <table class="w-full border-collapse text-[#475467]">
-            <thead class="bg-[#F9F9FA]">
-              <tr>
-                <th class="py-4 px-6 text-left">Nome</th>
-                <th class="py-4 px-6 text-left">Turma</th>
-                <th class="py-4 px-4 text-center">Ações</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white"></tbody>
-          </table>
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        Pesquisar
+      </button>
+    </div>
+
+    <div class="flex justify-end mb-6 mt-12">
+      <button
+              class="bg-[#FFD735] text-black px-6 py-3 rounded-[15px] flex items-center jersey-10 text-2xl hover:bg-[#FFE889] transition-colors"
+              onclick="document.getElementById('teacherModal').classList.remove('teacher-hidden')"
+      >
+        <span>Adicionar</span>
+      </button>
+    </div>
+
+
+    <div
+            class="bg-[#FFF8E8] rounded-xl shadow-sm overflow-hidden w-full mb-12"
+    >
+      <table class="w-full border-collapse text-[#475467]">
+        <thead class="bg-[#F9F9FA]">
+        <tr>
+          <th class="py-4 px-6 text-left">Nome</th>
+          <th class="py-4 px-6 text-left">Turma</th>
+          <th class="py-4 px-4 text-center">Ações</th>
+        </tr>
+        </thead>
+        <tbody class="bg-white"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div
+          id="sectionTurmas"
+          class="content-section w-full max-w-[1200px] mx-auto mt-8 hidden"
+  >
+    <div class="flex items-center gap-2 h-[55px]">
+      <div class="relative flex-1">
+        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
         </div>
+
+        <input
+                type="text"
+                placeholder="Pesquisar por Turma ou Periodo"
+                class="w-full h-12 pl-10 pr-4 border border-[#E5E7EB] rounded-l-lg focus:outline-none bg-white"
+        />
       </div>
 
-      <div
-        id="sectionTurmas"
-        class="content-section w-full max-w-[1200px] mx-auto mt-8 hidden"
+      <button
+              class="h-12 w-[105px] bg-yellow-400 text-black font-medium rounded-r-lg border border-black flex items-center gap-2 hover:bg-yellow-500 transition"
       >
-        <div class="flex items-center gap-2 h-[55px]">
-          <div class="relative flex-1">
-            <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-              <svg
+        <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
                 height="20"
@@ -436,557 +530,493 @@
         <div
           class="bg-[#FFF8E8] rounded-xl shadow-sm overflow-hidden w-full mb-12"
         >
-          <table class="w-full border-collapse text-[#475467]">
-            <thead class="bg-[#F9F9FA]">
-              <tr>
-                <th class="py-4 px-6 text-left">Turma</th>
-                <th class="py-4 px-6 text-left">Periodo</th>
-                <th class="py-4 px-4 text-center">Ações</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white"></tbody>
-          </table>
-        </div>
-      </div>
-    </main>
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        Pesquisar
+      </button>
+    </div>
+
+    <div class="flex justify-end mb-6 mt-12">
+      <button
+              class="bg-[#FFD735] text-black px-6 py-3 rounded-[15px] flex items-center jersey-10 text-2xl hover:bg-[#FFE889] transition-colors"
+              onclick="window.openClassModal && window.openClassModal()"
+      >
+        <span>Adicionar</span>
+      </button>
+    </div>
 
     <div
-      th:replace="~{components/modal/CreateStudentModal :: student-modal}"
-    ></div>
-    <script
-      th:replace="~{components/modal/CreateStudentModal :: student-modal-script}"
-    ></script>
+            class="bg-[#FFF8E8] rounded-xl shadow-sm overflow-hidden w-full mb-12"
+    >
+      <table class="w-full border-collapse text-[#475467]">
+        <thead class="bg-[#F9F9FA]">
+        <tr>
+          <th class="py-4 px-6 text-left">Turma</th>
+          <th class="py-4 px-6 text-left">Periodo</th>
+          <th class="py-4 px-4 text-center">Ações</th>
+        </tr>
+        </thead>
+        <tbody class="bg-white"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
 
-    <div
-      th:replace="~{components/modal/CreateTeacherModal :: teacher-modal}"
-    ></div>
-    <script
-      th:replace="~{components/modal/CreateTeacherModal :: teacher-modal-script}"
-    ></script>
+<div
+        th:replace="~{components/modal/CreateStudentModal :: student-modal}"
+></div>
+<script
+        th:replace="~{components/modal/CreateStudentModal :: student-modal-script}"
+></script>
 
-    <div th:replace="~{components/modal/CreateClassModal :: class-modal}"></div>
-    <script
-      th:replace="~{components/modal/CreateClassModal :: class-modal-script}"
-    ></script>
+<div
+        th:replace="~{components/modal/CreateTeacherModal :: teacher-modal}"
+></div>
+<script
+        th:replace="~{components/modal/CreateTeacherModal :: teacher-modal-script}"
+></script>
 
-    <div
-      th:replace="~{components/modal/ViewStudentModal :: view-student-modal}"
-    ></div>
-    <script
-      th:replace="~{components/modal/ViewStudentModal :: view-student-modal-script}"
-    ></script>
+<div th:replace="~{components/modal/CreateClassModal :: class-modal}"></div>
+<script
+        th:replace="~{components/modal/CreateClassModal :: class-modal-script}"
+></script>
 
-    <div
-      th:replace="~{components/modal/ViewTeacherModal :: view-teacher-modal}"
-    ></div>
-    <script
-      th:replace="~{components/modal/ViewTeacherModal :: view-teacher-modal-script}"
-    ></script>
+<div
+        th:replace="~{components/modal/ViewStudentModal :: view-student-modal}"
+></div>
+<script
+        th:replace="~{components/modal/ViewStudentModal :: view-student-modal-script}"
+></script>
 
-    <div
-      th:replace="~{components/modal/ViewClassModal :: view-class-modal}"
-    ></div>
-    <script
-      th:replace="~{components/modal/ViewClassModal :: view-class-modal-script}"
-    ></script>
+<div
+        th:replace="~{components/modal/ViewTeacherModal :: view-teacher-modal}"
+></div>
+<script
+        th:replace="~{components/modal/ViewTeacherModal :: view-teacher-modal-script}"
+></script>
 
-    <div
-      th:replace="~{components/modal/UpdateStudentModal :: update-student-modal}"
-    ></div>
-    <script
-      th:replace="~{components/modal/UpdateStudentModal :: update-student-modal-script}"
-    ></script>
+<div
+        th:replace="~{components/modal/ViewClassModal :: view-class-modal}"
+></div>
+<script
+        th:replace="~{components/modal/ViewClassModal :: view-class-modal-script}"
+></script>
 
-    <div
-      th:replace="~{components/modal/UpdateTeacherModal :: update-teacher-modal}"
-    ></div>
-    <script
-      th:replace="~{components/modal/UpdateTeacherModal :: update-teacher-modal-script}"
-    ></script>
+<div
+        th:replace="~{components/modal/UpdateStudentModal :: update-student-modal}"
+></div>
+<script
+        th:replace="~{components/modal/UpdateStudentModal :: update-student-modal-script}"
+></script>
 
-    <div
-      th:replace="~{components/modal/UpdateClassModal :: update-class-modal}"
-    ></div>
-    <script
-      th:replace="~{components/modal/UpdateClassModal :: update-class-modal-script}"
-    ></script>
+<div
+        th:replace="~{components/modal/UpdateTeacherModal :: update-teacher-modal}"
+></div>
+<script
+        th:replace="~{components/modal/UpdateTeacherModal :: update-teacher-modal-script}"
+></script>
 
-    <script>
-      async function getStudentsBySchool() {
+<div
+        th:replace="~{components/modal/UpdateClassModal :: update-class-modal}"
+></div>
+<script
+        th:replace="~{components/modal/UpdateClassModal :: update-class-modal-script}"
+></script>
+
+<script>
+  async function getStudentsBySchool() {
+try {
+const usuarioSalvo = sessionStorage.getItem("usuario");
+const usuario = JSON.parse(usuarioSalvo);
+
+const response = await axios.post(
+  "/api/v1/aluno/getAllBySchool",
+  usuario.email,
+  {
+    headers: {
+      "Content-Type": "text/plain",
+    },
+  }
+);
+
+const alunos = response.data;
+const tbody = document.querySelector("#sectionAlunos table tbody");
+
+tbody.innerHTML = "";
+
+alunos.forEach((aluno) => {
+  const tr = document.createElement("tr");
+  tr.className = "hover:bg-gray-100";
+
+  const tdNome = document.createElement("td");
+  tdNome.className = "py-4 px-6 text-left";
+  tdNome.textContent = `${aluno.nomeAluno}`;
+  tr.appendChild(tdNome);
+
+  const tdTurma = document.createElement("td");
+  tdTurma.className = "py-4 px-6 text-left";
+
+  if (aluno.turmas && aluno.turmas.length > 0) {
+    tdTurma.textContent = aluno.turmas.join(", ");
+  } else {
+    tdTurma.textContent = "-";
+  }
+
+  tr.appendChild(tdTurma);
+
+  const tdAcoes = document.createElement("td");
+  const divAcoes = document.createElement("div");
+  divAcoes.className = "action-icons fill-[#475467]";
+
+  divAcoes.innerHTML = `
+      <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 576 512"
+          class="hover:fill-gray-400 cursor-pointer view-student-btn"
+          data-aluno='${JSON.stringify(aluno)}'
+      >
+          <path
+              d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"
+          />
+      </svg>
+      <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 448 512"
+          class="hover:fill-red-500 cursor-pointer remove-student-btn"
+      >
+          <path
+              d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"
+          />
+      </svg>
+      <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+          class="hover:fill-green-500 cursor-pointer edit-student-btn"
+          data-aluno='${JSON.stringify(aluno)}'
+      >
+          <path
+              d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"
+          />
+      </svg>
+  `;
+
+  tdAcoes.appendChild(divAcoes);
+  tr.appendChild(tdAcoes);
+
+  tbody.appendChild(tr);
+
+  divAcoes
+    .querySelector(".view-student-btn")
+    .addEventListener("click", function () {
+      const alunoData = JSON.parse(this.getAttribute("data-aluno"));
+      window.openStudentViewModal(alunoData);
+    });
+
+  divAcoes
+    .querySelector(".edit-student-btn")
+    .addEventListener("click", function () {
+      const alunoData = JSON.parse(this.getAttribute("data-aluno"));
+      console.log(alunoData);
+      window.openStudentUpdateModal(alunoData);
+    });
+
+  divAcoes
+    .querySelector(".remove-student-btn")
+    .addEventListener("click", async function () {
+      const alunoId = aluno.id;
+
+      const result = await Swal.fire({
+        title: "Você tem certeza?",
+        text: "Essa ação é IRREVERSÍVEL",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, tenho Certeza!",
+        cancelButtonText: "Não, Cancelar!",
+      });
+
+      if (result.isConfirmed) {
         try {
-          const usuarioSalvo = sessionStorage.getItem("usuario");
-          const usuario = JSON.parse(usuarioSalvo);
-
-          const response = await axios.post(
-            "/api/v1/aluno/getAllBySchool",
-            usuario.email,
-            {
-              headers: {
-                "Content-Type": "text/plain",
-              },
-            }
-          );
-
-          const alunos = response.data;
-          const tbody = document.querySelector("#sectionAlunos table tbody");
-
-          tbody.innerHTML = "";
-
-          alunos.forEach((aluno) => {
-            const tr = document.createElement("tr");
-            tr.className = "hover:bg-gray-100";
-
-            const tdNome = document.createElement("td");
-            tdNome.className = "py-4 px-6 text-left";
-            tdNome.textContent = `${aluno.nomeAluno}`;
-            tr.appendChild(tdNome);
-
-            const tdTurma = document.createElement("td");
-            tdTurma.className = "py-4 px-6 text-left";
-            tdTurma.textContent = "-";
-            tr.appendChild(tdTurma);
-
-            const tdAcoes = document.createElement("td");
-            const divAcoes = document.createElement("div");
-            divAcoes.className = "action-icons fill-[#475467]";
-
-            divAcoes.innerHTML = `
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 576 512"
-                    class="hover:fill-gray-400 cursor-pointer view-student-btn"
-                    data-aluno='${JSON.stringify(aluno)}'
-                >
-                    <path
-                        d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"
-                    />
-                </svg>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 448 512"
-                    class="hover:fill-red-500 cursor-pointer remove-student-btn"
-                >
-                    <path
-                        d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"
-                    />
-                </svg>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 512 512"
-                    class="hover:fill-green-500 cursor-pointer edit-student-btn"
-                    data-aluno='${JSON.stringify(aluno)}'
-                >
-                    <path
-                        d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"
-                    />
-                </svg>
-            `;
-
-            tdAcoes.appendChild(divAcoes);
-            tr.appendChild(tdAcoes);
-
-            tbody.appendChild(tr);
-
-            divAcoes
-              .querySelector(".view-student-btn")
-              .addEventListener("click", function () {
-                const alunoData = JSON.parse(this.getAttribute("data-aluno"));
-                window.openStudentViewModal(alunoData);
-              });
-
-            divAcoes
-              .querySelector(".edit-student-btn")
-              .addEventListener("click", function () {
-                const alunoData = JSON.parse(this.getAttribute("data-aluno"));
-                console.log(alunoData);
-                window.openStudentUpdateModal(alunoData);
-              });
-
-            divAcoes
-              .querySelector(".remove-student-btn")
-              .addEventListener("click", async function () {
-                const alunoId = aluno.id;
-
-                const result = await Swal.fire({
-                  title: "Você tem certeza?",
-                  text: "Essa ação é IRREVERSÍVEL",
-                  icon: "warning",
-                  showCancelButton: true,
-                  confirmButtonColor: "#3085d6",
-                  cancelButtonColor: "#d33",
-                  confirmButtonText: "Sim, tenho Certeza!",
-                  cancelButtonText: "Não, Cancelar!",
-                });
-
-                if (result.isConfirmed) {
-                  try {
-                    await axios.post("/api/v1/aluno/remove", alunoId, {
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                    });
-
-                    await Swal.fire({
-                      title: "Usuário Removido",
-                      text: "Usuário foi removido do sistema",
-                      icon: "success",
-                    });
-                    getStudentsBySchool();
-                  } catch (error) {
-                    console.error("Erro ao remover aluno:", error);
-                    Swal.fire({
-                      title: "Erro",
-                      text: "Ocorreu um erro ao remover o aluno",
-                      icon: "error",
-                    });
-                  }
-                }
-              });
+          await axios.post("/api/v1/aluno/remove", alunoId, {
+            headers: {
+              "Content-Type": "application/json",
+            },
           });
+
+          await Swal.fire({
+            title: "Usuário Removido",
+            text: "Usuário foi removido do sistema",
+            icon: "success",
+          });
+          getStudentsBySchool();
         } catch (error) {
-          console.error("Erro ao buscar alunos:", error);
+          console.error("Erro ao remover aluno:", error);
+          Swal.fire({
+            title: "Erro",
+            text: "Ocorreu um erro ao remover o aluno",
+            icon: "error",
+          });
         }
       }
+    });
+});
+} catch (error) {
+console.error("Erro ao buscar alunos:", error);
+}
+}
 
-      async function getTeachersBySchool() {
-        try {
-          const usuarioSalvo = sessionStorage.getItem("usuario");
-          const usuario = JSON.parse(usuarioSalvo);
+  let professoresData = [];
 
-          const response = await axios.post(
-            "/api/v1/professor/getAllBySchool",
-            usuario.email,
-            {
-              headers: {
-                "Content-Type": "text/plain",
-              },
-            }
-          );
+async function getTeachersBySchool() {
+  try {
+    const usuarioSalvo = sessionStorage.getItem("usuario");
+    const usuario = JSON.parse(usuarioSalvo);
 
-          const professores = response.data;
-          const tbody = document.querySelector(
-            "#sectionProfessores table tbody"
-          );
-
-          tbody.innerHTML = "";
-
-          professores.forEach((professor) => {
-            const tr = document.createElement("tr");
-            tr.className = "hover:bg-gray-100";
-
-            const tdNome = document.createElement("td");
-            tdNome.className = "py-4 px-6 text-left";
-            tdNome.textContent = `${professor.nomeProfessor}`;
-            tr.appendChild(tdNome);
-
-            const tdTurma = document.createElement("td");
-            tdTurma.className = "py-4 px-6 text-left";
-            tdTurma.textContent = professor.turma || "-";
-            tr.appendChild(tdTurma);
-
-            const tdAcoes = document.createElement("td");
-            const divAcoes = document.createElement("div");
-            divAcoes.className = "action-icons fill-[#475467]";
-
-            divAcoes.innerHTML = `
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 576 512"
-                    class="hover:fill-gray-400 cursor-pointer view-teacher-btn"
-                    data-professor='${JSON.stringify(professor)}'
-                >
-                    <path
-                        d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"
-                    />
-                </svg>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 448 512"
-                    class="hover:fill-red-500 cursor-pointer remove-teacher-btn"
-                >
-                    <path
-                        d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"
-                    />
-                </svg>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 512 512"
-                    class="hover:fill-green-500 cursor-pointer edit-teacher-btn"
-                    data-professor='${JSON.stringify(professor)}'
-                >
-                    <path
-                        d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"
-                    />
-                </svg>
-            `;
-
-            tdAcoes.appendChild(divAcoes);
-            tr.appendChild(tdAcoes);
-
-            tbody.appendChild(tr);
-
-            divAcoes
-              .querySelector(".view-teacher-btn")
-              .addEventListener("click", function () {
-                const professorData = JSON.parse(
-                  this.getAttribute("data-professor")
-                );
-                window.openTeacherViewModal(professorData);
-              });
-
-            divAcoes
-              .querySelector(".edit-teacher-btn")
-              .addEventListener("click", function () {
-                const professorData = JSON.parse(
-                  this.getAttribute("data-professor")
-                );
-                window.openTeacherUpdateModal(professorData);
-              });
-
-            divAcoes
-              .querySelector(".remove-teacher-btn")
-              .addEventListener("click", async function () {
-                const professorId = professor.id;
-
-                const result = await Swal.fire({
-                  title: "Você tem certeza?",
-                  text: "Essa ação é IRREVERSÍVEL",
-                  icon: "warning",
-                  showCancelButton: true,
-                  confirmButtonColor: "#3085d6",
-                  cancelButtonColor: "#d33",
-                  confirmButtonText: "Sim, tenho Certeza!",
-                  cancelButtonText: "Não, Cancelar!",
-                });
-
-                if (result.isConfirmed) {
-                  try {
-                    await axios.post("/api/v1/professor/remove", professorId, {
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                    });
-
-                    await Swal.fire({
-                      title: "Usuário Removido",
-                      text: "Usuário foi removido do sistema",
-                      icon: "success",
-                    });
-                    getTeachersBySchool();
-                  } catch (error) {
-                    console.error("Erro ao remover aluno:", error);
-                    Swal.fire({
-                      title: "Erro",
-                      text: "Ocorreu um erro ao remover o aluno",
-                      icon: "error",
-                    });
-                  }
-                }
-              });
-          });
-        } catch (error) {
-          console.error("Erro ao buscar professores:", error);
-        }
+    const response = await axios.post(
+      "/api/v1/professor/getAllBySchool",
+      usuario.email,
+      {
+        headers: {
+          "Content-Type": "text/plain",
+        },
       }
+    );
 
-      async function getClassBySchool() {
-        try {
-          const usuarioSalvo = sessionStorage.getItem("usuario");
-          const usuario = JSON.parse(usuarioSalvo);
+    const professores = response.data;
+    professoresData = professores;
+    const tbody = document.querySelector("#sectionProfessores table tbody");
 
-          const response = await axios.post(
-            "/api/v1/turma/getAllBySchool",
-            usuario.email,
-            {
-              headers: {
-                "Content-Type": "text/plain",
-              },
-            }
-          );
+    tbody.innerHTML = "";
 
-          const turmas = response.data;
-          const tbody = document.querySelector("#sectionTurmas table tbody");
+    professores.forEach((professor, index) => {
+      const tr = document.createElement("tr");
+      tr.className = "hover:bg-gray-100";
 
-          tbody.innerHTML = "";
+      const tdNome = document.createElement("td");
+      tdNome.className = "py-4 px-6 text-left";
+      tdNome.textContent = `${professor.nomeProfessor}`;
+      tr.appendChild(tdNome);
 
-          turmas.forEach((turma) => {
-            const tr = document.createElement("tr");
-            tr.className = "hover:bg-gray-100";
-
-            const tdNome = document.createElement("td");
-            tdNome.className = "py-4 px-6 text-left";
-            tdNome.textContent = `${turma.nomeTurma}`;
-            tr.appendChild(tdNome);
-
-            const tdTurma = document.createElement("td");
-            tdTurma.className = "py-4 px-6 text-left";
-            tdTurma.textContent = turma.periodo || "-";
-            tr.appendChild(tdTurma);
-
-            const tdAcoes = document.createElement("td");
-            const divAcoes = document.createElement("div");
-            divAcoes.className = "action-icons fill-[#475467]";
-
-            divAcoes.innerHTML = `
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 576 512"
-                    class="hover:fill-gray-400 cursor-pointer view-class-btn"
-                    data-turma='${JSON.stringify(turma)}'
-                >
-                    <path
-                        d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"
-                    />
-                </svg>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 448 512"
-                    class="hover:fill-red-500 cursor-pointer remove-class-btn"
-                >
-                    <path
-                        d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"
-                    />
-                </svg>
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 512 512"
-                    class="hover:fill-green-500 cursor-pointer edit-class-btn"
-                    data-turma='${JSON.stringify(turma)}'
-                >
-                    <path
-                        d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"
-                    />
-                </svg>
-            `;
-
-            tdAcoes.appendChild(divAcoes);
-            tr.appendChild(tdAcoes);
-
-            tbody.appendChild(tr);
-
-            divAcoes
-              .querySelector(".view-class-btn")
-              .addEventListener("click", function () {
-                const turmaData = JSON.parse(this.getAttribute("data-turma"));
-                window.openClassViewModal(turmaData);
-              });
-
-            divAcoes
-              .querySelector(".edit-class-btn")
-              .addEventListener("click", function () {
-                const turmaData = JSON.parse(this.getAttribute("data-turma"));
-                window.openUpdateClassModal(turmaData);
-              });
-
-            divAcoes
-              .querySelector(".remove-class-btn")
-              .addEventListener("click", async function () {
-                const nomeTurma = turma.nomeTurma;
-
-                const result = await Swal.fire({
-                  title: "Você tem certeza?",
-                  text: "Essa ação é IRREVERSÍVEL",
-                  icon: "warning",
-                  showCancelButton: true,
-                  confirmButtonColor: "#3085d6",
-                  cancelButtonColor: "#d33",
-                  confirmButtonText: "Sim, tenho Certeza!",
-                  cancelButtonText: "Não, Cancelar!",
-                });
-
-                if (result.isConfirmed) {
-                  try {
-                    await axios.post("/api/v1/turma/remove", nomeTurma, {
-                      headers: {
-                        "Content-Type": "text/plain",
-                      },
-                    });
-
-                    await Swal.fire({
-                      title: "Turma Removida",
-                      text: "Turma foi removida do sistema",
-                      icon: "success",
-                    });
-                    getClassBySchool();
-                  } catch (error) {
-                    console.error("Erro ao remover aluno:", error);
-                    Swal.fire({
-                      title: "Erro",
-                      text: "Ocorreu um erro ao remover o aluno",
-                      icon: "error",
-                    });
-                  }
-                }
-              });
-          });
-        } catch (error) {
-          console.error("Erro ao buscar Turmas:", error);
-        }
+      const tdTurma = document.createElement("td");
+      tdTurma.className = "py-4 px-6 text-left";
+      if (professor.turmas && professor.turmas.length > 0) {
+        tdTurma.textContent = professor.turmas.join(", ");
+      } else {
+        tdTurma.textContent = "-";
       }
+      tr.appendChild(tdTurma);
 
-      document.addEventListener("DOMContentLoaded", function () {
-        const cardsSection = document.getElementById("cardsSection");
-        const cardAlunos = document.getElementById("cardAlunos");
-        const cardProfessores = document.getElementById("cardProfessores");
-        const cardTurmas = document.getElementById("cardTurmas");
-        const sectionAlunos = document.getElementById("sectionAlunos");
-        const sectionProfessores = document.getElementById("sectionProfessores");
-        const sectionTurmas = document.getElementById("sectionTurmas");
+      const tdAcoes = document.createElement("td");
+      const divAcoes = document.createElement("div");
+      divAcoes.className = "action-icons fill-[#475467]";
 
-        let activeCard = null;
-        let isAnimating = false;
+      divAcoes.innerHTML = `
+          <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 576 512"
+              class="hover:fill-gray-400 cursor-pointer view-teacher-btn"
+              data-professor-index="${index}"
+          >
+              <path
+                  d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"
+              />
+          </svg>
+          <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512"
+              class="hover:fill-red-500 cursor-pointer remove-teacher-btn"
+              data-professor-index="${index}"
+          >
+              <path
+                  d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"
+              />
+          </svg>
+          <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              class="hover:fill-green-500 cursor-pointer edit-teacher-btn"
+              data-professor-index="${index}"
+          >
+              <path
+                  d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"
+              />
+          </svg>
+      `;
 
-        function animateCardSelection(selectedCard, event) {
-          if (isAnimating || !selectedCard.contains(event.target)) {
-            return;
+      tdAcoes.appendChild(divAcoes);
+      tr.appendChild(tdAcoes);
+
+      tbody.appendChild(tr);
+
+      divAcoes
+        .querySelector(".view-teacher-btn")
+        .addEventListener("click", function () {
+          const professorIndex = parseInt(this.getAttribute("data-professor-index"));
+          const professorData = professoresData[professorIndex];
+          window.openTeacherViewModal(professorData);
+        });
+
+      divAcoes
+        .querySelector(".edit-teacher-btn")
+        .addEventListener("click", function () {
+          const professorIndex = parseInt(this.getAttribute("data-professor-index"));
+          const professorData = professoresData[professorIndex];
+          window.openTeacherUpdateModal(professorData);
+        });
+
+      divAcoes
+        .querySelector(".remove-teacher-btn")
+        .addEventListener("click", async function () {
+          const professorIndex = parseInt(this.getAttribute("data-professor-index"));
+          const professor = professoresData[professorIndex];
+          const professorId = professor.professor_id;
+
+          const result = await Swal.fire({
+            title: "Você tem certeza?",
+            text: "Essa ação é IRREVERSÍVEL",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, tenho Certeza!",
+            cancelButtonText: "Não, Cancelar!",
+          });
+
+          if (result.isConfirmed) {
+            try {
+              await axios.post("/api/v1/professor/remove", professorId, {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+
+              await Swal.fire({
+                title: "Usuário Removido",
+                text: "Usuário foi removido do sistema",
+                icon: "success",
+              });
+              getTeachersBySchool();
+            } catch (error) {
+              console.error("Erro ao remover professor:", error);
+              Swal.fire({
+                title: "Erro",
+                text: "Ocorreu um erro ao remover o professor",
+                icon: "error",
+              });
+            }
           }
+        });
+    });
+  } catch (error) {
+    console.error("Erro ao buscar professores:", error);
+  }
+}
 
-          isAnimating = true;
-          const allCards = [cardAlunos, cardProfessores, cardTurmas];
+  async function getClassBySchool() {
+    try {
+      const usuarioSalvo = sessionStorage.getItem("usuario");
+      const usuario = JSON.parse(usuarioSalvo);
 
-          if (activeCard === selectedCard) {
-            allCards.forEach((card) => {
-              card.style.transform = "";
-              card.style.opacity = "1";
-              card.style.position = "";
-              card.style.left = "";
-              card.style.zIndex = "";
-              card.style.pointerEvents = "auto";
-            });
-            cardsSection.style.height = "";
-            document.querySelector(".content-section.active")?.classList.remove("active");
-            activeCard = null;
-            isAnimating = false;
-            return;
-          }
+      const response = await axios.post(
+        "/api/v1/turma/getAllBySchool",
+        usuario.email,
+        {
+          headers: {
+            "Content-Type": "text/plain",
+          },
+        }
+      );
 
-          const currentHeight = cardsSection.offsetHeight;
-          cardsSection.style.height = `${currentHeight}px`;
+      const turmas = response.data;
+      const tbody = document.querySelector("#sectionTurmas table tbody");
 
-          allCards.forEach((card) => {
-            card.style.pointerEvents = "none";
+      tbody.innerHTML = "";
+
+      turmas.forEach((turma) => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-gray-100";
+
+        const tdNome = document.createElement("td");
+        tdNome.className = "py-4 px-6 text-left";
+        tdNome.textContent = `${turma.nomeTurma}`;
+        tr.appendChild(tdNome);
+
+        const tdTurma = document.createElement("td");
+        tdTurma.className = "py-4 px-6 text-left";
+        tdTurma.textContent = turma.periodo || "-";
+        tr.appendChild(tdTurma);
+
+        const tdAcoes = document.createElement("td");
+        const divAcoes = document.createElement("div");
+        divAcoes.className = "action-icons fill-[#475467]";
+
+        divAcoes.innerHTML = `
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 576 512"
+                class="hover:fill-gray-400 cursor-pointer view-class-btn"
+                data-turma='${JSON.stringify(turma)}'
+            >
+                <path
+                    d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"
+                />
+            </svg>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+                class="hover:fill-red-500 cursor-pointer remove-class-btn"
+            >
+                <path
+                    d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"
+                />
+            </svg>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+                class="hover:fill-green-500 cursor-pointer edit-class-btn"
+                data-turma='${JSON.stringify(turma)}'
+            >
+                <path
+                    d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"
+                />
+            </svg>
+        `;
+
+        tdAcoes.appendChild(divAcoes);
+        tr.appendChild(tdAcoes);
+
+        tbody.appendChild(tr);
+
+        divAcoes
+          .querySelector(".view-class-btn")
+          .addEventListener("click", function () {
+            const turmaData = JSON.parse(this.getAttribute("data-turma"));
+            window.openClassViewModal(turmaData);
           });
 
-          allCards.forEach((card) => {
-            if (card !== selectedCard) {
-              card.style.transform = "translateX(100%)";
-              card.style.opacity = "0";
-              card.style.position = "relative";
-              card.style.zIndex = "0";
-            }
+        divAcoes
+          .querySelector(".edit-class-btn")
+          .addEventListener("click", function () {
+            const turmaData = JSON.parse(this.getAttribute("data-turma"));
+            window.openUpdateClassModal(turmaData);
           });
 
-          setTimeout(() => {
-            selectedCard.style.position = "absolute";
-            selectedCard.style.left = "50%";
-            selectedCard.style.transform = "translateX(-50%) scale(1.1)";
-            selectedCard.style.zIndex = "10";
-            selectedCard.style.opacity = "1";
-            selectedCard.style.pointerEvents = "auto";
+        divAcoes
+          .querySelector(".remove-class-btn")
+          .addEventListener("click", async function () {
+            const nomeTurma = turma.nomeTurma;
 
-            document.querySelectorAll(".content-section").forEach((section) => {
-              section.classList.add("hidden");
-              section.classList.remove("active");
+            const result = await Swal.fire({
+              title: "Você tem certeza?",
+              text: "Essa ação é IRREVERSÍVEL",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Sim, tenho Certeza!",
+              cancelButtonText: "Não, Cancelar!",
             });
 
             if (selectedCard === cardAlunos) {
@@ -1001,39 +1031,115 @@
               sectionTurmas.classList.remove("hidden");
               sectionTurmas.classList.add("active");
               getClassBySchool();
+=======
+            if (result.isConfirmed) {
+              try {
+                await axios.post("/api/v1/turma/remove", nomeTurma, {
+                  headers: {
+                    "Content-Type": "text/plain",
+                  },
+                });
+
+                await Swal.fire({
+                  title: "Turma Removida",
+                  text: "Turma foi removida do sistema",
+                  icon: "success",
+                });
+                getClassBySchool();
+              } catch (error) {
+                console.error("Erro ao remover aluno:", error);
+                Swal.fire({
+                  title: "Erro",
+                  text: "Ocorreu um erro ao remover o aluno",
+                  icon: "error",
+                });
+              }
+
             }
+          });
+      });
+    } catch (error) {
+      console.error("Erro ao buscar Turmas:", error);
+    }
+  }
 
-            activeCard = selectedCard;
-            isAnimating = false;
-          }, 300);
+  document.addEventListener("DOMContentLoaded", function () {
+    const cardsSection = document.getElementById("cardsSection");
+    const cardAlunos = document.getElementById("cardAlunos");
+    const cardProfessores = document.getElementById("cardProfessores");
+    const cardTurmas = document.getElementById("cardTurmas");
+    const sectionAlunos = document.getElementById("sectionAlunos");
+    const sectionProfessores = document.getElementById("sectionProfessores");
+    const sectionTurmas = document.getElementById("sectionTurmas");
+
+    let activeCard = null;
+    let isAnimating = false;
+
+    function animateCardSelection(selectedCard, event) {
+      if (isAnimating || !selectedCard.contains(event.target)) {
+        return;
+      }
+
+      isAnimating = true;
+      const allCards = [cardAlunos, cardProfessores, cardTurmas];
+
+      if (activeCard === selectedCard) {
+        allCards.forEach((card) => {
+          card.style.transform = "";
+          card.style.opacity = "1";
+          card.style.position = "";
+          card.style.left = "";
+          card.style.zIndex = "";
+          card.style.pointerEvents = "auto";
+        });
+        cardsSection.style.height = "";
+        document.querySelector(".content-section.active")?.classList.remove("active");
+        activeCard = null;
+        isAnimating = false;
+        return;
+      }
+
+      const currentHeight = cardsSection.offsetHeight;
+      cardsSection.style.height = `${currentHeight}px`;
+
+      allCards.forEach((card) => {
+        card.style.pointerEvents = "none";
+      });
+
+      allCards.forEach((card) => {
+        if (card !== selectedCard) {
+          card.style.transform = "translateX(100%)";
+          card.style.opacity = "0";
+          card.style.position = "relative";
+          card.style.zIndex = "0";
         }
+      });
 
-        cardAlunos.addEventListener("click", (event) => {
-          animateCardSelection(cardAlunos, event);
+      setTimeout(() => {
+        selectedCard.style.position = "absolute";
+        selectedCard.style.left = "50%";
+        selectedCard.style.transform = "translateX(-50%) scale(1.1)";
+        selectedCard.style.zIndex = "10";
+        selectedCard.style.opacity = "1";
+        selectedCard.style.pointerEvents = "auto";
+
+        document.querySelectorAll(".content-section").forEach((section) => {
+          section.classList.add("hidden");
+          section.classList.remove("active");
         });
 
-        cardProfessores.addEventListener("click", (event) => {
-          animateCardSelection(cardProfessores, event);
-        });
-
-        cardTurmas.addEventListener("click", (event) => {
-          animateCardSelection(cardTurmas, event);
-        });
-
-        cardsSection.addEventListener("click", (event) => {
-          if (event.target === cardsSection) {
-            event.stopPropagation();
-          }
-        });
-
-        const usuarioSalvo = sessionStorage.getItem("usuario");
-
-        if (usuarioSalvo) {
-          const usuario = JSON.parse(usuarioSalvo);
-          //console.log("Usuário logado:", usuario.email);
-          document.getElementById("user-email").textContent = usuario.email;
-        } else {
-          window.location.href = "/";
+        if (selectedCard === cardAlunos) {
+          sectionAlunos.classList.remove("hidden");
+          sectionAlunos.classList.add("active");
+          getStudentsBySchool();
+        } else if (selectedCard === cardProfessores) {
+          sectionProfessores.classList.remove("hidden");
+          sectionProfessores.classList.add("active");
+          getTeachersBySchool();
+        } else if (selectedCard === cardTurmas) {
+          sectionTurmas.classList.remove("hidden");
+          sectionTurmas.classList.add("active");
+          getClassBySchool();
         }
       });
     </script>
@@ -1041,4 +1147,42 @@
     <script src="/js/SchoolManagement.js"></script>
 
   </body>
+=======
+
+        activeCard = selectedCard;
+        isAnimating = false;
+      }, 300);
+    }
+
+    cardAlunos.addEventListener("click", (event) => {
+      animateCardSelection(cardAlunos, event);
+    });
+
+    cardProfessores.addEventListener("click", (event) => {
+      animateCardSelection(cardProfessores, event);
+    });
+
+    cardTurmas.addEventListener("click", (event) => {
+      animateCardSelection(cardTurmas, event);
+    });
+
+    cardsSection.addEventListener("click", (event) => {
+      if (event.target === cardsSection) {
+        event.stopPropagation();
+      }
+    });
+
+    const usuarioSalvo = sessionStorage.getItem("usuario");
+
+    if (usuarioSalvo) {
+      const usuario = JSON.parse(usuarioSalvo);
+      //console.log("Usuário logado:", usuario.email);
+      document.getElementById("user-email").textContent = usuario.email;
+    } else {
+      window.location.href = "/";
+    }
+  });
+</script>
+</body>
+
 </html>
