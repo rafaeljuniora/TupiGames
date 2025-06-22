@@ -8,6 +8,8 @@ import br.com.TupiGames.domain.Turma;
 import java.util.List;
 
 public class EscolaDTO {
+
+    private Long escola_id;
     private String nomeEscola;
     private String email;
     private String senha;
@@ -16,10 +18,21 @@ public class EscolaDTO {
     private List<Professor> professores;
     private List<Aluno> alunos;
 
+    public EscolaDTO() {
+    }
+
     public EscolaDTO(String nomeEscola, String email, String senha) {
         this.nomeEscola = nomeEscola;
         this.email = email;
         this.senha = senha;
+    }
+
+    public Long getEscola_id() {
+        return escola_id;
+    }
+
+    public void setEscola_id(Long escola_id) {
+        this.escola_id = escola_id;
     }
 
     public String getNomeEscola() {
@@ -48,8 +61,5 @@ public class EscolaDTO {
 
     public Escola toEscola() {
         return new Escola(this.nomeEscola, this.email, this.senha);
-    }
-
-    public EscolaDTO() {
     }
 }
