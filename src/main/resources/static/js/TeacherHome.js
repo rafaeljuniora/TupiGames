@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const atividades = await response.json();
             console.log("Atividades recebidas:", atividades);
 
-            // Ordenar as atividades pelo ID em ordem decrescente (do maior para o menor)
+
             atividades.sort((a, b) => b.id - a.id);
 
             renderizarAtividades(atividades);
