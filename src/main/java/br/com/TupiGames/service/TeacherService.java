@@ -47,4 +47,8 @@ public class TeacherService {
             e.printStackTrace();
         }
     }
+
+    public List<Professor> FindAllByTurma(Turma turma){
+        return teacherRepository.findAllByturmas(turma);
+    }
 }
