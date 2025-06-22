@@ -78,7 +78,6 @@ public class SchoolRestController {
 
     @PostMapping("/configuracoes")
     public ResponseEntity<?> updateSchoolConfiguration(@RequestBody EscolaConfigDTO escolaConfigDTO) {
-        System.out.println("Email atual: " + escolaConfigDTO.getEmail());
 
         try {
             Escola escola = schoolService.getSchoolByEmail(escolaConfigDTO.getEmail());
