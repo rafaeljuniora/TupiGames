@@ -41,6 +41,10 @@ public class Escola {
     public Escola() {
     }
 
+    public Long getEscola_id() {
+        return escola_id;
+    }
+
     public String getNomeEscola() {
         return nomeEscola;
     }
