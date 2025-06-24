@@ -18,7 +18,6 @@ public class AtividadeTest {
         assertEquals(true, atividade.getGlobal());
         assertEquals("Professor João", atividade.getCriador());
     }
-
     @Test
     public void testCriadorIncorreto() {
         List<Pergunta> perguntas = new ArrayList<>();
