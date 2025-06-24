@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const atividades = await response.json();
-            console.log("Atividades recebidas:", atividades);
 
 
             atividades.sort((a, b) => b.id - a.id);
