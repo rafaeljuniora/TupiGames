@@ -87,6 +87,8 @@ function adicionarEventosAlunos(divAcoes, aluno) {
   if (removeBtn) {
     removeBtn.addEventListener("click", async function () {
       const alunoId = aluno.id;
+      console.log("ID do aluno a ser removido:", alunoId);
+      console.log("Tipo do ID do aluno:", typeof alunoId);
 
       const result = await Swal.fire({
         title: "Você tem certeza?",
@@ -101,11 +103,17 @@ function adicionarEventosAlunos(divAcoes, aluno) {
 
       if (result.isConfirmed) {
         try {
-          await axios.post("/api/v1/aluno/remove", alunoId, {
+          // Criando um objeto com a propriedade 'id' para enviar ao servidor
+          const payload = { id: alunoId };
+          console.log("Payload enviado:", payload);
+
+          const response = await axios.post("/api/v1/aluno/remove", payload, {
             headers: {
               "Content-Type": "application/json",
             },
           });
+
+          console.log("Resposta do servidor:", response);
 
           await Swal.fire({
             title: "Usuário Removido",
@@ -115,6 +123,7 @@ function adicionarEventosAlunos(divAcoes, aluno) {
           getStudentsBySchoolWithCache();
         } catch (error) {
           console.error("Erro ao remover aluno:", error);
+          console.error("Detalhes do erro:", error.response ? error.response.data : "Sem detalhes adicionais");
           Swal.fire({
             title: "Erro",
             text: "Ocorreu um erro ao remover o aluno",
@@ -148,6 +157,7 @@ function adicionarEventosProfessores(divAcoes, professor) {
   if (removeBtn) {
     removeBtn.addEventListener("click", async function () {
       const professorId = professor.id;
+      console.log("ID do professor a ser removido:", professorId);
 
       const result = await Swal.fire({
         title: "Você tem certeza?",
@@ -356,7 +366,7 @@ function adicionarEventosTurmas(divAcoes, turma) {
         try {
           await axios.post("/api/v1/turma/remove", turmaId, {
             headers: {
-              "Content-Type": "application/json",
+              "Content-Type": "text/plain",
             },
           });
 
