@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="text-base mb-3 jersey-10">Código: ${atividade.atividadeCode || ''}</div>
                 <div class="flex justify-between items-center">
                     <div class="text-base jersey-10">
-                        ${atividade.professor ? `<span>Prof: ${atividade.nomeprofessor}</span>` : ''}
+                        ${atividade.professor ? `<span>Prof: ${atividade.professor}</span>` : ''}
                     </div>
                     <div class="text-base">
                         <span class="bg-[#66AD70] text-[#000000] px-2 py-1 rounded-full text-sm jersey-10">

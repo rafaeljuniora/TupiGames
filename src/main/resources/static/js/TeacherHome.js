@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const usuarioString = sessionStorage.getItem('usuario');
         if (!usuarioString) {
             console.error("Usuário não encontrado no sessionStorage");
-git push origin c105-Ultimas_atividades_criadas_por_escola
-git push origin c105-Ultimas_atividades_criadas_por_escola
             return null;
         }
 
