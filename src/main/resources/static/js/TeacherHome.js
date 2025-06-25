@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     };
 
+
     function getProfessorLogado() {
         const usuarioString = sessionStorage.getItem('usuario');
         if (!usuarioString) {
@@ -50,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const atividadesLimitadas = atividades.slice(0, 3);
 
         containerAtividades.innerHTML = atividadesLimitadas.map(atividade => `
+
             <div class="bg-[#7C4A24] rounded-lg p-4 text-[#66AD70] shadow-md">
                            <div class="flex justify-between items-center mb-2">
                                <span class="text-xl jersey-10">${atividade.nomeAtividade}</span>
@@ -86,8 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('Professor não está logado');
             }
 
-            console.log("Email do professor logado:", professorEmail);
-
             const response = await fetch('/api/v1/atividade/getAllActivities', {
                 method: 'GET',
                 headers: {
@@ -114,6 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
             renderizarAtividades(atividadesDoProfessor);
         } catch (error) {
             console.error('Erro:', error);
+
             containerAtividades.innerHTML = `
                 <div class="col-span-full text-center py-8">
                     <p class="text-gray-500 jersey-10 text-xl">

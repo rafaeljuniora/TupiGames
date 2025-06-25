@@ -50,4 +50,6 @@ public class ActivityService {
     public List<Atividade> findAll(){
         return actvityRepository.findAll();
     }
+
 }
+
