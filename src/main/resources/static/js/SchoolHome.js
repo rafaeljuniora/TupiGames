@@ -32,18 +32,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const atividadesLimitadas = atividades.slice(0, 3);
 
         containerAtividades.innerHTML = atividadesLimitadas.map(atividade => `
-            <div class="bg-[#7C4A24] rounded-lg p-4 text-[#66AD70] shadow-md">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-lg font-bold jersey-10">${atividade.nomeAtividade}</span>
-                    <span class="text-sm jersey-10">${atividade.dataAtribuicao || ''}</span>
+
+            <div class="bg-[#7C4A24] rounded-lg p-6 text-[#66AD70] shadow-md w-full min-h-[150px]">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-xl jersey-10">${atividade.nomeAtividade}</span>
+                    <span class="text-base jersey-10">${atividade.dataAtribuicao || ''}</span>
                 </div>
-                <div class="text-sm mb-2 jersey-10">Código: ${atividade.atividadeCode || ''}</div>
+                <div class="text-base mb-3 jersey-10">Código: ${atividade.atividadeCode || ''}</div>
                 <div class="flex justify-between items-center">
-                    <div class="text-sm jersey-10">
-                        ${atividade.professor ? `<span>Prof: ${atividade.nomeprofessor}</span>` : ''}
+                    <div class="text-base jersey-10">
+                        ${atividade.professor ? `<span>Prof: ${atividade.professor}</span>` : ''}
                     </div>
-                    <div class="text-sm">
-                        <span class="bg-[#66AD70] text-[#000000] px-2 py-1 rounded-full text-xs jersey-10">
+                    <div class="text-base">
+                        <span class="bg-[#66AD70] text-[#000000] px-2 py-1 rounded-full text-sm jersey-10">
+
                             ${atividade.quantidadeQuestoes || 0} questões
                         </span>
                     </div>
@@ -66,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('Escola não está logada');
             }
 
-            console.log("Email da escola logada:", escolaEmail);
+
 
             const response = await fetch('/api/v1/atividade/getAllActivities', {
                 method: 'GET',
@@ -81,13 +83,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const todasAtividades = await response.json();
 
-            console.log("JSON completo recebido de getAllActivities:", todasAtividades);
 
             const atividadesDaEscola = todasAtividades.filter(atividade => {
                 return atividade.professor === escolaEmail;
             });
 
-            console.log("Atividades da escola:", atividadesDaEscola);
 
             atividadesDaEscola.sort((a, b) => b.id - a.id);
 
@@ -211,4 +211,4 @@ document.addEventListener('DOMContentLoaded', function() {
     buscarAtividades();
     carregarTurmas();
 });
-//F
+
