@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const atividadesLimitadas = atividades.slice(0, 3);
 
         containerAtividades.innerHTML = atividadesLimitadas.map(atividade => `
+
             <div class="bg-[#7C4A24] rounded-lg p-6 text-[#66AD70] shadow-md w-full min-h-[150px]">
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-xl jersey-10">${atividade.nomeAtividade}</span>
@@ -44,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="text-base">
                         <span class="bg-[#66AD70] text-[#000000] px-2 py-1 rounded-full text-sm jersey-10">
+
                             ${atividade.quantidadeQuestoes || 0} questões
                         </span>
                     </div>
@@ -67,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
 
+
             const response = await fetch('/api/v1/atividade/getAllActivities', {
                 method: 'GET',
                 headers: {
@@ -81,11 +84,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const todasAtividades = await response.json();
 
 
-
             const atividadesDaEscola = todasAtividades.filter(atividade => {
                 return atividade.professor === escolaEmail;
             });
-
 
 
             atividadesDaEscola.sort((a, b) => b.id - a.id);
@@ -210,3 +211,4 @@ document.addEventListener('DOMContentLoaded', function() {
     buscarAtividades();
     carregarTurmas();
 });
+

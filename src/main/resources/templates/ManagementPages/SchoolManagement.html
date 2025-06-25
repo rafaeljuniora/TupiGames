@@ -247,6 +247,7 @@
         </div>
 
         <input
+                id="searchStudents"
                 type="text"
                 placeholder="Pesquisar por Nome de Aluno e Turma"
                 class="w-full h-12 pl-10 pr-4 border border-[#E5E7EB] rounded-l-lg focus:outline-none bg-white"
@@ -321,6 +322,7 @@
         </div>
 
         <input
+                id="searchTeachers"
                 type="text"
                 placeholder="Pesquisar por Nome de Professor e Turma referente"
                 class="w-full h-12 pl-10 pr-4 border border-[#E5E7EB] rounded-l-lg focus:outline-none bg-white"
@@ -395,8 +397,9 @@
         </div>
 
         <input
+                id="searchClasses"
                 type="text"
-                placeholder="Pesquisar por Turma ou Periodo"
+                placeholder="Pesquisar por Turma e Periodo"
                 class="w-full h-12 pl-10 pr-4 border border-[#E5E7EB] rounded-l-lg focus:outline-none bg-white"
         />
       </div>
@@ -1046,5 +1049,8 @@ async function getTeachersBySchool() {
     }
   });
 </script>
+
+<!-- Adicionando o script SchoolManagement.js para funcionalidades de busca -->
+<script src="/js/SchoolManagement.js"></script>
 </body>
 </html>
